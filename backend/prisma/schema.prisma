@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  User
+  Admin
+}
+
+enum JenisKelamin {
+  LakiLaki
+  Perempuan
+}
+
+enum Tingkatan {
+  WUSTHA
+  ULYA
+}
+
+enum Kelas {
+  VII_Putra
+  VIII_Putra
+  IX_Putra
+  X_Putra
+  XI_Putra
+  XII_Putra
+  VII_Putri
+  VIII_Putri
+  IX_Putri
+  X_Putri
+  XI_Putri
+  XII_Putri
+}
+
+enum StatusAbsensi {
+  HADIR
+  TIDAK_HADIR
+  SAKIT
+  IZIN
+}
+
+enum JenisAbsensi {
+  KELAS
+  ASRAMA
+  PENGAJIAN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(User)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Siswa {
+  id             String        @id @default(cuid())
+  nama           String?
+  kelas          Kelas?
+  tingkatan      Tingkatan?
+  nisn           String?
+  npsn           String?
+  sekolahAsal    String?
+  nis            String?
+  nik            String?
+  tempatLahir    String?
+  tanggalLahir   DateTime?
+  alamat         String?
+  kodePos        String?
+  namaAyah       String?
+  nikAyah        String?
+  ttlAyah        String?
+  noKartuKeluarga String?
+  pekerjaanAyah  String?
+  pendidikanAyah String?
+  noTelpAyah     String?
+  namaIbu        String?
+  nikIbu         String?
+  ttlIbu         String?
+  pekerjaanIbu   String?
+  pendidikanIbu  String?
+  noTelpIbu      String?
+  jenisKelamin   JenisKelamin?
+  isAktif        Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  biodataKeuangan BiodataKeuangan?
+  pembayaran      Pembayaran[]
+  absensi         Absensi[]
+
+  @@map("siswa")
+  @@index([nama])
+  @@index([nik])
+}
+
+model BiodataKeuangan {
+  id                    String   @id @default(cuid())
+  siswaId               String   @unique
+  siswa                 Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  komitmenInfaqLaundry  Float
+  infaq                 Float
+  laundry               Float
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("biodata_keuangan")
+  @@index([siswaId])
+}
+
+model Pembayaran {
+  id                    String   @id @default(cuid())
+  siswaId               String
+  siswa                 Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  totalPembayaranInfaq  Float
+  totalPembayaranLaundry Float
+  buktiPembayaran       String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("pembayaran")
+  @@index([siswaId])
+  @@index([createdAt])
+}
+
+model Absensi {
+  id            String        @id @default(cuid())
+  siswaId       String
+  siswa         Siswa         @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  tanggal       DateTime      @db.Date
+  jenis         JenisAbsensi
+  status        StatusAbsensi
+  keterangan    String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([siswaId, tanggal, jenis])
+  @@map("absensi")
+  @@index([siswaId])
+  @@index([tanggal])
+  @@index([jenis])
+  @@index([status])
+}
