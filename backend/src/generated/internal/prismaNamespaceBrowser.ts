@@ -55,7 +55,12 @@ export const ModelName = {
   Siswa: 'Siswa',
   BiodataKeuangan: 'BiodataKeuangan',
   Pembayaran: 'Pembayaran',
-  Absensi: 'Absensi'
+  Absensi: 'Absensi',
+  Pelanggaran: 'Pelanggaran',
+  Kesehatan: 'Kesehatan',
+  Pengeluaran: 'Pengeluaran',
+  Nilai: 'Nilai',
+  MataPelajaran: 'MataPelajaran'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -142,6 +147,7 @@ export const PembayaranScalarFieldEnum = {
   totalPembayaranInfaq: 'totalPembayaranInfaq',
   totalPembayaranLaundry: 'totalPembayaranLaundry',
   buktiPembayaran: 'buktiPembayaran',
+  tanggalPembayaran: 'tanggalPembayaran',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -161,6 +167,73 @@ export const AbsensiScalarFieldEnum = {
 } as const
 
 export type AbsensiScalarFieldEnum = (typeof AbsensiScalarFieldEnum)[keyof typeof AbsensiScalarFieldEnum]
+
+
+export const PelanggaranScalarFieldEnum = {
+  id: 'id',
+  siswaId: 'siswaId',
+  sanksi: 'sanksi',
+  keterangan: 'keterangan',
+  evidence: 'evidence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PelanggaranScalarFieldEnum = (typeof PelanggaranScalarFieldEnum)[keyof typeof PelanggaranScalarFieldEnum]
+
+
+export const KesehatanScalarFieldEnum = {
+  id: 'id',
+  siswaId: 'siswaId',
+  noBpjs: 'noBpjs',
+  riwayatSakit: 'riwayatSakit',
+  tanggal: 'tanggal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type KesehatanScalarFieldEnum = (typeof KesehatanScalarFieldEnum)[keyof typeof KesehatanScalarFieldEnum]
+
+
+export const PengeluaranScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  jenis: 'jenis',
+  harga: 'harga',
+  bukti: 'bukti',
+  tanggalPengeluaran: 'tanggalPengeluaran',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PengeluaranScalarFieldEnum = (typeof PengeluaranScalarFieldEnum)[keyof typeof PengeluaranScalarFieldEnum]
+
+
+export const NilaiScalarFieldEnum = {
+  id: 'id',
+  siswaId: 'siswaId',
+  mataPelajaran: 'mataPelajaran',
+  jenisNilai: 'jenisNilai',
+  nilai: 'nilai',
+  semester: 'semester',
+  tahunAjaran: 'tahunAjaran',
+  tanggal: 'tanggal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NilaiScalarFieldEnum = (typeof NilaiScalarFieldEnum)[keyof typeof NilaiScalarFieldEnum]
+
+
+export const MataPelajaranScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  kelas: 'kelas',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MataPelajaranScalarFieldEnum = (typeof MataPelajaranScalarFieldEnum)[keyof typeof MataPelajaranScalarFieldEnum]
 
 
 export const SortOrder = {

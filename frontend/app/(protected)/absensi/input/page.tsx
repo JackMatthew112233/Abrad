@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +39,11 @@ interface Siswa {
 
 export default function InputAbsensiPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const jenis = searchParams.get("jenis");
+  const kelas = searchParams.get("kelas");
+  const tingkatan = searchParams.get("tingkatan");
+
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [tanggal, setTanggal] = useState(
@@ -50,13 +55,20 @@ export default function InputAbsensiPage() {
   >({});
 
   useEffect(() => {
-    fetchSiswa();
-  }, []);
+    if (jenis && kelas && tingkatan) {
+      fetchSiswa();
+    }
+  }, [jenis, kelas, tingkatan]);
 
   const fetchSiswa = async () => {
     try {
+      const params = new URLSearchParams();
+      if (kelas) params.append("kelas", kelas);
+      if (tingkatan) params.append("tingkatan", tingkatan);
+      if (jenis) params.append("jenis", jenis);
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/absensi/today`,
+        `${process.env.NEXT_PUBLIC_API_URL}/absensi/today?${params.toString()}`,
         {
           credentials: "include",
         }
@@ -128,6 +140,7 @@ export default function InputAbsensiPage() {
           credentials: "include",
           body: JSON.stringify({
             tanggal,
+            jenis,
             absensiList,
           }),
         }
@@ -171,6 +184,13 @@ export default function InputAbsensiPage() {
     return labels[status as keyof typeof labels] || status;
   };
 
+  const getJenisLabel = (jenis: string | null) => {
+    if (jenis === "KELAS") return "Kelas";
+    if (jenis === "ASRAMA") return "Asrama";
+    if (jenis === "PENGAJIAN") return "Pengajian";
+    return "";
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -184,10 +204,10 @@ export default function InputAbsensiPage() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold text-emerald-700">
-            Input Absensi Santri / Santriwati
+            Input Absensi {getJenisLabel(jenis)}
           </h1>
           <p className="text-zinc-600">
-            Catat kehadiran santri / santriwati untuk hari ini
+            {tingkatan} - {kelas?.replace(/_/g, " ")} • Catat kehadiran santri / santriwati untuk hari ini
           </p>
         </div>
       </div>

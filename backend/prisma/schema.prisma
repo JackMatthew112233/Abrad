@@ -56,6 +56,23 @@ enum JenisAbsensi {
   PENGAJIAN
 }
 
+enum JenisSanksi {
+  RINGAN
+  SEDANG
+  BERAT
+  SP1
+  SP2
+  SP3
+}
+
+enum JenisNilai {
+  HARIAN
+  TUGAS
+  UTS
+  UAS
+  PRAKTIK
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -103,6 +120,9 @@ model Siswa {
   biodataKeuangan BiodataKeuangan?
   pembayaran      Pembayaran[]
   absensi         Absensi[]
+  pelanggaran     Pelanggaran[]
+  kesehatan       Kesehatan[]
+  nilai           Nilai[]
 
   @@map("siswa")
   @@index([nama])
@@ -113,9 +133,9 @@ model BiodataKeuangan {
   id                    String   @id @default(cuid())
   siswaId               String   @unique
   siswa                 Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
-  komitmenInfaqLaundry  Float
-  infaq                 Float
-  laundry               Float
+  komitmenInfaqLaundry  Decimal
+  infaq                 Decimal
+  laundry               Decimal
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
@@ -127,14 +147,16 @@ model Pembayaran {
   id                    String   @id @default(cuid())
   siswaId               String
   siswa                 Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
-  totalPembayaranInfaq  Float
-  totalPembayaranLaundry Float
+  totalPembayaranInfaq  Decimal
+  totalPembayaranLaundry Decimal
   buktiPembayaran       String
+  tanggalPembayaran     DateTime @db.Date
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
   @@map("pembayaran")
   @@index([siswaId])
+  @@index([tanggalPembayaran])
   @@index([createdAt])
 }
 
@@ -155,4 +177,81 @@ model Absensi {
   @@index([tanggal])
   @@index([jenis])
   @@index([status])
+}
+
+model Pelanggaran {
+  id            String      @id @default(cuid())
+  siswaId       String
+  siswa         Siswa       @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  sanksi        JenisSanksi
+  keterangan    String
+  evidence      String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("pelanggaran")
+  @@index([siswaId])
+  @@index([sanksi])
+  @@index([createdAt])
+}
+
+model Kesehatan {
+  id           String   @id @default(cuid())
+  siswaId      String
+  siswa        Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  noBpjs       String?
+  riwayatSakit String
+  tanggal      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("kesehatan")
+  @@index([siswaId])
+  @@index([tanggal])
+}
+
+model Pengeluaran {
+  id                  String   @id @default(cuid())
+  nama                String
+  jenis               String
+  harga               Decimal
+  bukti               String?
+  tanggalPengeluaran  DateTime
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("pengeluaran")
+  @@index([jenis])
+  @@index([tanggalPengeluaran])
+}
+
+model Nilai {
+  id            String     @id @default(cuid())
+  siswaId       String
+  siswa         Siswa      @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  mataPelajaran String
+  jenisNilai    JenisNilai
+  nilai         Decimal
+  semester      String
+  tahunAjaran   String
+  tanggal       DateTime
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@map("nilai")
+  @@index([siswaId])
+  @@index([mataPelajaran])
+  @@index([semester])
+  @@index([tanggal])
+}
+
+model MataPelajaran {
+  id        String   @id @default(cuid())
+  nama      String
+  kelas     Kelas
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mata_pelajaran")
+  @@index([kelas])
 }

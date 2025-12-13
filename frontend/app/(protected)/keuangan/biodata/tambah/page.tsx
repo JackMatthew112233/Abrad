@@ -214,53 +214,6 @@ export default function TambahBiodataKeuanganPage() {
                             </div>
                           </div>
                         </div>
-                        
-                        <div className="grid gap-2 text-sm">
-                          {selectedSiswa.nis && (
-                            <div className="flex">
-                              <span className="w-32 text-zinc-600">NIS:</span>
-                              <span className="font-medium text-zinc-900">{selectedSiswa.nis}</span>
-                            </div>
-                          )}
-                          {selectedSiswa.nisn && (
-                            <div className="flex">
-                              <span className="w-32 text-zinc-600">NISN:</span>
-                              <span className="font-medium text-zinc-900">{selectedSiswa.nisn}</span>
-                            </div>
-                          )}
-                          {selectedSiswa.nik && (
-                            <div className="flex">
-                              <span className="w-32 text-zinc-600">NIK:</span>
-                              <span className="font-medium text-zinc-900">{selectedSiswa.nik}</span>
-                            </div>
-                          )}
-                          {selectedSiswa.jenisKelamin && (
-                            <div className="flex">
-                              <span className="w-32 text-zinc-600">Jenis Kelamin:</span>
-                              <span className="font-medium text-zinc-900">
-                                {selectedSiswa.jenisKelamin === "LAKI_LAKI" ? "Laki-laki" : "Perempuan"}
-                              </span>
-                            </div>
-                          )}
-                          {selectedSiswa.tempatLahir && selectedSiswa.tanggalLahir && (
-                            <div className="flex">
-                              <span className="w-32 text-zinc-600">TTL:</span>
-                              <span className="font-medium text-zinc-900">
-                                {selectedSiswa.tempatLahir}, {new Date(selectedSiswa.tanggalLahir).toLocaleDateString("id-ID", {
-                                  day: "numeric",
-                                  month: "long",
-                                  year: "numeric",
-                                })}
-                              </span>
-                            </div>
-                          )}
-                          {selectedSiswa.alamat && (
-                            <div className="flex">
-                              <span className="w-32 text-zinc-600">Alamat:</span>
-                              <span className="font-medium text-zinc-900">{selectedSiswa.alamat}</span>
-                            </div>
-                          )}
-                        </div>
                       </div>
                       <Button
                         type="button"
@@ -270,9 +223,9 @@ export default function TambahBiodataKeuanganPage() {
                           setSelectedSiswa(null);
                           setSearchQuery("");
                         }}
-                        className="text-zinc-500 hover:text-red-600"
+                        className="text-zinc-600 hover:text-red-600"
                       >
-                        ✕
+                        Batal
                       </Button>
                     </div>
                   </CardContent>

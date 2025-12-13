@@ -23,10 +23,11 @@ export class SiswaController {
   async getAllSiswa(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('kelas') kelas?: string,
   ) {
     const pageNum = page ? parseInt(page) : 1;
     const limitNum = limit ? parseInt(limit) : 20;
-    return this.siswaService.getAllSiswa(pageNum, limitNum);
+    return this.siswaService.getAllSiswa(pageNum, limitNum, kelas);
   }
 
   @Get('statistik')

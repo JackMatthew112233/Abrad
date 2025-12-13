@@ -27,23 +27,23 @@ export type AggregateBiodataKeuangan = {
 }
 
 export type BiodataKeuanganAvgAggregateOutputType = {
-  komitmenInfaqLaundry: number | null
-  infaq: number | null
-  laundry: number | null
+  komitmenInfaqLaundry: runtime.Decimal | null
+  infaq: runtime.Decimal | null
+  laundry: runtime.Decimal | null
 }
 
 export type BiodataKeuanganSumAggregateOutputType = {
-  komitmenInfaqLaundry: number | null
-  infaq: number | null
-  laundry: number | null
+  komitmenInfaqLaundry: runtime.Decimal | null
+  infaq: runtime.Decimal | null
+  laundry: runtime.Decimal | null
 }
 
 export type BiodataKeuanganMinAggregateOutputType = {
   id: string | null
   siswaId: string | null
-  komitmenInfaqLaundry: number | null
-  infaq: number | null
-  laundry: number | null
+  komitmenInfaqLaundry: runtime.Decimal | null
+  infaq: runtime.Decimal | null
+  laundry: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -51,9 +51,9 @@ export type BiodataKeuanganMinAggregateOutputType = {
 export type BiodataKeuanganMaxAggregateOutputType = {
   id: string | null
   siswaId: string | null
-  komitmenInfaqLaundry: number | null
-  infaq: number | null
-  laundry: number | null
+  komitmenInfaqLaundry: runtime.Decimal | null
+  infaq: runtime.Decimal | null
+  laundry: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -202,9 +202,9 @@ export type BiodataKeuanganGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type BiodataKeuanganGroupByOutputType = {
   id: string
   siswaId: string
-  komitmenInfaqLaundry: number
-  infaq: number
-  laundry: number
+  komitmenInfaqLaundry: runtime.Decimal
+  infaq: runtime.Decimal
+  laundry: runtime.Decimal
   createdAt: Date
   updatedAt: Date
   _count: BiodataKeuanganCountAggregateOutputType | null
@@ -235,9 +235,9 @@ export type BiodataKeuanganWhereInput = {
   NOT?: Prisma.BiodataKeuanganWhereInput | Prisma.BiodataKeuanganWhereInput[]
   id?: Prisma.StringFilter<"BiodataKeuangan"> | string
   siswaId?: Prisma.StringFilter<"BiodataKeuangan"> | string
-  komitmenInfaqLaundry?: Prisma.FloatFilter<"BiodataKeuangan"> | number
-  infaq?: Prisma.FloatFilter<"BiodataKeuangan"> | number
-  laundry?: Prisma.FloatFilter<"BiodataKeuangan"> | number
+  komitmenInfaqLaundry?: Prisma.DecimalFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"BiodataKeuangan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BiodataKeuangan"> | Date | string
   siswa?: Prisma.XOR<Prisma.SiswaScalarRelationFilter, Prisma.SiswaWhereInput>
@@ -260,9 +260,9 @@ export type BiodataKeuanganWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.BiodataKeuanganWhereInput | Prisma.BiodataKeuanganWhereInput[]
   OR?: Prisma.BiodataKeuanganWhereInput[]
   NOT?: Prisma.BiodataKeuanganWhereInput | Prisma.BiodataKeuanganWhereInput[]
-  komitmenInfaqLaundry?: Prisma.FloatFilter<"BiodataKeuangan"> | number
-  infaq?: Prisma.FloatFilter<"BiodataKeuangan"> | number
-  laundry?: Prisma.FloatFilter<"BiodataKeuangan"> | number
+  komitmenInfaqLaundry?: Prisma.DecimalFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"BiodataKeuangan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BiodataKeuangan"> | Date | string
   siswa?: Prisma.XOR<Prisma.SiswaScalarRelationFilter, Prisma.SiswaWhereInput>
@@ -289,18 +289,18 @@ export type BiodataKeuanganScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BiodataKeuanganScalarWhereWithAggregatesInput | Prisma.BiodataKeuanganScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"BiodataKeuangan"> | string
   siswaId?: Prisma.StringWithAggregatesFilter<"BiodataKeuangan"> | string
-  komitmenInfaqLaundry?: Prisma.FloatWithAggregatesFilter<"BiodataKeuangan"> | number
-  infaq?: Prisma.FloatWithAggregatesFilter<"BiodataKeuangan"> | number
-  laundry?: Prisma.FloatWithAggregatesFilter<"BiodataKeuangan"> | number
+  komitmenInfaqLaundry?: Prisma.DecimalWithAggregatesFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalWithAggregatesFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalWithAggregatesFilter<"BiodataKeuangan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BiodataKeuangan"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BiodataKeuangan"> | Date | string
 }
 
 export type BiodataKeuanganCreateInput = {
   id?: string
-  komitmenInfaqLaundry: number
-  infaq: number
-  laundry: number
+  komitmenInfaqLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   siswa: Prisma.SiswaCreateNestedOneWithoutBiodataKeuanganInput
@@ -309,18 +309,18 @@ export type BiodataKeuanganCreateInput = {
 export type BiodataKeuanganUncheckedCreateInput = {
   id?: string
   siswaId: string
-  komitmenInfaqLaundry: number
-  infaq: number
-  laundry: number
+  komitmenInfaqLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type BiodataKeuanganUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  komitmenInfaqLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
-  infaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  laundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  komitmenInfaqLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   siswa?: Prisma.SiswaUpdateOneRequiredWithoutBiodataKeuanganNestedInput
@@ -329,9 +329,9 @@ export type BiodataKeuanganUpdateInput = {
 export type BiodataKeuanganUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   siswaId?: Prisma.StringFieldUpdateOperationsInput | string
-  komitmenInfaqLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
-  infaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  laundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  komitmenInfaqLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -339,18 +339,18 @@ export type BiodataKeuanganUncheckedUpdateInput = {
 export type BiodataKeuanganCreateManyInput = {
   id?: string
   siswaId: string
-  komitmenInfaqLaundry: number
-  infaq: number
-  laundry: number
+  komitmenInfaqLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type BiodataKeuanganUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  komitmenInfaqLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
-  infaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  laundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  komitmenInfaqLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -358,9 +358,9 @@ export type BiodataKeuanganUpdateManyMutationInput = {
 export type BiodataKeuanganUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   siswaId?: Prisma.StringFieldUpdateOperationsInput | string
-  komitmenInfaqLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
-  infaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  laundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  komitmenInfaqLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -444,28 +444,28 @@ export type BiodataKeuanganUncheckedUpdateOneWithoutSiswaNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BiodataKeuanganUpdateToOneWithWhereWithoutSiswaInput, Prisma.BiodataKeuanganUpdateWithoutSiswaInput>, Prisma.BiodataKeuanganUncheckedUpdateWithoutSiswaInput>
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type BiodataKeuanganCreateWithoutSiswaInput = {
   id?: string
-  komitmenInfaqLaundry: number
-  infaq: number
-  laundry: number
+  komitmenInfaqLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type BiodataKeuanganUncheckedCreateWithoutSiswaInput = {
   id?: string
-  komitmenInfaqLaundry: number
-  infaq: number
-  laundry: number
+  komitmenInfaqLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -488,18 +488,18 @@ export type BiodataKeuanganUpdateToOneWithWhereWithoutSiswaInput = {
 
 export type BiodataKeuanganUpdateWithoutSiswaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  komitmenInfaqLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
-  infaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  laundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  komitmenInfaqLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BiodataKeuanganUncheckedUpdateWithoutSiswaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  komitmenInfaqLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
-  infaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  laundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  komitmenInfaqLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  infaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  laundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -568,9 +568,9 @@ export type $BiodataKeuanganPayload<ExtArgs extends runtime.Types.Extensions.Int
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     siswaId: string
-    komitmenInfaqLaundry: number
-    infaq: number
-    laundry: number
+    komitmenInfaqLaundry: runtime.Decimal
+    infaq: runtime.Decimal
+    laundry: runtime.Decimal
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["biodataKeuangan"]>
@@ -999,9 +999,9 @@ export interface Prisma__BiodataKeuanganClient<T, Null = never, ExtArgs extends 
 export interface BiodataKeuanganFieldRefs {
   readonly id: Prisma.FieldRef<"BiodataKeuangan", 'String'>
   readonly siswaId: Prisma.FieldRef<"BiodataKeuangan", 'String'>
-  readonly komitmenInfaqLaundry: Prisma.FieldRef<"BiodataKeuangan", 'Float'>
-  readonly infaq: Prisma.FieldRef<"BiodataKeuangan", 'Float'>
-  readonly laundry: Prisma.FieldRef<"BiodataKeuangan", 'Float'>
+  readonly komitmenInfaqLaundry: Prisma.FieldRef<"BiodataKeuangan", 'Decimal'>
+  readonly infaq: Prisma.FieldRef<"BiodataKeuangan", 'Decimal'>
+  readonly laundry: Prisma.FieldRef<"BiodataKeuangan", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"BiodataKeuangan", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"BiodataKeuangan", 'DateTime'>
 }

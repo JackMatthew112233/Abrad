@@ -22,15 +22,14 @@ export class AbsensiService {
     }
 
     const tanggalDate = new Date(data.tanggal);
+    tanggalDate.setHours(0, 0, 0, 0);
 
     // Check if absensi already exists for this siswa, date and jenis
-    const existingAbsensi = await this.prisma.absensi.findUnique({
+    const existingAbsensi = await this.prisma.absensi.findFirst({
       where: {
-        siswaId_tanggal_jenis: {
-          siswaId: data.siswaId,
-          tanggal: tanggalDate,
-          jenis: data.jenis as any,
-        },
+        siswaId: data.siswaId,
+        tanggal: tanggalDate,
+        jenis: data.jenis as any,
       },
     });
 
@@ -203,23 +202,46 @@ export class AbsensiService {
     return stats;
   }
 
-  async getAllSiswaWithTodayAbsensi() {
+  async getAllSiswaWithTodayAbsensi(kelas?: string, tingkatan?: string, jenis?: string) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const where: any = {
+      isAktif: true,
+    };
+
+    if (kelas) {
+      // Convert format from "XII_PUTRA" to "XII_Putra" to match Prisma enum
+      const kelasFormatted = kelas
+        .split('_')
+        .map((part, index) =>
+          index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+        )
+        .join('_');
+      where.kelas = kelasFormatted as any;
+    }
+
+    if (tingkatan) {
+      where.tingkatan = tingkatan as any;
+    }
+
+    const absensiWhere: any = {
+      tanggal: today,
+    };
+
+    if (jenis) {
+      absensiWhere.jenis = jenis;
+    }
+
     const siswaList = await this.prisma.siswa.findMany({
-      where: {
-        isAktif: true,
-      },
+      where,
       select: {
         id: true,
         nama: true,
         kelas: true,
         tingkatan: true,
         absensi: {
-          where: {
-            tanggal: today,
-          },
+          where: absensiWhere,
         },
       },
       orderBy: {
@@ -448,19 +470,25 @@ export class AbsensiService {
     return Buffer.from(buffer);
   }
 
-  async getTrendBulanan() {
+  async getTrendBulanan(jenis?: string) {
     // Get last 6 months data
     const today = new Date();
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-    const absensiData = await this.prisma.absensi.findMany({
-      where: {
-        tanggal: {
-          gte: sixMonthsAgo,
-          lte: today,
-        },
+    const where: any = {
+      tanggal: {
+        gte: sixMonthsAgo,
+        lte: today,
       },
+    };
+
+    if (jenis) {
+      where.jenis = jenis;
+    }
+
+    const absensiData = await this.prisma.absensi.findMany({
+      where,
       select: {
         tanggal: true,
         status: true,
@@ -499,19 +527,25 @@ export class AbsensiService {
     return result;
   }
 
-  async getDistribusiHarian() {
+  async getDistribusiHarian(jenis?: string) {
     // Get last 30 days data
     const today = new Date();
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const absensiData = await this.prisma.absensi.findMany({
-      where: {
-        tanggal: {
-          gte: thirtyDaysAgo,
-          lte: today,
-        },
+    const where: any = {
+      tanggal: {
+        gte: thirtyDaysAgo,
+        lte: today,
       },
+    };
+
+    if (jenis) {
+      where.jenis = jenis;
+    }
+
+    const absensiData = await this.prisma.absensi.findMany({
+      where,
       select: {
         tanggal: true,
         status: true,

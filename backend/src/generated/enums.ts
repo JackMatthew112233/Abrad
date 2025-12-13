@@ -68,3 +68,26 @@ export const JenisAbsensi = {
 } as const
 
 export type JenisAbsensi = (typeof JenisAbsensi)[keyof typeof JenisAbsensi]
+
+
+export const JenisSanksi = {
+  RINGAN: 'RINGAN',
+  SEDANG: 'SEDANG',
+  BERAT: 'BERAT',
+  SP1: 'SP1',
+  SP2: 'SP2',
+  SP3: 'SP3'
+} as const
+
+export type JenisSanksi = (typeof JenisSanksi)[keyof typeof JenisSanksi]
+
+
+export const JenisNilai = {
+  HARIAN: 'HARIAN',
+  TUGAS: 'TUGAS',
+  UTS: 'UTS',
+  UAS: 'UAS',
+  PRAKTIK: 'PRAKTIK'
+} as const
+
+export type JenisNilai = (typeof JenisNilai)[keyof typeof JenisNilai]

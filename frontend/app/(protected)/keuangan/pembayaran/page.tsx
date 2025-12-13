@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Search, Plus, ExternalLink } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, Edit, Trash2, ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import { toast } from "sonner";
 import {
   Table,
@@ -15,73 +16,188 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { FileUpload } from "@/components/ui/file-upload";
 
 interface Pembayaran {
   id: string;
-  totalPembayaranInfaq: number;
-  totalPembayaranLaundry: number;
-  buktiPembayaran: string;
-  createdAt: string;
   siswa: {
     id: string;
     nama: string;
-    kelas?: string;
-    tingkatan?: string;
+    kelas: string | null;
+    tingkatan: string | null;
+    jenisKelamin: string;
   };
+  totalPembayaranInfaq: number;
+  totalPembayaranLaundry: number;
+  buktiPembayaran: string;
+  tanggalPembayaran: string;
+}
+
+interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 
 export default function RiwayatPembayaranPage() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
   const [pembayaranList, setPembayaranList] = useState<Pembayaran[]>([]);
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    page: 1,
+    limit: 20,
+    total: 0,
+    totalPages: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [selectedPembayaran, setSelectedPembayaran] = useState<Pembayaran | null>(null);
+  const [editFormData, setEditFormData] = useState({
+    totalPembayaranInfaq: "",
+    totalPembayaranLaundry: "",
+    tanggalPembayaran: "",
+  });
+  const [newBukti, setNewBukti] = useState<File | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    fetchPembayaran();
+    fetchData(pagination.page);
   }, []);
 
-  const fetchPembayaran = async () => {
+  const fetchData = async (page: number = 1) => {
     try {
+      setIsLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran`,
-        {
-          credentials: "include",
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran-all?page=${page}&limit=20`,
+        { credentials: "include" }
       );
+
       if (response.ok) {
         const data = await response.json();
-        setPembayaranList(data);
-      } else {
-        toast.error("Gagal memuat data pembayaran");
+        setPembayaranList(data.data);
+        setPagination(data.pagination);
       }
     } catch (error) {
+      console.error("Error fetching pembayaran:", error);
       toast.error("Gagal memuat data pembayaran");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const filteredPembayaran = pembayaranList.filter((pembayaran) =>
-    pembayaran.siswa.nama?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handlePageChange = (newPage: number) => {
+    fetchData(newPage);
+  };
 
-  const formatCurrency = (amount: number) => {
+  const handleEditPembayaran = (pembayaran: Pembayaran) => {
+    setSelectedPembayaran(pembayaran);
+    setEditFormData({
+      totalPembayaranInfaq: pembayaran.totalPembayaranInfaq.toString(),
+      totalPembayaranLaundry: pembayaran.totalPembayaranLaundry.toString(),
+      tanggalPembayaran: new Date(pembayaran.tanggalPembayaran)
+        .toISOString()
+        .split("T")[0],
+    });
+    setNewBukti(null);
+    setShowEditDialog(true);
+  };
+
+  const handleUpdatePembayaran = async () => {
+    if (!selectedPembayaran) return;
+
+    setIsSaving(true);
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("totalPembayaranInfaq", editFormData.totalPembayaranInfaq);
+      formDataToSend.append("totalPembayaranLaundry", editFormData.totalPembayaranLaundry);
+      formDataToSend.append("tanggalPembayaran", editFormData.tanggalPembayaran);
+
+      if (newBukti) {
+        formDataToSend.append("buktiPembayaran", newBukti);
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran/${selectedPembayaran.id}`,
+        {
+          method: "PUT",
+          credentials: "include",
+          body: formDataToSend,
+        }
+      );
+
+      if (response.ok) {
+        toast.success("Data pembayaran berhasil diperbarui!");
+        setShowEditDialog(false);
+        setSelectedPembayaran(null);
+        setNewBukti(null);
+        fetchData(pagination.page);
+      } else {
+        const error = await response.json();
+        toast.error(error.message || "Gagal memperbarui data pembayaran");
+      }
+    } catch (error) {
+      toast.error("Gagal memperbarui data pembayaran");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeletePembayaran = async () => {
+    if (!selectedPembayaran) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran/${selectedPembayaran.id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        toast.success("Data pembayaran berhasil dihapus!");
+        setShowDeleteDialog(false);
+        setSelectedPembayaran(null);
+
+        // If current page becomes empty after delete, go to previous page
+        if (pembayaranList.length === 1 && pagination.page > 1) {
+          fetchData(pagination.page - 1);
+        } else {
+          fetchData(pagination.page);
+        }
+      } else {
+        const error = await response.json();
+        toast.error(error.message || "Gagal menghapus data pembayaran");
+      }
+    } catch (error) {
+      toast.error("Gagal menghapus data pembayaran");
+    }
+  };
+
+  const formatRupiah = (amount: number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
       minimumFractionDigits: 0,
     }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
   return (
@@ -95,115 +211,263 @@ export default function RiwayatPembayaranPage() {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <div className="flex-1">
+        <div>
           <h1 className="text-2xl font-bold text-emerald-700">
             Riwayat Pembayaran
           </h1>
           <p className="text-zinc-600">
-            Data pembayaran infaq dan laundry santri / santriwati
+            Semua riwayat pembayaran dari seluruh santri
           </p>
         </div>
-        <Button
-          onClick={() => router.push("/keuangan/pembayaran/tambah")}
-          className="bg-emerald-600 hover:bg-emerald-700"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Tambah Pembayaran
-        </Button>
       </div>
 
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-emerald-700">
-            Riwayat Pembayaran Santri / Santriwati
+            Daftar Pembayaran
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
-              <Input
-                placeholder="Cari nama santri / santriwati..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-
           {isLoading ? (
-            <div className="text-center py-8 text-zinc-500">Memuat data...</div>
+            <div className="text-center py-12 text-zinc-500">Loading...</div>
+          ) : pembayaranList.length === 0 ? (
+            <div className="text-center py-12 text-zinc-500">
+              Belum ada riwayat pembayaran
+            </div>
           ) : (
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-emerald-50 hover:bg-emerald-50">
-                    <TableHead className="font-semibold text-emerald-700">No</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Infaq</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Laundry</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Total</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Bukti</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredPembayaran.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={9} className="text-center text-zinc-500">
-                        {searchQuery
-                          ? "Tidak ada data yang sesuai pencarian"
-                          : "Belum ada riwayat pembayaran"}
-                      </TableCell>
+            <>
+              <div className="rounded-md border border-zinc-200">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-emerald-50">
+                      <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
+                      <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
+                      <TableHead className="font-semibold text-emerald-700">Nama Santri</TableHead>
+                      <TableHead className="font-semibold text-emerald-700">Jenis Kelamin</TableHead>
+                      <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
+                      <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700">Pembayaran Infaq</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700">Pembayaran Laundry</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700">Total</TableHead>
+                      <TableHead className="text-center font-semibold text-emerald-700">Bukti</TableHead>
+                      <TableHead className="text-center font-semibold text-emerald-700">Aksi</TableHead>
                     </TableRow>
-                  ) : (
-                    filteredPembayaran.map((pembayaran, index) => (
-                      <TableRow key={pembayaran.id}>
-                        <TableCell className="font-medium">{index + 1}</TableCell>
-                        <TableCell className="text-sm">
-                          {formatDate(pembayaran.createdAt)}
+                  </TableHeader>
+                  <TableBody>
+                    {pembayaranList.map((pembayaran, index) => (
+                      <TableRow key={pembayaran.id} className="hover:bg-zinc-50">
+                        <TableCell className="text-zinc-600">
+                          {(pagination.page - 1) * pagination.limit + index + 1}
                         </TableCell>
-                        <TableCell>{pembayaran.siswa.nama}</TableCell>
-                        <TableCell>
-                          {pembayaran.siswa.tingkatan && (
-                            <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700">
-                              {pembayaran.siswa.tingkatan}
-                            </Badge>
-                          )}
+                        <TableCell className="text-zinc-600 text-sm">
+                          {new Date(pembayaran.tanggalPembayaran).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
                         </TableCell>
-                        <TableCell>
-                          {pembayaran.siswa.kelas && (
-                            <Badge variant="outline" className="border-blue-300 bg-blue-50 text-blue-700">
-                              {pembayaran.siswa.kelas.replace("_", " ")}
-                            </Badge>
-                          )}
+                        <TableCell className="text-zinc-900">{pembayaran.siswa.nama}</TableCell>
+                        <TableCell className="text-zinc-600">
+                          {pembayaran.siswa.jenisKelamin === "LakiLaki" ? "Laki-Laki" : "Perempuan"}
                         </TableCell>
-                        <TableCell>{formatCurrency(pembayaran.totalPembayaranInfaq)}</TableCell>
-                        <TableCell>{formatCurrency(pembayaran.totalPembayaranLaundry)}</TableCell>
-                        <TableCell className="font-semibold text-emerald-700">
-                          {formatCurrency(pembayaran.totalPembayaranInfaq + pembayaran.totalPembayaranLaundry)}
+                        <TableCell className="text-zinc-600">
+                          {pembayaran.siswa.kelas ? pembayaran.siswa.kelas.replace(/_/g, " ") : "-"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-zinc-600">
+                          {pembayaran.siswa.tingkatan || "-"}
+                        </TableCell>
+                        <TableCell className="text-right text-zinc-900">
+                          {formatRupiah(pembayaran.totalPembayaranInfaq)}
+                        </TableCell>
+                        <TableCell className="text-right text-zinc-900">
+                          {formatRupiah(pembayaran.totalPembayaranLaundry)}
+                        </TableCell>
+                        <TableCell className="text-right font-semibold text-emerald-700">
+                          {formatRupiah(pembayaran.totalPembayaranInfaq + pembayaran.totalPembayaranLaundry)}
+                        </TableCell>
+                        <TableCell className="text-center">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => window.open(pembayaran.buktiPembayaran, "_blank")}
-                            className="text-emerald-600 hover:text-emerald-700"
+                            className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
                           >
-                            <ExternalLink className="h-4 w-4" />
+                            <FileText className="h-4 w-4" />
                           </Button>
                         </TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEditPembayaran(pembayaran)}
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedPembayaran(pembayaran);
+                                setShowDeleteDialog(true);
+                              }}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Pagination */}
+              {pagination.totalPages > 1 && (
+                <div className="flex items-center justify-between mt-4">
+                  <p className="text-sm text-zinc-600">
+                    Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}
+                    {Math.min(pagination.page * pagination.limit, pagination.total)} dari{" "}
+                    {pagination.total} pembayaran
+                  </p>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(pagination.page - 1)}
+                      disabled={pagination.page === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4 mr-1" />
+                      Sebelumnya
+                    </Button>
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+                        (pageNum) => (
+                          <Button
+                            key={pageNum}
+                            variant={pageNum === pagination.page ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => handlePageChange(pageNum)}
+                            className={pageNum === pagination.page ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                          >
+                            {pageNum}
+                          </Button>
+                        )
+                      )}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(pagination.page + 1)}
+                      disabled={pagination.page === pagination.totalPages}
+                    >
+                      Selanjutnya
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
+
+      {/* Edit Dialog */}
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Data Pembayaran</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-tanggal">Tanggal Pembayaran</Label>
+              <Input
+                id="edit-tanggal"
+                type="date"
+                value={editFormData.tanggalPembayaran}
+                onChange={(e) =>
+                  setEditFormData({ ...editFormData, tanggalPembayaran: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-infaq">Total Pembayaran Infaq</Label>
+              <Input
+                id="edit-infaq"
+                type="number"
+                step="0.01"
+                value={editFormData.totalPembayaranInfaq}
+                onChange={(e) =>
+                  setEditFormData({ ...editFormData, totalPembayaranInfaq: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-laundry">Total Pembayaran Laundry</Label>
+              <Input
+                id="edit-laundry"
+                type="number"
+                step="0.01"
+                value={editFormData.totalPembayaranLaundry}
+                onChange={(e) =>
+                  setEditFormData({ ...editFormData, totalPembayaranLaundry: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Bukti Pembayaran (Opsional)</Label>
+              <FileUpload
+                onFileSelect={setNewBukti}
+                accept="image/*,application/pdf"
+                maxSize={5}
+              />
+              <p className="text-xs text-zinc-500">
+                Kosongkan jika tidak ingin mengubah bukti
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowEditDialog(false)}
+              disabled={isSaving}
+            >
+              Batal
+            </Button>
+            <Button
+              onClick={handleUpdatePembayaran}
+              disabled={isSaving}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              {isSaving ? "Menyimpan..." : "Simpan"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Hapus Data Pembayaran?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah Anda yakin ingin menghapus data pembayaran ini? Tindakan ini tidak dapat
+              dibatalkan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeletePembayaran}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Hapus
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

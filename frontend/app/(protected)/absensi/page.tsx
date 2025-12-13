@@ -98,6 +98,10 @@ export default function AbsensiPage() {
   const [isLoadingTable, setIsLoadingTable] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
+  // Filter states
+  const [filterTingkatan, setFilterTingkatan] = useState("");
+  const [filterKelas, setFilterKelas] = useState("");
+  
   // Dialog states
   const [showInputDialog, setShowInputDialog] = useState(false);
   const [showDownloadDialog, setShowDownloadDialog] = useState(false);
@@ -165,12 +169,13 @@ export default function AbsensiPage() {
   };
 
   const fetchChartData = async () => {
+    if (!jenisAbsensi) return;
     try {
       const [trendResponse, radarResponse] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/absensi/trend-bulanan`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/absensi/trend-bulanan?jenis=${jenisAbsensi}`, {
           credentials: "include",
         }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/absensi/distribusi-harian`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/absensi/distribusi-harian?jenis=${jenisAbsensi}`, {
           credentials: "include",
         }),
       ]);
@@ -196,9 +201,12 @@ export default function AbsensiPage() {
     ? ((stats.HADIR / totalKehadiran) * 100).toFixed(1) 
     : "0";
 
-  const filteredAbsensi = absensiData.filter((item) =>
-    item.nama?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAbsensi = absensiData.filter((item) => {
+    const matchesSearch = item.nama?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTingkatan = !filterTingkatan || filterTingkatan === "all" || item.tingkatan === filterTingkatan;
+    const matchesKelas = !filterKelas || filterKelas === "all" || item.kelas === filterKelas;
+    return matchesSearch && matchesTingkatan && matchesKelas;
+  });
 
   // If no jenis selected, show selection menu
   if (!jenisAbsensi) {
@@ -312,13 +320,6 @@ export default function AbsensiPage() {
               Kelola dan pantau kehadiran santri / santriwati setiap hari
             </p>
           </div>
-          <Button
-            variant="ghost"
-            onClick={() => setJenisAbsensi(null)}
-            className="text-white hover:bg-white/20"
-          >
-            ← Kembali ke Menu
-          </Button>
         </div>
       </div>
 
@@ -442,8 +443,8 @@ export default function AbsensiPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
-            <div className="relative">
+          <div className="mb-4 flex gap-3">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
               <Input
                 placeholder="Cari nama santri / santriwati..."
@@ -452,6 +453,36 @@ export default function AbsensiPage() {
                 className="pl-10"
               />
             </div>
+            <Select value={filterTingkatan} onValueChange={setFilterTingkatan}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Semua Tingkatan" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Tingkatan</SelectItem>
+                <SelectItem value="WUSTHA">WUSTHA</SelectItem>
+                <SelectItem value="ULYA">ULYA</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={filterKelas} onValueChange={setFilterKelas}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Semua Kelas" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Kelas</SelectItem>
+                <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                <SelectItem value="X_Putra">X Putra</SelectItem>
+                <SelectItem value="X_Putri">X Putri</SelectItem>
+                <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                <SelectItem value="XII_Putri">XII Putri</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {isLoadingTable ? (

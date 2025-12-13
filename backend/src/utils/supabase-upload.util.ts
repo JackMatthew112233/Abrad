@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -17,7 +18,7 @@ export interface UploadResult {
 export async function uploadToSupabase(
   file: Buffer,
   fileName: string,
-  bucket: string = 'evidence',
+  bucket: string = 'Evidence',
   contentType?: string,
 ): Promise<UploadResult> {
   try {
@@ -35,12 +36,17 @@ export async function uploadToSupabase(
       throw new Error(`Upload failed: ${error.message}`);
     }
 
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from(bucket).getPublicUrl(data.path);
+    // Generate signed URL with 10 years expiration for private buckets
+    const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+      .from(bucket)
+      .createSignedUrl(data.path, 315360000); // 10 years in seconds
+
+    if (signedUrlError) {
+      throw new Error(`Failed to create signed URL: ${signedUrlError.message}`);
+    }
 
     return {
-      url: publicUrl,
+      url: signedUrlData.signedUrl,
       path: data.path,
     };
   } catch (error) {
@@ -50,7 +56,7 @@ export async function uploadToSupabase(
 
 export async function deleteFromSupabase(
   filePath: string,
-  bucket: string = 'evidence',
+  bucket: string = 'Evidence',
 ): Promise<void> {
   try {
     const { error } = await supabase.storage.from(bucket).remove([filePath]);

@@ -64,3 +64,28 @@ export type Pembayaran = Prisma.PembayaranModel
  * 
  */
 export type Absensi = Prisma.AbsensiModel
+/**
+ * Model Pelanggaran
+ * 
+ */
+export type Pelanggaran = Prisma.PelanggaranModel
+/**
+ * Model Kesehatan
+ * 
+ */
+export type Kesehatan = Prisma.KesehatanModel
+/**
+ * Model Pengeluaran
+ * 
+ */
+export type Pengeluaran = Prisma.PengeluaranModel
+/**
+ * Model Nilai
+ * 
+ */
+export type Nilai = Prisma.NilaiModel
+/**
+ * Model MataPelajaran
+ * 
+ */
+export type MataPelajaran = Prisma.MataPelajaranModel

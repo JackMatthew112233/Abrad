@@ -27,21 +27,22 @@ export type AggregatePembayaran = {
 }
 
 export type PembayaranAvgAggregateOutputType = {
-  totalPembayaranInfaq: number | null
-  totalPembayaranLaundry: number | null
+  totalPembayaranInfaq: runtime.Decimal | null
+  totalPembayaranLaundry: runtime.Decimal | null
 }
 
 export type PembayaranSumAggregateOutputType = {
-  totalPembayaranInfaq: number | null
-  totalPembayaranLaundry: number | null
+  totalPembayaranInfaq: runtime.Decimal | null
+  totalPembayaranLaundry: runtime.Decimal | null
 }
 
 export type PembayaranMinAggregateOutputType = {
   id: string | null
   siswaId: string | null
-  totalPembayaranInfaq: number | null
-  totalPembayaranLaundry: number | null
+  totalPembayaranInfaq: runtime.Decimal | null
+  totalPembayaranLaundry: runtime.Decimal | null
   buktiPembayaran: string | null
+  tanggalPembayaran: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -49,9 +50,10 @@ export type PembayaranMinAggregateOutputType = {
 export type PembayaranMaxAggregateOutputType = {
   id: string | null
   siswaId: string | null
-  totalPembayaranInfaq: number | null
-  totalPembayaranLaundry: number | null
+  totalPembayaranInfaq: runtime.Decimal | null
+  totalPembayaranLaundry: runtime.Decimal | null
   buktiPembayaran: string | null
+  tanggalPembayaran: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,6 +64,7 @@ export type PembayaranCountAggregateOutputType = {
   totalPembayaranInfaq: number
   totalPembayaranLaundry: number
   buktiPembayaran: number
+  tanggalPembayaran: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -84,6 +87,7 @@ export type PembayaranMinAggregateInputType = {
   totalPembayaranInfaq?: true
   totalPembayaranLaundry?: true
   buktiPembayaran?: true
+  tanggalPembayaran?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +98,7 @@ export type PembayaranMaxAggregateInputType = {
   totalPembayaranInfaq?: true
   totalPembayaranLaundry?: true
   buktiPembayaran?: true
+  tanggalPembayaran?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -104,6 +109,7 @@ export type PembayaranCountAggregateInputType = {
   totalPembayaranInfaq?: true
   totalPembayaranLaundry?: true
   buktiPembayaran?: true
+  tanggalPembayaran?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -198,9 +204,10 @@ export type PembayaranGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type PembayaranGroupByOutputType = {
   id: string
   siswaId: string
-  totalPembayaranInfaq: number
-  totalPembayaranLaundry: number
+  totalPembayaranInfaq: runtime.Decimal
+  totalPembayaranLaundry: runtime.Decimal
   buktiPembayaran: string
+  tanggalPembayaran: Date
   createdAt: Date
   updatedAt: Date
   _count: PembayaranCountAggregateOutputType | null
@@ -231,9 +238,10 @@ export type PembayaranWhereInput = {
   NOT?: Prisma.PembayaranWhereInput | Prisma.PembayaranWhereInput[]
   id?: Prisma.StringFilter<"Pembayaran"> | string
   siswaId?: Prisma.StringFilter<"Pembayaran"> | string
-  totalPembayaranInfaq?: Prisma.FloatFilter<"Pembayaran"> | number
-  totalPembayaranLaundry?: Prisma.FloatFilter<"Pembayaran"> | number
+  totalPembayaranInfaq?: Prisma.DecimalFilter<"Pembayaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFilter<"Pembayaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFilter<"Pembayaran"> | string
+  tanggalPembayaran?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
   siswa?: Prisma.XOR<Prisma.SiswaScalarRelationFilter, Prisma.SiswaWhereInput>
@@ -245,6 +253,7 @@ export type PembayaranOrderByWithRelationInput = {
   totalPembayaranInfaq?: Prisma.SortOrder
   totalPembayaranLaundry?: Prisma.SortOrder
   buktiPembayaran?: Prisma.SortOrder
+  tanggalPembayaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   siswa?: Prisma.SiswaOrderByWithRelationInput
@@ -256,9 +265,10 @@ export type PembayaranWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PembayaranWhereInput[]
   NOT?: Prisma.PembayaranWhereInput | Prisma.PembayaranWhereInput[]
   siswaId?: Prisma.StringFilter<"Pembayaran"> | string
-  totalPembayaranInfaq?: Prisma.FloatFilter<"Pembayaran"> | number
-  totalPembayaranLaundry?: Prisma.FloatFilter<"Pembayaran"> | number
+  totalPembayaranInfaq?: Prisma.DecimalFilter<"Pembayaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFilter<"Pembayaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFilter<"Pembayaran"> | string
+  tanggalPembayaran?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
   siswa?: Prisma.XOR<Prisma.SiswaScalarRelationFilter, Prisma.SiswaWhereInput>
@@ -270,6 +280,7 @@ export type PembayaranOrderByWithAggregationInput = {
   totalPembayaranInfaq?: Prisma.SortOrder
   totalPembayaranLaundry?: Prisma.SortOrder
   buktiPembayaran?: Prisma.SortOrder
+  tanggalPembayaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PembayaranCountOrderByAggregateInput
@@ -285,18 +296,20 @@ export type PembayaranScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PembayaranScalarWhereWithAggregatesInput | Prisma.PembayaranScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Pembayaran"> | string
   siswaId?: Prisma.StringWithAggregatesFilter<"Pembayaran"> | string
-  totalPembayaranInfaq?: Prisma.FloatWithAggregatesFilter<"Pembayaran"> | number
-  totalPembayaranLaundry?: Prisma.FloatWithAggregatesFilter<"Pembayaran"> | number
+  totalPembayaranInfaq?: Prisma.DecimalWithAggregatesFilter<"Pembayaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalWithAggregatesFilter<"Pembayaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringWithAggregatesFilter<"Pembayaran"> | string
+  tanggalPembayaran?: Prisma.DateTimeWithAggregatesFilter<"Pembayaran"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Pembayaran"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Pembayaran"> | Date | string
 }
 
 export type PembayaranCreateInput = {
   id?: string
-  totalPembayaranInfaq: number
-  totalPembayaranLaundry: number
+  totalPembayaranInfaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran: string
+  tanggalPembayaran: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   siswa: Prisma.SiswaCreateNestedOneWithoutPembayaranInput
@@ -305,18 +318,20 @@ export type PembayaranCreateInput = {
 export type PembayaranUncheckedCreateInput = {
   id?: string
   siswaId: string
-  totalPembayaranInfaq: number
-  totalPembayaranLaundry: number
+  totalPembayaranInfaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran: string
+  tanggalPembayaran: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PembayaranUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalPembayaranInfaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalPembayaranLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPembayaranInfaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggalPembayaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   siswa?: Prisma.SiswaUpdateOneRequiredWithoutPembayaranNestedInput
@@ -325,9 +340,10 @@ export type PembayaranUpdateInput = {
 export type PembayaranUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   siswaId?: Prisma.StringFieldUpdateOperationsInput | string
-  totalPembayaranInfaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalPembayaranLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPembayaranInfaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggalPembayaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -335,18 +351,20 @@ export type PembayaranUncheckedUpdateInput = {
 export type PembayaranCreateManyInput = {
   id?: string
   siswaId: string
-  totalPembayaranInfaq: number
-  totalPembayaranLaundry: number
+  totalPembayaranInfaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran: string
+  tanggalPembayaran: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PembayaranUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalPembayaranInfaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalPembayaranLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPembayaranInfaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggalPembayaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -354,9 +372,10 @@ export type PembayaranUpdateManyMutationInput = {
 export type PembayaranUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   siswaId?: Prisma.StringFieldUpdateOperationsInput | string
-  totalPembayaranInfaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalPembayaranLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPembayaranInfaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggalPembayaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -377,6 +396,7 @@ export type PembayaranCountOrderByAggregateInput = {
   totalPembayaranInfaq?: Prisma.SortOrder
   totalPembayaranLaundry?: Prisma.SortOrder
   buktiPembayaran?: Prisma.SortOrder
+  tanggalPembayaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -392,6 +412,7 @@ export type PembayaranMaxOrderByAggregateInput = {
   totalPembayaranInfaq?: Prisma.SortOrder
   totalPembayaranLaundry?: Prisma.SortOrder
   buktiPembayaran?: Prisma.SortOrder
+  tanggalPembayaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -402,6 +423,7 @@ export type PembayaranMinOrderByAggregateInput = {
   totalPembayaranInfaq?: Prisma.SortOrder
   totalPembayaranLaundry?: Prisma.SortOrder
   buktiPembayaran?: Prisma.SortOrder
+  tanggalPembayaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -455,18 +477,20 @@ export type PembayaranUncheckedUpdateManyWithoutSiswaNestedInput = {
 
 export type PembayaranCreateWithoutSiswaInput = {
   id?: string
-  totalPembayaranInfaq: number
-  totalPembayaranLaundry: number
+  totalPembayaranInfaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran: string
+  tanggalPembayaran: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PembayaranUncheckedCreateWithoutSiswaInput = {
   id?: string
-  totalPembayaranInfaq: number
-  totalPembayaranLaundry: number
+  totalPembayaranInfaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran: string
+  tanggalPembayaran: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -503,45 +527,50 @@ export type PembayaranScalarWhereInput = {
   NOT?: Prisma.PembayaranScalarWhereInput | Prisma.PembayaranScalarWhereInput[]
   id?: Prisma.StringFilter<"Pembayaran"> | string
   siswaId?: Prisma.StringFilter<"Pembayaran"> | string
-  totalPembayaranInfaq?: Prisma.FloatFilter<"Pembayaran"> | number
-  totalPembayaranLaundry?: Prisma.FloatFilter<"Pembayaran"> | number
+  totalPembayaranInfaq?: Prisma.DecimalFilter<"Pembayaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFilter<"Pembayaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFilter<"Pembayaran"> | string
+  tanggalPembayaran?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Pembayaran"> | Date | string
 }
 
 export type PembayaranCreateManySiswaInput = {
   id?: string
-  totalPembayaranInfaq: number
-  totalPembayaranLaundry: number
+  totalPembayaranInfaq: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry: runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran: string
+  tanggalPembayaran: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PembayaranUpdateWithoutSiswaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalPembayaranInfaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalPembayaranLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPembayaranInfaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggalPembayaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PembayaranUncheckedUpdateWithoutSiswaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalPembayaranInfaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalPembayaranLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPembayaranInfaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggalPembayaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PembayaranUncheckedUpdateManyWithoutSiswaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  totalPembayaranInfaq?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalPembayaranLaundry?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPembayaranInfaq?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPembayaranLaundry?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   buktiPembayaran?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggalPembayaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -554,6 +583,7 @@ export type PembayaranSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   totalPembayaranInfaq?: boolean
   totalPembayaranLaundry?: boolean
   buktiPembayaran?: boolean
+  tanggalPembayaran?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   siswa?: boolean | Prisma.SiswaDefaultArgs<ExtArgs>
@@ -565,6 +595,7 @@ export type PembayaranSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   totalPembayaranInfaq?: boolean
   totalPembayaranLaundry?: boolean
   buktiPembayaran?: boolean
+  tanggalPembayaran?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   siswa?: boolean | Prisma.SiswaDefaultArgs<ExtArgs>
@@ -576,6 +607,7 @@ export type PembayaranSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   totalPembayaranInfaq?: boolean
   totalPembayaranLaundry?: boolean
   buktiPembayaran?: boolean
+  tanggalPembayaran?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   siswa?: boolean | Prisma.SiswaDefaultArgs<ExtArgs>
@@ -587,11 +619,12 @@ export type PembayaranSelectScalar = {
   totalPembayaranInfaq?: boolean
   totalPembayaranLaundry?: boolean
   buktiPembayaran?: boolean
+  tanggalPembayaran?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PembayaranOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "siswaId" | "totalPembayaranInfaq" | "totalPembayaranLaundry" | "buktiPembayaran" | "createdAt" | "updatedAt", ExtArgs["result"]["pembayaran"]>
+export type PembayaranOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "siswaId" | "totalPembayaranInfaq" | "totalPembayaranLaundry" | "buktiPembayaran" | "tanggalPembayaran" | "createdAt" | "updatedAt", ExtArgs["result"]["pembayaran"]>
 export type PembayaranInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   siswa?: boolean | Prisma.SiswaDefaultArgs<ExtArgs>
 }
@@ -610,9 +643,10 @@ export type $PembayaranPayload<ExtArgs extends runtime.Types.Extensions.Internal
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     siswaId: string
-    totalPembayaranInfaq: number
-    totalPembayaranLaundry: number
+    totalPembayaranInfaq: runtime.Decimal
+    totalPembayaranLaundry: runtime.Decimal
     buktiPembayaran: string
+    tanggalPembayaran: Date
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["pembayaran"]>
@@ -1041,9 +1075,10 @@ export interface Prisma__PembayaranClient<T, Null = never, ExtArgs extends runti
 export interface PembayaranFieldRefs {
   readonly id: Prisma.FieldRef<"Pembayaran", 'String'>
   readonly siswaId: Prisma.FieldRef<"Pembayaran", 'String'>
-  readonly totalPembayaranInfaq: Prisma.FieldRef<"Pembayaran", 'Float'>
-  readonly totalPembayaranLaundry: Prisma.FieldRef<"Pembayaran", 'Float'>
+  readonly totalPembayaranInfaq: Prisma.FieldRef<"Pembayaran", 'Decimal'>
+  readonly totalPembayaranLaundry: Prisma.FieldRef<"Pembayaran", 'Decimal'>
   readonly buktiPembayaran: Prisma.FieldRef<"Pembayaran", 'String'>
+  readonly tanggalPembayaran: Prisma.FieldRef<"Pembayaran", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Pembayaran", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Pembayaran", 'DateTime'>
 }

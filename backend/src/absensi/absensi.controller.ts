@@ -82,18 +82,22 @@ export class AbsensiController {
   }
 
   @Get('today')
-  async getAllSiswaWithTodayAbsensi() {
-    return this.absensiService.getAllSiswaWithTodayAbsensi();
+  async getAllSiswaWithTodayAbsensi(
+    @Query('kelas') kelas?: string,
+    @Query('tingkatan') tingkatan?: string,
+    @Query('jenis') jenis?: string,
+  ) {
+    return this.absensiService.getAllSiswaWithTodayAbsensi(kelas, tingkatan, jenis);
   }
 
   @Get('trend-bulanan')
-  async getTrendBulanan() {
-    return this.absensiService.getTrendBulanan();
+  async getTrendBulanan(@Query('jenis') jenis?: string) {
+    return this.absensiService.getTrendBulanan(jenis);
   }
 
   @Get('distribusi-harian')
-  async getDistribusiHarian() {
-    return this.absensiService.getDistribusiHarian();
+  async getDistribusiHarian(@Query('jenis') jenis?: string) {
+    return this.absensiService.getDistribusiHarian(jenis);
   }
 
   @Get('export')

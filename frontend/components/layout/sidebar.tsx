@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Wallet, ClipboardCheck, School } from "lucide-react";
+import { LayoutDashboard, Users, Wallet, ClipboardCheck, School, AlertTriangle, Heart, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
@@ -25,6 +25,21 @@ const menuItems = [
     title: "Kelola Absensi",
     href: "/absensi",
     icon: ClipboardCheck,
+  },
+  {
+    title: "Kelola Pelanggaran",
+    href: "/pelanggaran",
+    icon: AlertTriangle,
+  },
+  {
+    title: "Kelola Kesehatan",
+    href: "/kesehatan",
+    icon: Heart,
+  },
+  {
+    title: "Kelola Nilai",
+    href: "/nilai",
+    icon: BookOpen,
   },
 ];
 

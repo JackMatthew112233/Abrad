@@ -6,18 +6,24 @@ import ExcelJS from 'exceljs';
 export class SiswaService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllSiswa(page: number = 1, limit: number = 20) {
+  async getAllSiswa(page: number = 1, limit: number = 20, kelas?: string) {
     const skip = (page - 1) * limit;
+    
+    const where: any = {};
+    if (kelas) {
+      where.kelas = kelas;
+    }
     
     const [siswa, total] = await Promise.all([
       this.prisma.siswa.findMany({
+        where,
         skip,
         take: limit,
         orderBy: {
           createdAt: 'desc',
         },
       }),
-      this.prisma.siswa.count(),
+      this.prisma.siswa.count({ where }),
     ]);
 
     return {

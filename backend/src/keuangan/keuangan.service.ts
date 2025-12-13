@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { uploadToSupabase } from '../utils/supabase-upload.util.js';
+import ExcelJS from 'exceljs';
 
 @Injectable()
 export class KeuanganService {
@@ -60,21 +61,7 @@ export class KeuanganService {
     const biodata = await this.prisma.biodataKeuangan.findUnique({
       where: { id },
       include: {
-        siswa: {
-          select: {
-            id: true,
-            nama: true,
-            kelas: true,
-            tingkatan: true,
-            nik: true,
-            nis: true,
-            nisn: true,
-            jenisKelamin: true,
-            tempatLahir: true,
-            tanggalLahir: true,
-            alamat: true,
-          },
-        },
+        siswa: true,
       },
     });
 
@@ -82,7 +69,13 @@ export class KeuanganService {
       throw new NotFoundException('Biodata keuangan tidak ditemukan');
     }
 
-    return biodata;
+    // Convert Decimal to Number for JSON serialization
+    return {
+      ...biodata,
+      komitmenInfaqLaundry: Number(biodata.komitmenInfaqLaundry),
+      infaq: Number(biodata.infaq),
+      laundry: Number(biodata.laundry),
+    };
   }
 
   async updateBiodataKeuangan(
@@ -147,6 +140,7 @@ export class KeuanganService {
               nama: true,
               kelas: true,
               tingkatan: true,
+              jenisKelamin: true,
             },
           },
         },
@@ -157,8 +151,16 @@ export class KeuanganService {
       this.prisma.biodataKeuangan.count(),
     ]);
 
+    // Convert Decimal to Number for JSON serialization
+    const biodataWithNumbers = biodataList.map(biodata => ({
+      ...biodata,
+      komitmenInfaqLaundry: Number(biodata.komitmenInfaqLaundry),
+      infaq: Number(biodata.infaq),
+      laundry: Number(biodata.laundry),
+    }));
+
     return {
-      data: biodataList,
+      data: biodataWithNumbers,
       pagination: {
         page,
         limit,
@@ -178,14 +180,14 @@ export class KeuanganService {
       },
     });
 
-    // Calculate totals
+    // Calculate totals (convert Decimal to Number)
     const totalKomitmen = allBiodata.reduce(
-      (sum, item) => sum + (item.komitmenInfaqLaundry || 0),
+      (sum, item) => sum + Number(item.komitmenInfaqLaundry || 0),
       0,
     );
-    const totalInfaq = allBiodata.reduce((sum, item) => sum + (item.infaq || 0), 0);
+    const totalInfaq = allBiodata.reduce((sum, item) => sum + Number(item.infaq || 0), 0);
     const totalLaundry = allBiodata.reduce(
-      (sum, item) => sum + (item.laundry || 0),
+      (sum, item) => sum + Number(item.laundry || 0),
       0,
     );
 
@@ -198,11 +200,11 @@ export class KeuanganService {
     });
 
     const totalPembayaranInfaq = allPembayaran.reduce(
-      (sum, item) => sum + (item.totalPembayaranInfaq || 0),
+      (sum, item) => sum + Number(item.totalPembayaranInfaq || 0),
       0,
     );
     const totalPembayaranLaundry = allPembayaran.reduce(
-      (sum, item) => sum + (item.totalPembayaranLaundry || 0),
+      (sum, item) => sum + Number(item.totalPembayaranLaundry || 0),
       0,
     );
 
@@ -256,8 +258,8 @@ export class KeuanganService {
         monthlyData[monthKey] = { infaq: 0, laundry: 0 };
       }
 
-      monthlyData[monthKey].infaq += pembayaran.totalPembayaranInfaq || 0;
-      monthlyData[monthKey].laundry += pembayaran.totalPembayaranLaundry || 0;
+      monthlyData[monthKey].infaq += Number(pembayaran.totalPembayaranInfaq || 0);
+      monthlyData[monthKey].laundry += Number(pembayaran.totalPembayaranLaundry || 0);
     });
 
     // Convert to array format for charts
@@ -269,28 +271,34 @@ export class KeuanganService {
   }
 
   async getChartDistribusi() {
-    const stats = await this.getStatistikKeuangan();
+    // Get total pemasukan (pembayaran)
+    const pembayaran = await this.prisma.pembayaran.aggregate({
+      _sum: {
+        totalPembayaranInfaq: true,
+        totalPembayaranLaundry: true,
+      },
+    });
+
+    // Get total pengeluaran
+    const pengeluaran = await this.prisma.pengeluaran.aggregate({
+      _sum: {
+        harga: true,
+      },
+    });
+
+    const totalPemasukan = Number(pembayaran._sum.totalPembayaranInfaq || 0) + Number(pembayaran._sum.totalPembayaranLaundry || 0);
+    const totalPengeluaran = Number(pengeluaran._sum.harga || 0);
 
     return [
       {
-        name: 'Total Infaq',
-        value: stats.totalInfaq,
+        name: 'Pemasukan',
+        value: totalPemasukan,
         color: '#10b981',
       },
       {
-        name: 'Total Laundry',
-        value: stats.totalLaundry,
-        color: '#22c55e',
-      },
-      {
-        name: 'Pembayaran Infaq',
-        value: stats.totalPembayaranInfaq,
-        color: '#34d399',
-      },
-      {
-        name: 'Pembayaran Laundry',
-        value: stats.totalPembayaranLaundry,
-        color: '#6ee7b7',
+        name: 'Pengeluaran',
+        value: totalPengeluaran,
+        color: '#ef4444',
       },
     ];
   }
@@ -300,6 +308,7 @@ export class KeuanganService {
       siswaId: string;
       totalPembayaranInfaq: number;
       totalPembayaranLaundry: number;
+      tanggalPembayaran: string;
     },
     file: any,
   ) {
@@ -314,7 +323,7 @@ export class KeuanganService {
     const uploadResult = await uploadToSupabase(
       file.buffer,
       file.originalname,
-      'evidence',
+      'Evidence',
       file.mimetype,
     );
 
@@ -324,6 +333,7 @@ export class KeuanganService {
         totalPembayaranInfaq: data.totalPembayaranInfaq,
         totalPembayaranLaundry: data.totalPembayaranLaundry,
         buktiPembayaran: uploadResult.url,
+        tanggalPembayaran: new Date(data.tanggalPembayaran),
       },
       include: {
         siswa: {
@@ -337,7 +347,7 @@ export class KeuanganService {
   }
 
   async getAllPembayaran() {
-    return this.prisma.pembayaran.findMany({
+    const pembayaranList = await this.prisma.pembayaran.findMany({
       include: {
         siswa: {
           select: {
@@ -349,9 +359,180 @@ export class KeuanganService {
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        tanggalPembayaran: 'desc',
       },
     });
+
+    // Convert Decimal to Number for JSON serialization
+    return pembayaranList.map(pembayaran => ({
+      ...pembayaran,
+      totalPembayaranInfaq: Number(pembayaran.totalPembayaranInfaq),
+      totalPembayaranLaundry: Number(pembayaran.totalPembayaranLaundry),
+    }));
+  }
+
+  async getAllPembayaranWithPagination(page: number = 1, limit: number = 20) {
+    const skip = (page - 1) * limit;
+
+    const [pembayaranList, total] = await Promise.all([
+      this.prisma.pembayaran.findMany({
+        skip,
+        take: limit,
+        include: {
+          siswa: {
+            select: {
+              id: true,
+              nama: true,
+              kelas: true,
+              tingkatan: true,
+              jenisKelamin: true,
+            },
+          },
+        },
+        orderBy: {
+          tanggalPembayaran: 'desc',
+        },
+      }),
+      this.prisma.pembayaran.count(),
+    ]);
+
+    // Convert Decimal to Number for JSON serialization
+    const pembayaranWithNumbers = pembayaranList.map(pembayaran => ({
+      ...pembayaran,
+      totalPembayaranInfaq: Number(pembayaran.totalPembayaranInfaq),
+      totalPembayaranLaundry: Number(pembayaran.totalPembayaranLaundry),
+    }));
+
+    return {
+      data: pembayaranWithNumbers,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async getPembayaranTerbaru(limit: number = 10) {
+    const pembayaranList = await this.prisma.pembayaran.findMany({
+      take: limit,
+      include: {
+        siswa: {
+          select: {
+            id: true,
+            nama: true,
+            kelas: true,
+            tingkatan: true,
+          },
+        },
+      },
+      orderBy: {
+        tanggalPembayaran: 'desc',
+      },
+    });
+
+    // Convert Decimal to Number for JSON serialization
+    return pembayaranList.map(pembayaran => ({
+      ...pembayaran,
+      totalPembayaranInfaq: Number(pembayaran.totalPembayaranInfaq),
+      totalPembayaranLaundry: Number(pembayaran.totalPembayaranLaundry),
+    }));
+  }
+
+  async getPembayaranBySiswa(siswaId: string, page: number = 1, limit: number = 12) {
+    const skip = (page - 1) * limit;
+
+    const [pembayaranList, total] = await Promise.all([
+      this.prisma.pembayaran.findMany({
+        where: {
+          siswaId,
+        },
+        skip,
+        take: limit,
+        orderBy: {
+          tanggalPembayaran: 'desc',
+        },
+      }),
+      this.prisma.pembayaran.count({
+        where: {
+          siswaId,
+        },
+      }),
+    ]);
+
+    // Convert Decimal to Number for JSON serialization
+    const pembayaranWithNumbers = pembayaranList.map(pembayaran => ({
+      ...pembayaran,
+      totalPembayaranInfaq: Number(pembayaran.totalPembayaranInfaq),
+      totalPembayaranLaundry: Number(pembayaran.totalPembayaranLaundry),
+    }));
+
+    return {
+      data: pembayaranWithNumbers,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async updatePembayaran(
+    id: string,
+    data: {
+      totalPembayaranInfaq: number;
+      totalPembayaranLaundry: number;
+      tanggalPembayaran: string;
+    },
+    file?: any,
+  ) {
+    const pembayaran = await this.prisma.pembayaran.findUnique({
+      where: { id },
+    });
+
+    if (!pembayaran) {
+      throw new NotFoundException('Data pembayaran tidak ditemukan');
+    }
+
+    const updateData: any = {
+      totalPembayaranInfaq: data.totalPembayaranInfaq,
+      totalPembayaranLaundry: data.totalPembayaranLaundry,
+      tanggalPembayaran: new Date(data.tanggalPembayaran),
+    };
+
+    // If new file uploaded, upload it and update URL
+    if (file) {
+      const uploadResult = await uploadToSupabase(
+        file.buffer,
+        file.originalname,
+        'Evidence',
+        file.mimetype,
+      );
+      updateData.buktiPembayaran = uploadResult.url;
+    }
+
+    return this.prisma.pembayaran.update({
+      where: { id },
+      data: updateData,
+    });
+  }
+
+  async deletePembayaran(id: string) {
+    const pembayaran = await this.prisma.pembayaran.findUnique({
+      where: { id },
+    });
+
+    if (!pembayaran) {
+      throw new NotFoundException('Data pembayaran tidak ditemukan');
+    }
+
+    await this.prisma.pembayaran.delete({
+      where: { id },
+    });
+
+    return { message: 'Data pembayaran berhasil dihapus' };
   }
 
   async searchSiswa(query: string) {
@@ -377,5 +558,114 @@ export class KeuanganService {
       },
       take: 10,
     });
+  }
+
+  async getSiswaById(id: string) {
+    return this.prisma.siswa.findUnique({
+      where: { id },
+    });
+  }
+
+  async exportPembayaranToExcel(siswaId?: string): Promise<Buffer> {
+    // Build where clause based on provided filter
+    const where: any = {};
+    
+    if (siswaId) {
+      where.siswaId = siswaId;
+    }
+
+    // Get all pembayaran data based on filter
+    const pembayaranData = await this.prisma.pembayaran.findMany({
+      where,
+      include: {
+        siswa: {
+          select: {
+            nama: true,
+            kelas: true,
+            tingkatan: true,
+            jenisKelamin: true,
+          },
+        },
+      },
+      orderBy: {
+        tanggalPembayaran: 'desc',
+      },
+    });
+
+    // Create workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Riwayat Pembayaran');
+
+    // Set column headers
+    worksheet.columns = [
+      { header: 'No', key: 'no', width: 5 },
+      { header: 'Tanggal', key: 'tanggal', width: 15 },
+      { header: 'Nama Santri', key: 'nama', width: 30 },
+      { header: 'Jenis Kelamin', key: 'jenisKelamin', width: 15 },
+      { header: 'Kelas', key: 'kelas', width: 15 },
+      { header: 'Tingkatan', key: 'tingkatan', width: 12 },
+      { header: 'Pembayaran Infaq', key: 'infaq', width: 18 },
+      { header: 'Pembayaran Laundry', key: 'laundry', width: 18 },
+      { header: 'Total', key: 'total', width: 18 },
+    ];
+
+    // Style header row
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF10b981' },
+    };
+    worksheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+
+    // Add data rows
+    pembayaranData.forEach((pembayaran, index) => {
+      let jenisKelamin = '-';
+      if (pembayaran.siswa.jenisKelamin === 'LakiLaki') {
+        jenisKelamin = 'Laki-Laki';
+      } else if (pembayaran.siswa.jenisKelamin === 'Perempuan') {
+        jenisKelamin = 'Perempuan';
+      }
+      const kelas = pembayaran.siswa.kelas ? pembayaran.siswa.kelas.replace(/_/g, ' ') : '-';
+      
+      worksheet.addRow({
+        no: index + 1,
+        tanggal: new Date(pembayaran.tanggalPembayaran).toLocaleDateString('id-ID'),
+        nama: pembayaran.siswa.nama,
+        jenisKelamin: jenisKelamin,
+        kelas: kelas,
+        tingkatan: pembayaran.siswa.tingkatan || '-',
+        infaq: Number(pembayaran.totalPembayaranInfaq),
+        laundry: Number(pembayaran.totalPembayaranLaundry),
+        total: Number(pembayaran.totalPembayaranInfaq) + Number(pembayaran.totalPembayaranLaundry),
+      });
+    });
+
+    // Format currency columns
+    ['infaq', 'laundry', 'total'].forEach((key) => {
+      const col = worksheet.getColumn(key);
+      col.eachCell((cell, rowNumber) => {
+        if (rowNumber > 1) {
+          cell.numFmt = 'Rp#,##0';
+          cell.alignment = { horizontal: 'right' };
+        }
+      });
+    });
+
+    // Add borders to all cells
+    worksheet.eachRow((row) => {
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+      });
+    });
+
+    // Generate buffer
+    const buffer = await workbook.xlsx.writeBuffer();
+    return Buffer.from(buffer);
   }
 }

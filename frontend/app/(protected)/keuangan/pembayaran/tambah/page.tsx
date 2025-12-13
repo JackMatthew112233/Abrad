@@ -25,9 +25,11 @@ export default function TambahPembayaranPage() {
   const [selectedSiswa, setSelectedSiswa] = useState<Siswa | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [buktiPembayaran, setBuktiPembayaran] = useState<File | null>(null);
+  const [useToday, setUseToday] = useState(true);
   const [formData, setFormData] = useState({
     totalPembayaranInfaq: "",
     totalPembayaranLaundry: "",
+    tanggalPembayaran: new Date().toISOString().split("T")[0],
   });
 
   useEffect(() => {
@@ -86,6 +88,7 @@ export default function TambahPembayaranPage() {
       formDataToSend.append("siswaId", selectedSiswa.id);
       formDataToSend.append("totalPembayaranInfaq", formData.totalPembayaranInfaq);
       formDataToSend.append("totalPembayaranLaundry", formData.totalPembayaranLaundry);
+      formDataToSend.append("tanggalPembayaran", formData.tanggalPembayaran);
       formDataToSend.append("buktiPembayaran", buktiPembayaran);
 
       const response = await fetch(
@@ -185,9 +188,48 @@ export default function TambahPembayaranPage() {
                 )}
               </div>
               {selectedSiswa && (
-                <p className="text-sm text-emerald-600">
-                  ✓ Dipilih: {selectedSiswa.nama}
-                </p>
+                <Card className="mt-3 border-emerald-200 bg-emerald-50">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 space-y-3">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white font-bold">
+                            {selectedSiswa.nama.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-emerald-900">
+                              {selectedSiswa.nama}
+                            </p>
+                            <div className="flex gap-2 mt-1">
+                              {selectedSiswa.tingkatan && (
+                                <span className="text-xs px-2 py-0.5 rounded bg-emerald-600 text-white">
+                                  {selectedSiswa.tingkatan}
+                                </span>
+                              )}
+                              {selectedSiswa.kelas && (
+                                <span className="text-xs px-2 py-0.5 rounded bg-emerald-600 text-white">
+                                  {selectedSiswa.kelas.replace("_", " ")}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedSiswa(null);
+                          setSearchQuery("");
+                        }}
+                        className="text-zinc-600 hover:text-red-600"
+                      >
+                        Batal
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               )}
             </div>
 
@@ -223,6 +265,46 @@ export default function TambahPembayaranPage() {
                     setFormData({ ...formData, totalPembayaranLaundry: e.target.value })
                   }
                   required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="tanggal">
+                Tanggal Pembayaran <span className="text-red-500">*</span>
+              </Label>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="useToday"
+                    checked={useToday}
+                    onChange={(e) => {
+                      setUseToday(e.target.checked);
+                      if (e.target.checked) {
+                        setFormData({
+                          ...formData,
+                          tanggalPembayaran: new Date().toISOString().split("T")[0],
+                        });
+                      }
+                    }}
+                    className="h-4 w-4 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <Label htmlFor="useToday" className="text-sm font-normal cursor-pointer">
+                    Gunakan tanggal hari ini
+                  </Label>
+                </div>
+                <Input
+                  id="tanggal"
+                  type="date"
+                  value={formData.tanggalPembayaran}
+                  onChange={(e) => {
+                    setFormData({ ...formData, tanggalPembayaran: e.target.value });
+                    setUseToday(false);
+                  }}
+                  disabled={useToday}
+                  required
+                  className={useToday ? "bg-zinc-50 cursor-not-allowed" : ""}
                 />
               </div>
             </div>
