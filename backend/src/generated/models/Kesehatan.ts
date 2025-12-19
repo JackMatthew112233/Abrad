@@ -27,7 +27,9 @@ export type AggregateKesehatan = {
 export type KesehatanMinAggregateOutputType = {
   id: string | null
   siswaId: string | null
+  jenisAsuransi: $Enums.JenisAsuransi | null
   noBpjs: string | null
+  noAsuransi: string | null
   riwayatSakit: string | null
   tanggal: Date | null
   createdAt: Date | null
@@ -37,7 +39,9 @@ export type KesehatanMinAggregateOutputType = {
 export type KesehatanMaxAggregateOutputType = {
   id: string | null
   siswaId: string | null
+  jenisAsuransi: $Enums.JenisAsuransi | null
   noBpjs: string | null
+  noAsuransi: string | null
   riwayatSakit: string | null
   tanggal: Date | null
   createdAt: Date | null
@@ -47,7 +51,9 @@ export type KesehatanMaxAggregateOutputType = {
 export type KesehatanCountAggregateOutputType = {
   id: number
   siswaId: number
+  jenisAsuransi: number
   noBpjs: number
+  noAsuransi: number
   riwayatSakit: number
   tanggal: number
   createdAt: number
@@ -59,7 +65,9 @@ export type KesehatanCountAggregateOutputType = {
 export type KesehatanMinAggregateInputType = {
   id?: true
   siswaId?: true
+  jenisAsuransi?: true
   noBpjs?: true
+  noAsuransi?: true
   riwayatSakit?: true
   tanggal?: true
   createdAt?: true
@@ -69,7 +77,9 @@ export type KesehatanMinAggregateInputType = {
 export type KesehatanMaxAggregateInputType = {
   id?: true
   siswaId?: true
+  jenisAsuransi?: true
   noBpjs?: true
+  noAsuransi?: true
   riwayatSakit?: true
   tanggal?: true
   createdAt?: true
@@ -79,7 +89,9 @@ export type KesehatanMaxAggregateInputType = {
 export type KesehatanCountAggregateInputType = {
   id?: true
   siswaId?: true
+  jenisAsuransi?: true
   noBpjs?: true
+  noAsuransi?: true
   riwayatSakit?: true
   tanggal?: true
   createdAt?: true
@@ -162,7 +174,9 @@ export type KesehatanGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type KesehatanGroupByOutputType = {
   id: string
   siswaId: string
+  jenisAsuransi: $Enums.JenisAsuransi | null
   noBpjs: string | null
+  noAsuransi: string | null
   riwayatSakit: string
   tanggal: Date
   createdAt: Date
@@ -193,7 +207,9 @@ export type KesehatanWhereInput = {
   NOT?: Prisma.KesehatanWhereInput | Prisma.KesehatanWhereInput[]
   id?: Prisma.StringFilter<"Kesehatan"> | string
   siswaId?: Prisma.StringFilter<"Kesehatan"> | string
+  jenisAsuransi?: Prisma.EnumJenisAsuransiNullableFilter<"Kesehatan"> | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.StringNullableFilter<"Kesehatan"> | string | null
+  noAsuransi?: Prisma.StringNullableFilter<"Kesehatan"> | string | null
   riwayatSakit?: Prisma.StringFilter<"Kesehatan"> | string
   tanggal?: Prisma.DateTimeFilter<"Kesehatan"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Kesehatan"> | Date | string
@@ -204,7 +220,9 @@ export type KesehatanWhereInput = {
 export type KesehatanOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   siswaId?: Prisma.SortOrder
+  jenisAsuransi?: Prisma.SortOrderInput | Prisma.SortOrder
   noBpjs?: Prisma.SortOrderInput | Prisma.SortOrder
+  noAsuransi?: Prisma.SortOrderInput | Prisma.SortOrder
   riwayatSakit?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -218,7 +236,9 @@ export type KesehatanWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.KesehatanWhereInput[]
   NOT?: Prisma.KesehatanWhereInput | Prisma.KesehatanWhereInput[]
   siswaId?: Prisma.StringFilter<"Kesehatan"> | string
+  jenisAsuransi?: Prisma.EnumJenisAsuransiNullableFilter<"Kesehatan"> | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.StringNullableFilter<"Kesehatan"> | string | null
+  noAsuransi?: Prisma.StringNullableFilter<"Kesehatan"> | string | null
   riwayatSakit?: Prisma.StringFilter<"Kesehatan"> | string
   tanggal?: Prisma.DateTimeFilter<"Kesehatan"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Kesehatan"> | Date | string
@@ -229,7 +249,9 @@ export type KesehatanWhereUniqueInput = Prisma.AtLeast<{
 export type KesehatanOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   siswaId?: Prisma.SortOrder
+  jenisAsuransi?: Prisma.SortOrderInput | Prisma.SortOrder
   noBpjs?: Prisma.SortOrderInput | Prisma.SortOrder
+  noAsuransi?: Prisma.SortOrderInput | Prisma.SortOrder
   riwayatSakit?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -245,7 +267,9 @@ export type KesehatanScalarWhereWithAggregatesInput = {
   NOT?: Prisma.KesehatanScalarWhereWithAggregatesInput | Prisma.KesehatanScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Kesehatan"> | string
   siswaId?: Prisma.StringWithAggregatesFilter<"Kesehatan"> | string
+  jenisAsuransi?: Prisma.EnumJenisAsuransiNullableWithAggregatesFilter<"Kesehatan"> | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.StringNullableWithAggregatesFilter<"Kesehatan"> | string | null
+  noAsuransi?: Prisma.StringNullableWithAggregatesFilter<"Kesehatan"> | string | null
   riwayatSakit?: Prisma.StringWithAggregatesFilter<"Kesehatan"> | string
   tanggal?: Prisma.DateTimeWithAggregatesFilter<"Kesehatan"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Kesehatan"> | Date | string
@@ -254,7 +278,9 @@ export type KesehatanScalarWhereWithAggregatesInput = {
 
 export type KesehatanCreateInput = {
   id?: string
+  jenisAsuransi?: $Enums.JenisAsuransi | null
   noBpjs?: string | null
+  noAsuransi?: string | null
   riwayatSakit: string
   tanggal: Date | string
   createdAt?: Date | string
@@ -265,7 +291,9 @@ export type KesehatanCreateInput = {
 export type KesehatanUncheckedCreateInput = {
   id?: string
   siswaId: string
+  jenisAsuransi?: $Enums.JenisAsuransi | null
   noBpjs?: string | null
+  noAsuransi?: string | null
   riwayatSakit: string
   tanggal: Date | string
   createdAt?: Date | string
@@ -274,7 +302,9 @@ export type KesehatanUncheckedCreateInput = {
 
 export type KesehatanUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  jenisAsuransi?: Prisma.NullableEnumJenisAsuransiFieldUpdateOperationsInput | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noAsuransi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   riwayatSakit?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -285,7 +315,9 @@ export type KesehatanUpdateInput = {
 export type KesehatanUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   siswaId?: Prisma.StringFieldUpdateOperationsInput | string
+  jenisAsuransi?: Prisma.NullableEnumJenisAsuransiFieldUpdateOperationsInput | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noAsuransi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   riwayatSakit?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -295,7 +327,9 @@ export type KesehatanUncheckedUpdateInput = {
 export type KesehatanCreateManyInput = {
   id?: string
   siswaId: string
+  jenisAsuransi?: $Enums.JenisAsuransi | null
   noBpjs?: string | null
+  noAsuransi?: string | null
   riwayatSakit: string
   tanggal: Date | string
   createdAt?: Date | string
@@ -304,7 +338,9 @@ export type KesehatanCreateManyInput = {
 
 export type KesehatanUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  jenisAsuransi?: Prisma.NullableEnumJenisAsuransiFieldUpdateOperationsInput | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noAsuransi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   riwayatSakit?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -314,7 +350,9 @@ export type KesehatanUpdateManyMutationInput = {
 export type KesehatanUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   siswaId?: Prisma.StringFieldUpdateOperationsInput | string
+  jenisAsuransi?: Prisma.NullableEnumJenisAsuransiFieldUpdateOperationsInput | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noAsuransi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   riwayatSakit?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -334,7 +372,9 @@ export type KesehatanOrderByRelationAggregateInput = {
 export type KesehatanCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   siswaId?: Prisma.SortOrder
+  jenisAsuransi?: Prisma.SortOrder
   noBpjs?: Prisma.SortOrder
+  noAsuransi?: Prisma.SortOrder
   riwayatSakit?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -344,7 +384,9 @@ export type KesehatanCountOrderByAggregateInput = {
 export type KesehatanMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   siswaId?: Prisma.SortOrder
+  jenisAsuransi?: Prisma.SortOrder
   noBpjs?: Prisma.SortOrder
+  noAsuransi?: Prisma.SortOrder
   riwayatSakit?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -354,7 +396,9 @@ export type KesehatanMaxOrderByAggregateInput = {
 export type KesehatanMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   siswaId?: Prisma.SortOrder
+  jenisAsuransi?: Prisma.SortOrder
   noBpjs?: Prisma.SortOrder
+  noAsuransi?: Prisma.SortOrder
   riwayatSakit?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -403,9 +447,15 @@ export type KesehatanUncheckedUpdateManyWithoutSiswaNestedInput = {
   deleteMany?: Prisma.KesehatanScalarWhereInput | Prisma.KesehatanScalarWhereInput[]
 }
 
+export type NullableEnumJenisAsuransiFieldUpdateOperationsInput = {
+  set?: $Enums.JenisAsuransi | null
+}
+
 export type KesehatanCreateWithoutSiswaInput = {
   id?: string
+  jenisAsuransi?: $Enums.JenisAsuransi | null
   noBpjs?: string | null
+  noAsuransi?: string | null
   riwayatSakit: string
   tanggal: Date | string
   createdAt?: Date | string
@@ -414,7 +464,9 @@ export type KesehatanCreateWithoutSiswaInput = {
 
 export type KesehatanUncheckedCreateWithoutSiswaInput = {
   id?: string
+  jenisAsuransi?: $Enums.JenisAsuransi | null
   noBpjs?: string | null
+  noAsuransi?: string | null
   riwayatSakit: string
   tanggal: Date | string
   createdAt?: Date | string
@@ -453,7 +505,9 @@ export type KesehatanScalarWhereInput = {
   NOT?: Prisma.KesehatanScalarWhereInput | Prisma.KesehatanScalarWhereInput[]
   id?: Prisma.StringFilter<"Kesehatan"> | string
   siswaId?: Prisma.StringFilter<"Kesehatan"> | string
+  jenisAsuransi?: Prisma.EnumJenisAsuransiNullableFilter<"Kesehatan"> | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.StringNullableFilter<"Kesehatan"> | string | null
+  noAsuransi?: Prisma.StringNullableFilter<"Kesehatan"> | string | null
   riwayatSakit?: Prisma.StringFilter<"Kesehatan"> | string
   tanggal?: Prisma.DateTimeFilter<"Kesehatan"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Kesehatan"> | Date | string
@@ -462,7 +516,9 @@ export type KesehatanScalarWhereInput = {
 
 export type KesehatanCreateManySiswaInput = {
   id?: string
+  jenisAsuransi?: $Enums.JenisAsuransi | null
   noBpjs?: string | null
+  noAsuransi?: string | null
   riwayatSakit: string
   tanggal: Date | string
   createdAt?: Date | string
@@ -471,7 +527,9 @@ export type KesehatanCreateManySiswaInput = {
 
 export type KesehatanUpdateWithoutSiswaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  jenisAsuransi?: Prisma.NullableEnumJenisAsuransiFieldUpdateOperationsInput | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noAsuransi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   riwayatSakit?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -480,7 +538,9 @@ export type KesehatanUpdateWithoutSiswaInput = {
 
 export type KesehatanUncheckedUpdateWithoutSiswaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  jenisAsuransi?: Prisma.NullableEnumJenisAsuransiFieldUpdateOperationsInput | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noAsuransi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   riwayatSakit?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -489,7 +549,9 @@ export type KesehatanUncheckedUpdateWithoutSiswaInput = {
 
 export type KesehatanUncheckedUpdateManyWithoutSiswaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  jenisAsuransi?: Prisma.NullableEnumJenisAsuransiFieldUpdateOperationsInput | $Enums.JenisAsuransi | null
   noBpjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noAsuransi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   riwayatSakit?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -501,7 +563,9 @@ export type KesehatanUncheckedUpdateManyWithoutSiswaInput = {
 export type KesehatanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   siswaId?: boolean
+  jenisAsuransi?: boolean
   noBpjs?: boolean
+  noAsuransi?: boolean
   riwayatSakit?: boolean
   tanggal?: boolean
   createdAt?: boolean
@@ -512,7 +576,9 @@ export type KesehatanSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type KesehatanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   siswaId?: boolean
+  jenisAsuransi?: boolean
   noBpjs?: boolean
+  noAsuransi?: boolean
   riwayatSakit?: boolean
   tanggal?: boolean
   createdAt?: boolean
@@ -523,7 +589,9 @@ export type KesehatanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type KesehatanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   siswaId?: boolean
+  jenisAsuransi?: boolean
   noBpjs?: boolean
+  noAsuransi?: boolean
   riwayatSakit?: boolean
   tanggal?: boolean
   createdAt?: boolean
@@ -534,14 +602,16 @@ export type KesehatanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type KesehatanSelectScalar = {
   id?: boolean
   siswaId?: boolean
+  jenisAsuransi?: boolean
   noBpjs?: boolean
+  noAsuransi?: boolean
   riwayatSakit?: boolean
   tanggal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type KesehatanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "siswaId" | "noBpjs" | "riwayatSakit" | "tanggal" | "createdAt" | "updatedAt", ExtArgs["result"]["kesehatan"]>
+export type KesehatanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "siswaId" | "jenisAsuransi" | "noBpjs" | "noAsuransi" | "riwayatSakit" | "tanggal" | "createdAt" | "updatedAt", ExtArgs["result"]["kesehatan"]>
 export type KesehatanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   siswa?: boolean | Prisma.SiswaDefaultArgs<ExtArgs>
 }
@@ -560,7 +630,9 @@ export type $KesehatanPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     siswaId: string
+    jenisAsuransi: $Enums.JenisAsuransi | null
     noBpjs: string | null
+    noAsuransi: string | null
     riwayatSakit: string
     tanggal: Date
     createdAt: Date
@@ -991,7 +1063,9 @@ export interface Prisma__KesehatanClient<T, Null = never, ExtArgs extends runtim
 export interface KesehatanFieldRefs {
   readonly id: Prisma.FieldRef<"Kesehatan", 'String'>
   readonly siswaId: Prisma.FieldRef<"Kesehatan", 'String'>
+  readonly jenisAsuransi: Prisma.FieldRef<"Kesehatan", 'JenisAsuransi'>
   readonly noBpjs: Prisma.FieldRef<"Kesehatan", 'String'>
+  readonly noAsuransi: Prisma.FieldRef<"Kesehatan", 'String'>
   readonly riwayatSakit: Prisma.FieldRef<"Kesehatan", 'String'>
   readonly tanggal: Prisma.FieldRef<"Kesehatan", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Kesehatan", 'DateTime'>

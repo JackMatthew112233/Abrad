@@ -57,8 +57,9 @@ export class AbsensiController {
     @Param('siswaId') siswaId: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
+    @Query('jenis') jenis?: string,
   ) {
-    return this.absensiService.getAbsensiBySiswa(siswaId, startDate, endDate);
+    return this.absensiService.getAbsensiBySiswa(siswaId, startDate, endDate, jenis);
   }
 
   @Get('statistik')

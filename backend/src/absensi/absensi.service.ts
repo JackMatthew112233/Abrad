@@ -128,7 +128,7 @@ export class AbsensiService {
     });
   }
 
-  async getAbsensiBySiswa(siswaId: string, startDate?: string, endDate?: string) {
+  async getAbsensiBySiswa(siswaId: string, startDate?: string, endDate?: string, jenis?: string) {
     const siswa = await this.prisma.siswa.findUnique({
       where: { id: siswaId },
     });
@@ -140,6 +140,10 @@ export class AbsensiService {
     const where: any = {
       siswaId,
     };
+
+    if (jenis) {
+      where.jenis = jenis;
+    }
 
     if (startDate && endDate) {
       where.tanggal = {

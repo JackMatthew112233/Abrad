@@ -19,7 +19,7 @@ export class DonasiService {
       const uploadResult = await uploadToSupabase(
         file.buffer,
         file.originalname,
-        'donasi-evidence',
+        'Evidence',
       );
       evidenceUrl = uploadResult.url;
     }

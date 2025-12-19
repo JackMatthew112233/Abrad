@@ -3,7 +3,13 @@
     "allow": [
       "Edit(frontend\\app\\(protected)\\keuangan/**)",
       "Bash(dir /s /b \"C:\\Users\\ASUS\\pesantren\\frontend\\app\\(protected)\\keuangan\")",
-      "Edit(backend\\prisma/**)"
+      "Edit(backend\\prisma/**)",
+      "Edit(frontend/app/(protected)/pelanggaran/**)",
+      "Bash(find:*)",
+      "Edit(backend/prisma/**)",
+      "Edit(frontend/app/(protected)/kesehatan/**)",
+      "Edit(frontend/app/(protected)/nilai/**)",
+      "Edit(backend/src/**)"
     ]
   }
 }

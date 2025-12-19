@@ -22,7 +22,9 @@ export class KesehatanController {
     @Body()
     body: {
       siswaId: string;
+      jenisAsuransi?: 'BPJS' | 'NON_BPJS';
       noBpjs?: string;
+      noAsuransi?: string;
       riwayatSakit: string;
       tanggal: string;
     },
@@ -72,7 +74,9 @@ export class KesehatanController {
     @Param('id') id: string,
     @Body()
     body: {
+      jenisAsuransi?: 'BPJS' | 'NON_BPJS';
       noBpjs?: string;
+      noAsuransi?: string;
       riwayatSakit: string;
       tanggal: string;
     },

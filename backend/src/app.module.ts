@@ -12,6 +12,9 @@ import { KesehatanModule } from './kesehatan/kesehatan.module.js';
 import { NilaiModule } from './nilai/nilai.module.js';
 import { MataPelajaranModule } from './mata-pelajaran/mata-pelajaran.module.js';
 import { KoperasiModule } from './koperasi/koperasi.module.js';
+import { TahfidzModule } from './tahfidz/tahfidz.module.js';
+import { DashboardModule } from './dashboard/dashboard.module.js';
+import { PendaftaranModule } from './pendaftaran/pendaftaran.module.js';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { KoperasiModule } from './koperasi/koperasi.module.js';
     NilaiModule,
     MataPelajaranModule,
     KoperasiModule,
+    TahfidzModule,
+    DashboardModule,
+    PendaftaranModule,
   ],
   controllers: [AppController],
   providers: [AppService],

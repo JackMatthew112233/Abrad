@@ -7,7 +7,9 @@ export class KesehatanService {
 
   async createKesehatan(data: {
     siswaId: string;
+    jenisAsuransi?: 'BPJS' | 'NON_BPJS';
     noBpjs?: string;
+    noAsuransi?: string;
     riwayatSakit: string;
     tanggal: string;
   }) {
@@ -24,7 +26,9 @@ export class KesehatanService {
     return this.prisma.kesehatan.create({
       data: {
         siswaId: data.siswaId,
-        noBpjs: data.noBpjs,
+        jenisAsuransi: data.jenisAsuransi,
+        noBpjs: data.jenisAsuransi === 'BPJS' ? data.noBpjs : null,
+        noAsuransi: data.jenisAsuransi === 'NON_BPJS' ? data.noAsuransi : null,
         riwayatSakit: data.riwayatSakit,
         tanggal: tanggalDate,
       },
@@ -118,17 +122,19 @@ export class KesehatanService {
           },
         });
 
-        // Get latest kesehatan record for BPJS
+        // Get latest kesehatan record for insurance info
         const latestKesehatan = await this.prisma.kesehatan.findFirst({
           where: { siswaId: item.siswaId },
           orderBy: { createdAt: 'desc' },
-          select: { noBpjs: true },
+          select: { jenisAsuransi: true, noBpjs: true, noAsuransi: true },
         });
 
         return {
           siswa,
           jumlahRiwayat: item._count.id,
+          jenisAsuransi: latestKesehatan?.jenisAsuransi || null,
           noBpjs: latestKesehatan?.noBpjs || null,
+          noAsuransi: latestKesehatan?.noAsuransi || null,
         };
       }),
     );
@@ -211,7 +217,9 @@ export class KesehatanService {
   async updateKesehatan(
     id: string,
     data: {
+      jenisAsuransi?: 'BPJS' | 'NON_BPJS';
       noBpjs?: string;
+      noAsuransi?: string;
       riwayatSakit: string;
       tanggal: string;
     },
@@ -229,7 +237,9 @@ export class KesehatanService {
     return this.prisma.kesehatan.update({
       where: { id },
       data: {
-        noBpjs: data.noBpjs,
+        jenisAsuransi: data.jenisAsuransi,
+        noBpjs: data.jenisAsuransi === 'BPJS' ? data.noBpjs : null,
+        noAsuransi: data.jenisAsuransi === 'NON_BPJS' ? data.noAsuransi : null,
         riwayatSakit: data.riwayatSakit,
         tanggal: tanggalDate,
       },

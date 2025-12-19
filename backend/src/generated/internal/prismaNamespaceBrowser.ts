@@ -58,6 +58,7 @@ export const ModelName = {
   Absensi: 'Absensi',
   Pelanggaran: 'Pelanggaran',
   Kesehatan: 'Kesehatan',
+  Tahfidz: 'Tahfidz',
   Pengeluaran: 'Pengeluaran',
   Nilai: 'Nilai',
   MataPelajaran: 'MataPelajaran',
@@ -89,6 +90,7 @@ export const UserScalarFieldEnum = {
   password: 'password',
   name: 'name',
   role: 'role',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -190,7 +192,9 @@ export type PelanggaranScalarFieldEnum = (typeof PelanggaranScalarFieldEnum)[key
 export const KesehatanScalarFieldEnum = {
   id: 'id',
   siswaId: 'siswaId',
+  jenisAsuransi: 'jenisAsuransi',
   noBpjs: 'noBpjs',
+  noAsuransi: 'noAsuransi',
   riwayatSakit: 'riwayatSakit',
   tanggal: 'tanggal',
   createdAt: 'createdAt',
@@ -198,6 +202,20 @@ export const KesehatanScalarFieldEnum = {
 } as const
 
 export type KesehatanScalarFieldEnum = (typeof KesehatanScalarFieldEnum)[keyof typeof KesehatanScalarFieldEnum]
+
+
+export const TahfidzScalarFieldEnum = {
+  id: 'id',
+  siswaId: 'siswaId',
+  juzKe: 'juzKe',
+  nilai: 'nilai',
+  keterangan: 'keterangan',
+  tanggal: 'tanggal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TahfidzScalarFieldEnum = (typeof TahfidzScalarFieldEnum)[keyof typeof TahfidzScalarFieldEnum]
 
 
 export const PengeluaranScalarFieldEnum = {

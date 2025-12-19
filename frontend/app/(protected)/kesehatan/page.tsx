@@ -138,9 +138,9 @@ export default function KelolaKesehatanPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-8 shadow-lg">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 lg:p-8 shadow-lg">
         <div className="absolute -right-8 -top-8 opacity-20">
           <Heart className="h-64 w-64 text-white" strokeWidth={0.5} />
         </div>
@@ -148,30 +148,30 @@ export default function KelolaKesehatanPage() {
           <Shield className="h-32 w-32 text-white" strokeWidth={0.5} />
         </div>
         <div className="relative">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
-            <Heart className="h-4 w-4" />
+          <div className="mb-2 lg:mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 lg:px-4 lg:py-1.5 text-xs lg:text-sm font-medium text-white backdrop-blur-sm">
+            <Heart className="h-3 w-3 lg:h-4 lg:w-4" />
             Manajemen Kesehatan
           </div>
-          <h1 className="mb-2 text-4xl font-bold text-white">
+          <h1 className="mb-1 lg:mb-2 text-2xl lg:text-4xl font-bold text-white">
             Kelola Kesehatan
           </h1>
-          <p className="max-w-2xl text-lg text-emerald-50">
+          <p className="max-w-2xl text-sm lg:text-lg text-emerald-50">
             Kelola data kesehatan dan riwayat sakit santri / santriwati
           </p>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
         <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-700">
+            <CardTitle className="text-xs lg:text-sm font-medium text-zinc-700">
               Total Riwayat
             </CardTitle>
-            <FileText className="h-4 w-4 text-emerald-600" />
+            <FileText className="h-3 w-3 lg:h-4 lg:w-4 text-emerald-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-emerald-700">
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : statistik.totalRiwayat}
             </div>
             <p className="text-xs text-zinc-500 mt-1">
@@ -182,34 +182,34 @@ export default function KelolaKesehatanPage() {
 
         <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-700">
-              Siswa Terdaftar BPJS
+            <CardTitle className="text-xs lg:text-sm font-medium text-zinc-700">
+              Terdaftar Asuransi
             </CardTitle>
-            <Shield className="h-4 w-4 text-blue-600" />
+            <Shield className="h-3 w-3 lg:h-4 lg:w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-700">
+            <div className="text-xl lg:text-2xl font-bold text-blue-700">
               {isLoading ? "..." : statistik.totalSiswaWithBpjs}
             </div>
             <p className="text-xs text-zinc-500 mt-1">
-              Siswa memiliki nomor BPJS
+              Memiliki asuransi
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-zinc-200 bg-white">
+        <Card className="border-zinc-200 bg-white col-span-2 md:col-span-1">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-700">
-              Siswa dengan Riwayat
+            <CardTitle className="text-xs lg:text-sm font-medium text-zinc-700">
+              Santri dengan Riwayat
             </CardTitle>
-            <Users className="h-4 w-4 text-emerald-600" />
+            <Users className="h-3 w-3 lg:h-4 lg:w-4 text-emerald-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-emerald-700">
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : statistik.totalSiswaWithKesehatan}
             </div>
             <p className="text-xs text-zinc-500 mt-1">
-              Total siswa tercatat
+              Total santri tercatat
             </p>
           </CardContent>
         </Card>
@@ -218,40 +218,39 @@ export default function KelolaKesehatanPage() {
       {/* Data Table */}
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
-              <CardTitle className="text-lg font-semibold text-emerald-700">
+              <CardTitle className="text-base lg:text-lg font-semibold text-emerald-700">
                 Daftar Santri & Data Kesehatan
               </CardTitle>
-              <p className="mt-1 text-sm text-zinc-500">
+              <p className="mt-1 text-xs lg:text-sm text-zinc-500">
                 Total {pagination.total} santri dengan data kesehatan
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button
-                onClick={() => router.push("/kesehatan/tambah")}
-                className="bg-emerald-600 hover:bg-emerald-700"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Tambah Data Kesehatan
-              </Button>
-            </div>
+            <Button
+              onClick={() => router.push("/kesehatan/tambah")}
+              className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9"
+            >
+              <Plus className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+              <span className="hidden sm:inline">Tambah Data Kesehatan</span>
+              <span className="sm:hidden">Tambah</span>
+            </Button>
           </div>
 
           {/* Search Bar */}
-          <div className="mt-4 flex items-center gap-3">
+          <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 lg:gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 h-3 w-3 lg:h-4 lg:w-4 -translate-y-1/2 text-zinc-400" />
               <Input
                 type="text"
                 placeholder="Cari nama santri..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 text-xs lg:text-sm h-9 lg:h-10"
               />
             </div>
             <Select value={filterTingkatan} onValueChange={setFilterTingkatan}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
                 <SelectValue placeholder="Semua Tingkatan" />
               </SelectTrigger>
               <SelectContent>
@@ -261,7 +260,7 @@ export default function KelolaKesehatanPage() {
               </SelectContent>
             </Select>
             <Select value={filterKelas} onValueChange={setFilterKelas}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
                 <SelectValue placeholder="Semua Kelas" />
               </SelectTrigger>
               <SelectContent>
@@ -282,30 +281,30 @@ export default function KelolaKesehatanPage() {
             </Select>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="rounded-md border border-zinc-200">
-            <Table>
+        <CardContent className="p-0 sm:p-6">
+          <div className="overflow-x-auto">
+            <Table className="min-w-[800px]">
               <TableHeader>
-                <TableRow className="bg-emerald-50">
-                  <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Jenis Kelamin</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">No BPJS</TableHead>
-                  <TableHead className="text-center font-semibold text-emerald-700">Jumlah Riwayat</TableHead>
+                <TableRow className="bg-emerald-50 hover:bg-emerald-50">
+                  <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Jenis Kelamin</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No BPJS</TableHead>
+                  <TableHead className="text-center font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Jumlah Riwayat</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-32 text-center text-zinc-500">
+                    <TableCell colSpan={7} className="h-32 text-center text-zinc-500 text-xs lg:text-sm">
                       Memuat data...
                     </TableCell>
                   </TableRow>
                 ) : filteredSiswa.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-32 text-center text-zinc-500">
+                    <TableCell colSpan={7} className="h-32 text-center text-zinc-500 text-xs lg:text-sm">
                       Tidak ada data santri dengan riwayat kesehatan
                     </TableCell>
                   </TableRow>
@@ -314,10 +313,10 @@ export default function KelolaKesehatanPage() {
                     const startIndex = (pagination.page - 1) * pagination.limit;
                     return (
                       <TableRow key={item.siswa.id} className="hover:bg-zinc-50">
-                        <TableCell className="font-medium text-zinc-900">
+                        <TableCell className="font-medium text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                           {startIndex + index + 1}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-xs lg:text-sm whitespace-nowrap">
                           <button
                             onClick={() => router.push(`/kesehatan/siswa/${item.siswa.id}`)}
                             className="font-medium text-emerald-600 hover:text-emerald-800 hover:underline"
@@ -325,24 +324,24 @@ export default function KelolaKesehatanPage() {
                             {item.siswa.nama}
                           </button>
                         </TableCell>
-                        <TableCell className="text-zinc-700">
+                        <TableCell className="text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
                           {item.siswa.jenisKelamin === "LakiLaki"
                             ? "Laki-Laki"
                             : item.siswa.jenisKelamin === "Perempuan"
                             ? "Perempuan"
                             : "-"}
                         </TableCell>
-                        <TableCell className="text-zinc-700">
+                        <TableCell className="text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
                           {item.siswa.kelas?.replace(/_/g, " ") || "-"}
                         </TableCell>
-                        <TableCell className="text-zinc-700">
+                        <TableCell className="text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
                           {item.siswa.tingkatan || "-"}
                         </TableCell>
-                        <TableCell className="text-zinc-700">
+                        <TableCell className="text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
                           {item.noBpjs || "-"}
                         </TableCell>
                         <TableCell className="text-center">
-                          <Badge variant="outline" className="border-emerald-500 text-emerald-700 bg-emerald-50">
+                          <Badge variant="outline" className="border-emerald-500 text-emerald-700 bg-emerald-50 text-xs">
                             {item.jumlahRiwayat}
                           </Badge>
                         </TableCell>
@@ -356,8 +355,8 @@ export default function KelolaKesehatanPage() {
 
           {/* Pagination */}
           {!isLoading && filteredSiswa.length > 0 && (
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm text-zinc-500">
+            <div className="mt-4 px-4 sm:px-0 flex flex-col lg:flex-row items-center justify-between gap-3">
+              <p className="text-xs lg:text-sm text-zinc-500">
                 Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}
                 {Math.min(pagination.page * pagination.limit, pagination.total)} dari{" "}
                 {pagination.total} data
@@ -368,9 +367,10 @@ export default function KelolaKesehatanPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className="h-8"
+                  className="h-8 text-xs lg:text-sm"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-3 w-3 lg:h-4 lg:w-4" />
+                  <span className="hidden lg:inline ml-1">Prev</span>
                 </Button>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
@@ -384,13 +384,13 @@ export default function KelolaKesehatanPage() {
                     .map((page, index, array) => (
                       <div key={page} className="flex items-center">
                         {index > 0 && array[index - 1] !== page - 1 && (
-                          <span className="px-2 text-zinc-400">...</span>
+                          <span className="px-2 text-zinc-400 text-xs">...</span>
                         )}
                         <Button
                           variant={page === pagination.page ? "default" : "outline"}
                           size="sm"
                           onClick={() => handlePageChange(page)}
-                          className={`h-8 w-8 p-0 ${
+                          className={`h-8 w-8 p-0 text-xs lg:text-sm ${
                             page === pagination.page
                               ? "bg-emerald-600 hover:bg-emerald-700"
                               : ""
@@ -406,9 +406,10 @@ export default function KelolaKesehatanPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
-                  className="h-8"
+                  className="h-8 text-xs lg:text-sm"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <span className="hidden lg:inline mr-1">Next</span>
+                  <ChevronRight className="h-3 w-3 lg:h-4 lg:w-4" />
                 </Button>
               </div>
             </div>
@@ -417,65 +418,57 @@ export default function KelolaKesehatanPage() {
       </Card>
 
       {/* Riwayat Kesehatan Terbaru */}
-      <Card className="border-zinc-200 bg-white">
+      <Card className="border-zinc-200 bg-white overflow-hidden">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg font-semibold text-emerald-700">
-                Riwayat Kesehatan Terbaru
-              </CardTitle>
-              <p className="mt-1 text-sm text-zinc-500">
-                10 catatan terakhir yang tercatat
-              </p>
-            </div>
-          </div>
+          <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
+            Riwayat Kesehatan Terbaru
+          </CardTitle>
+          <p className="text-xs text-zinc-500">
+            10 catatan terakhir yang tercatat
+          </p>
         </CardHeader>
-        <CardContent>
-          <div className="rounded-md border border-zinc-200">
-            <Table>
+        <div className="overflow-x-auto">
+          {kesehatanTerbaru.length === 0 ? (
+            <div className="text-center py-8 text-zinc-500 text-xs lg:text-sm px-6">
+              Belum ada data kesehatan
+            </div>
+          ) : (
+            <Table className="min-w-[700px]">
               <TableHeader>
-                <TableRow className="bg-emerald-50">
-                  <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Riwayat Sakit</TableHead>
+                <TableRow className="bg-emerald-50 hover:bg-emerald-50">
+                  <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tanggal</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Riwayat Sakit</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {kesehatanTerbaru.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center text-zinc-500 py-8">
-                      Belum ada data kesehatan
+                {kesehatanTerbaru.map((kesehatan, index) => (
+                  <TableRow key={kesehatan.id} className="hover:bg-zinc-50">
+                    <TableCell className="font-medium text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{index + 1}</TableCell>
+                    <TableCell className="text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
+                      {formatTanggal(kesehatan.tanggal)}
+                    </TableCell>
+                    <TableCell className="font-medium text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
+                      {kesehatan.siswa.nama}
+                    </TableCell>
+                    <TableCell className="text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
+                      {kesehatan.siswa.kelas?.replace(/_/g, " ") || "-"}
+                    </TableCell>
+                    <TableCell className="text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
+                      {kesehatan.siswa.tingkatan || "-"}
+                    </TableCell>
+                    <TableCell className="text-zinc-700 text-xs lg:text-sm max-w-[200px] truncate">
+                      {kesehatan.riwayatSakit}
                     </TableCell>
                   </TableRow>
-                ) : (
-                  kesehatanTerbaru.map((kesehatan, index) => (
-                    <TableRow key={kesehatan.id} className="hover:bg-zinc-50">
-                      <TableCell className="font-medium text-zinc-900">{index + 1}</TableCell>
-                      <TableCell className="text-zinc-700">
-                        {formatTanggal(kesehatan.tanggal)}
-                      </TableCell>
-                      <TableCell className="font-medium text-zinc-900">
-                        {kesehatan.siswa.nama}
-                      </TableCell>
-                      <TableCell className="text-zinc-700">
-                        {kesehatan.siswa.kelas?.replace(/_/g, " ") || "-"}
-                      </TableCell>
-                      <TableCell className="text-zinc-700">
-                        {kesehatan.siswa.tingkatan || "-"}
-                      </TableCell>
-                      <TableCell className="text-zinc-700 max-w-md truncate">
-                        {kesehatan.riwayatSakit}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                ))}
               </TableBody>
             </Table>
-          </div>
-        </CardContent>
+          )}
+        </div>
       </Card>
     </div>
   );

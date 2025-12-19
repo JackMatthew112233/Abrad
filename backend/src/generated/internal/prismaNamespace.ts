@@ -391,6 +391,7 @@ export const ModelName = {
   Absensi: 'Absensi',
   Pelanggaran: 'Pelanggaran',
   Kesehatan: 'Kesehatan',
+  Tahfidz: 'Tahfidz',
   Pengeluaran: 'Pengeluaran',
   Nilai: 'Nilai',
   MataPelajaran: 'MataPelajaran',
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siswa" | "biodataKeuangan" | "pembayaran" | "absensi" | "pelanggaran" | "kesehatan" | "pengeluaran" | "nilai" | "mataPelajaran" | "donasi" | "anggotaKoperasi" | "pemasukanKoperasi" | "pengeluaranKoperasi"
+    modelProps: "user" | "siswa" | "biodataKeuangan" | "pembayaran" | "absensi" | "pelanggaran" | "kesehatan" | "tahfidz" | "pengeluaran" | "nilai" | "mataPelajaran" | "donasi" | "anggotaKoperasi" | "pemasukanKoperasi" | "pengeluaranKoperasi"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -932,6 +933,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.KesehatanCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.KesehatanCountAggregateOutputType> | number
+        }
+      }
+    }
+    Tahfidz: {
+      payload: Prisma.$TahfidzPayload<ExtArgs>
+      fields: Prisma.TahfidzFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TahfidzFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TahfidzFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>
+        }
+        findFirst: {
+          args: Prisma.TahfidzFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TahfidzFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>
+        }
+        findMany: {
+          args: Prisma.TahfidzFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>[]
+        }
+        create: {
+          args: Prisma.TahfidzCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>
+        }
+        createMany: {
+          args: Prisma.TahfidzCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TahfidzCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>[]
+        }
+        delete: {
+          args: Prisma.TahfidzDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>
+        }
+        update: {
+          args: Prisma.TahfidzUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>
+        }
+        deleteMany: {
+          args: Prisma.TahfidzDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TahfidzUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TahfidzUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>[]
+        }
+        upsert: {
+          args: Prisma.TahfidzUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TahfidzPayload>
+        }
+        aggregate: {
+          args: Prisma.TahfidzAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTahfidz>
+        }
+        groupBy: {
+          args: Prisma.TahfidzGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TahfidzGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TahfidzCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TahfidzCountAggregateOutputType> | number
         }
       }
     }
@@ -1498,6 +1573,7 @@ export const UserScalarFieldEnum = {
   password: 'password',
   name: 'name',
   role: 'role',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1599,7 +1675,9 @@ export type PelanggaranScalarFieldEnum = (typeof PelanggaranScalarFieldEnum)[key
 export const KesehatanScalarFieldEnum = {
   id: 'id',
   siswaId: 'siswaId',
+  jenisAsuransi: 'jenisAsuransi',
   noBpjs: 'noBpjs',
+  noAsuransi: 'noAsuransi',
   riwayatSakit: 'riwayatSakit',
   tanggal: 'tanggal',
   createdAt: 'createdAt',
@@ -1607,6 +1685,20 @@ export const KesehatanScalarFieldEnum = {
 } as const
 
 export type KesehatanScalarFieldEnum = (typeof KesehatanScalarFieldEnum)[keyof typeof KesehatanScalarFieldEnum]
+
+
+export const TahfidzScalarFieldEnum = {
+  id: 'id',
+  siswaId: 'siswaId',
+  juzKe: 'juzKe',
+  nilai: 'nilai',
+  keterangan: 'keterangan',
+  tanggal: 'tanggal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TahfidzScalarFieldEnum = (typeof TahfidzScalarFieldEnum)[keyof typeof TahfidzScalarFieldEnum]
 
 
 export const PengeluaranScalarFieldEnum = {
@@ -1763,6 +1855,20 @@ export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'StatusUser'
+ */
+export type EnumStatusUserFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusUser'>
+    
+
+
+/**
+ * Reference to a field of type 'StatusUser[]'
+ */
+export type ListEnumStatusUserFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusUser[]'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1896,6 +2002,34 @@ export type ListEnumJenisSanksiFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'JenisAsuransi'
+ */
+export type EnumJenisAsuransiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisAsuransi'>
+    
+
+
+/**
+ * Reference to a field of type 'JenisAsuransi[]'
+ */
+export type ListEnumJenisAsuransiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisAsuransi[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'JenisPengeluaran'
  */
 export type EnumJenisPengeluaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPengeluaran'>
@@ -1952,16 +2086,16 @@ export type ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel> = FieldR
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'Float'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'Float[]'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -2066,6 +2200,7 @@ export type GlobalOmitConfig = {
   absensi?: Prisma.AbsensiOmit
   pelanggaran?: Prisma.PelanggaranOmit
   kesehatan?: Prisma.KesehatanOmit
+  tahfidz?: Prisma.TahfidzOmit
   pengeluaran?: Prisma.PengeluaranOmit
   nilai?: Prisma.NilaiOmit
   mataPelajaran?: Prisma.MataPelajaranOmit

@@ -53,6 +53,11 @@ export type Pelanggaran = Prisma.PelanggaranModel
  */
 export type Kesehatan = Prisma.KesehatanModel
 /**
+ * Model Tahfidz
+ * 
+ */
+export type Tahfidz = Prisma.TahfidzModel
+/**
  * Model Pengeluaran
  * 
  */

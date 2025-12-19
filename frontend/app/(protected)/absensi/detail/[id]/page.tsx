@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,6 +56,8 @@ interface AbsensiStats {
 export default function DetailAbsensiPage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
+  const jenis = searchParams.get("jenis");
   const [siswa, setSiswa] = useState<SiswaInfo | null>(null);
   const [absensiList, setAbsensiList] = useState<AbsensiRecord[]>([]);
   const [stats, setStats] = useState<AbsensiStats>({
@@ -75,7 +77,7 @@ export default function DetailAbsensiPage() {
       fetchSiswaInfo(params.id as string);
       fetchAbsensiData(params.id as string);
     }
-  }, [params.id]);
+  }, [params.id, jenis]);
 
   const fetchSiswaInfo = async (id: string) => {
     try {
@@ -101,8 +103,16 @@ export default function DetailAbsensiPage() {
     try {
       setIsLoading(true);
       let url = `${process.env.NEXT_PUBLIC_API_URL}/absensi/siswa/${id}`;
+      const params = new URLSearchParams();
+      if (jenis) {
+        params.append("jenis", jenis);
+      }
       if (start && end) {
-        url += `?startDate=${start}&endDate=${end}`;
+        params.append("startDate", start);
+        params.append("endDate", end);
+      }
+      if (params.toString()) {
+        url += `?${params.toString()}`;
       }
 
       const response = await fetch(url, {
@@ -223,7 +233,7 @@ export default function DetailAbsensiPage() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold text-emerald-700">
-            Detail Absensi - {siswa.nama}
+            Detail Absensi {jenis ? `${jenis === "KELAS" ? "Kelas" : jenis === "ASRAMA" ? "Asrama" : "Pengajian"}` : ""} - {siswa.nama}
           </h1>
           <p className="text-zinc-600">
             {siswa.kelas ? siswa.kelas.replace("_", " ") : "-"} • {siswa.tingkatan || "-"}

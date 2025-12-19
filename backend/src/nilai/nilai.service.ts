@@ -114,12 +114,44 @@ export class NilaiService {
           allNilai.length
         : 0;
 
+    // Calculate average for specific mata pelajaran
+    const mapelStats = await this.getStatistikPerMapel([
+      "Ad-Durus Al-Fiqhiyyah (Fiqh)",
+      "Qira'ah Al-Kutub",
+      "Ke-DDI-an",
+    ]);
+
     return {
       totalNilai,
       siswaWithNilai,
       totalSiswa,
       rataRataKeseluruhan: Math.round(rataRataKeseluruhan * 100) / 100,
+      ...mapelStats,
     };
+  }
+
+  async getStatistikPerMapel(mapelNames: string[]) {
+    const result: Record<string, number | null> = {};
+
+    for (const mapel of mapelNames) {
+      const avgResult = await this.prisma.nilai.aggregate({
+        _avg: { nilai: true },
+        where: {
+          mataPelajaran: {
+            contains: mapel,
+            mode: 'insensitive',
+          },
+        },
+      });
+
+      // Create key from mapel name (sanitized)
+      const key = `rataRata${mapel.replace(/[^a-zA-Z]/g, '')}`;
+      result[key] = avgResult._avg.nilai
+        ? Math.round(Number(avgResult._avg.nilai) * 100) / 100
+        : null;
+    }
+
+    return result;
   }
 
   async getNilaiTerbaru() {

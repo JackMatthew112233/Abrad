@@ -35,10 +35,10 @@ export function Header({ onMenuClick }: HeaderProps) {
           const data = await response.json();
           setUser(data);
         } else {
-          router.push("/login");
+          router.push("/");
         }
       } catch (error) {
-        router.push("/login");
+        router.push("/");
       }
     };
 
@@ -52,7 +52,7 @@ export function Header({ onMenuClick }: HeaderProps) {
         credentials: "include",
       });
       toast.success("Berhasil keluar");
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       toast.error("Gagal logout");
     }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -95,13 +95,11 @@ export default function TambahAnggotaKoperasiPage() {
       </div>
 
       <Card className="border-zinc-200 bg-white">
-        <CardHeader className="p-4 lg:p-6">
-          <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
-            Formulir Pendaftaran Anggota
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 lg:p-6 pt-0">
+        <CardContent className="p-4 lg:p-6">
           <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
+            <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
+              Formulir Pendaftaran Anggota
+            </CardTitle>
             <div className="space-y-2">
               <Label htmlFor="nama" className="text-xs lg:text-sm">
                 Nama <span className="text-red-500">*</span>
@@ -155,7 +153,7 @@ export default function TambahAnggotaKoperasiPage() {
                 variant="outline"
                 onClick={() => router.back()}
                 disabled={isLoading}
-                className="w-full sm:w-auto text-xs lg:text-sm h-9 lg:h-10"
+                className="w-full sm:flex-1 text-xs lg:text-sm h-9 lg:h-10"
               >
                 Batal
               </Button>

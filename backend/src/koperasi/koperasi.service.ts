@@ -110,16 +110,16 @@ export class KoperasiService {
     };
   }
 
-  // Get anggota by ID
+  // Get anggota by ID with totals
   async getAnggotaById(id: string) {
     const anggota = await this.prisma.anggotaKoperasi.findUnique({
       where: { id },
       include: {
         pemasukan: {
-          orderBy: { tanggal: 'desc' },
+          select: { jenis: true, jumlah: true },
         },
         pengeluaran: {
-          orderBy: { tanggal: 'desc' },
+          select: { jenis: true, jumlah: true },
         },
       },
     });
@@ -128,7 +128,86 @@ export class KoperasiService {
       throw new NotFoundException('Anggota koperasi tidak ditemukan');
     }
 
-    return anggota;
+    // Calculate totals
+    const totalSimpananPokok = anggota.pemasukan
+      .filter((p) => p.jenis === 'SIMPANAN_POKOK')
+      .reduce((sum, p) => sum + Number(p.jumlah), 0);
+    const totalSimpananWajib = anggota.pemasukan
+      .filter((p) => p.jenis === 'SIMPANAN_WAJIB')
+      .reduce((sum, p) => sum + Number(p.jumlah), 0);
+    const totalSimpananSukarela = anggota.pemasukan
+      .filter((p) => p.jenis === 'SIMPANAN_SUKARELA')
+      .reduce((sum, p) => sum + Number(p.jumlah), 0);
+    const totalPenyertaanModal = anggota.pemasukan
+      .filter((p) => p.jenis === 'PENYERTAAN_MODAL')
+      .reduce((sum, p) => sum + Number(p.jumlah), 0);
+    const totalPemasukan = totalSimpananPokok + totalSimpananWajib + totalSimpananSukarela + totalPenyertaanModal;
+
+    const totalBelanja = anggota.pengeluaran
+      .filter((p) => p.jenis === 'BELANJA')
+      .reduce((sum, p) => sum + Number(p.jumlah), 0);
+    const totalPinjaman = anggota.pengeluaran
+      .filter((p) => p.jenis === 'PINJAMAN')
+      .reduce((sum, p) => sum + Number(p.jumlah), 0);
+    const totalPengeluaran = totalBelanja + totalPinjaman;
+
+    return {
+      id: anggota.id,
+      nama: anggota.nama,
+      alamat: anggota.alamat,
+      noTelp: anggota.noTelp,
+      createdAt: anggota.createdAt,
+      updatedAt: anggota.updatedAt,
+      totalSimpananPokok,
+      totalSimpananWajib,
+      totalSimpananSukarela,
+      totalPenyertaanModal,
+      totalPemasukan,
+      totalBelanja,
+      totalPinjaman,
+      totalPengeluaran,
+      saldo: totalPemasukan - totalPengeluaran,
+    };
+  }
+
+  // Get pemasukan by anggota ID with pagination
+  async getPemasukanByAnggotaId(anggotaId: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
+    const [list, total] = await Promise.all([
+      this.prisma.pemasukanKoperasi.findMany({
+        where: { anggotaId },
+        skip,
+        take: limit,
+        orderBy: { tanggal: 'desc' },
+      }),
+      this.prisma.pemasukanKoperasi.count({ where: { anggotaId } }),
+    ]);
+
+    return {
+      data: list,
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
+  // Get pengeluaran by anggota ID with pagination
+  async getPengeluaranByAnggotaId(anggotaId: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
+    const [list, total] = await Promise.all([
+      this.prisma.pengeluaranKoperasi.findMany({
+        where: { anggotaId },
+        skip,
+        take: limit,
+        orderBy: { tanggal: 'desc' },
+      }),
+      this.prisma.pengeluaranKoperasi.count({ where: { anggotaId } }),
+    ]);
+
+    return {
+      data: list,
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    };
   }
 
   // Search anggota
@@ -175,7 +254,7 @@ export class KoperasiService {
       const uploadResult = await uploadToSupabase(
         file.buffer,
         file.originalname,
-        'koperasi-bukti',
+        'Evidence',
       );
       buktiUrl = uploadResult.url;
     }
@@ -222,7 +301,7 @@ export class KoperasiService {
       const uploadResult = await uploadToSupabase(
         file.buffer,
         file.originalname,
-        'koperasi-bukti',
+        'Evidence',
       );
       buktiUrl = uploadResult.url;
     }
@@ -356,6 +435,26 @@ export class KoperasiService {
       totalPengeluaran,
       saldo: totalPemasukan - totalPengeluaran,
     };
+  }
+
+  // Update anggota
+  async updateAnggota(id: string, data: { nama?: string; alamat?: string; noTelp?: string }) {
+    const anggota = await this.prisma.anggotaKoperasi.findUnique({
+      where: { id },
+    });
+
+    if (!anggota) {
+      throw new NotFoundException('Anggota koperasi tidak ditemukan');
+    }
+
+    return this.prisma.anggotaKoperasi.update({
+      where: { id },
+      data: {
+        nama: data.nama,
+        alamat: data.alamat,
+        noTelp: data.noTelp,
+      },
+    });
   }
 
   // Delete anggota

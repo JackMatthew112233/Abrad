@@ -9,11 +9,20 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Save } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Kesehatan {
   id: string;
   siswaId: string;
+  jenisAsuransi?: "BPJS" | "NON_BPJS";
   noBpjs?: string;
+  noAsuransi?: string;
   riwayatSakit: string;
   tanggal: string;
   siswa: {
@@ -34,7 +43,9 @@ export default function EditKesehatanPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
+    jenisAsuransi: "" as "" | "BPJS" | "NON_BPJS",
     noBpjs: "",
+    noAsuransi: "",
     riwayatSakit: "",
     tanggal: "",
   });
@@ -54,7 +65,9 @@ export default function EditKesehatanPage() {
         const data = await response.json();
         setKesehatan(data);
         setFormData({
+          jenisAsuransi: data.jenisAsuransi || "",
           noBpjs: data.noBpjs || "",
+          noAsuransi: data.noAsuransi || "",
           riwayatSakit: data.riwayatSakit,
           tanggal: new Date(data.tanggal).toISOString().split("T")[0],
         });
@@ -90,7 +103,9 @@ export default function EditKesehatanPage() {
           },
           credentials: "include",
           body: JSON.stringify({
-            noBpjs: formData.noBpjs || undefined,
+            jenisAsuransi: formData.jenisAsuransi || undefined,
+            noBpjs: formData.jenisAsuransi === "BPJS" ? formData.noBpjs : undefined,
+            noAsuransi: formData.jenisAsuransi === "NON_BPJS" ? formData.noAsuransi : undefined,
             riwayatSakit: formData.riwayatSakit,
             tanggal: formData.tanggal,
           }),
@@ -120,22 +135,34 @@ export default function EditKesehatanPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
+      {/* Back Button - Mobile */}
+      <div className="lg:hidden">
+        <Button
+          variant="outline"
+          onClick={() => router.back()}
+          className="w-full text-xs h-9"
+        >
+          <ArrowLeft className="mr-2 h-3 w-3" />
+          Kembali
+        </Button>
+      </div>
+
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.back()}
-          className="text-zinc-600 hover:text-zinc-900"
+          className="hidden lg:flex text-zinc-600 hover:text-zinc-900"
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-emerald-700">
+          <h1 className="text-lg lg:text-2xl font-bold text-emerald-700">
             Edit Data Kesehatan
           </h1>
-          <p className="text-zinc-600">
+          <p className="text-xs lg:text-sm text-zinc-600">
             {kesehatan.siswa.nama} • {kesehatan.siswa.tingkatan} • {kesehatan.siswa.kelas?.replace(/_/g, " ")}
           </p>
         </div>
@@ -143,16 +170,16 @@ export default function EditKesehatanPage() {
 
       {/* Form */}
       <Card className="border-zinc-200 bg-white">
-        <CardHeader>
-          <CardTitle className="text-base font-semibold text-emerald-700">
+        <CardHeader className="p-4 lg:p-6 pb-4 lg:pb-6">
+          <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
             Formulir Data Kesehatan
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <CardContent className="p-4 lg:p-6 pt-0">
+          <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
             {/* Tanggal */}
             <div className="space-y-2">
-              <Label htmlFor="tanggal">
+              <Label htmlFor="tanggal" className="text-xs lg:text-sm">
                 Tanggal <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -162,26 +189,71 @@ export default function EditKesehatanPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, tanggal: e.target.value })
                 }
+                className="text-xs lg:text-sm h-9 lg:h-10"
                 required
               />
             </div>
 
-            {/* No BPJS */}
+            {/* Jenis Asuransi */}
             <div className="space-y-2">
-              <Label htmlFor="noBpjs">No BPJS (Opsional)</Label>
-              <Input
-                id="noBpjs"
-                placeholder="Masukkan nomor BPJS..."
-                value={formData.noBpjs}
-                onChange={(e) =>
-                  setFormData({ ...formData, noBpjs: e.target.value })
+              <Label htmlFor="jenisAsuransi" className="text-xs lg:text-sm">Jenis Asuransi (Opsional)</Label>
+              <Select
+                value={formData.jenisAsuransi}
+                onValueChange={(value: "BPJS" | "NON_BPJS") =>
+                  setFormData({ ...formData, jenisAsuransi: value, noBpjs: "", noAsuransi: "" })
                 }
-              />
+              >
+                <SelectTrigger className="text-xs lg:text-sm h-9 lg:h-10">
+                  <SelectValue placeholder="Pilih jenis asuransi" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="BPJS">BPJS</SelectItem>
+                  <SelectItem value="NON_BPJS">Non BPJS</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+
+            {/* No BPJS - tampil jika pilih BPJS */}
+            {formData.jenisAsuransi === "BPJS" && (
+              <div className="space-y-2">
+                <Label htmlFor="noBpjs" className="text-xs lg:text-sm">
+                  No BPJS <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="noBpjs"
+                  placeholder="Masukkan nomor BPJS..."
+                  value={formData.noBpjs}
+                  onChange={(e) =>
+                    setFormData({ ...formData, noBpjs: e.target.value })
+                  }
+                  className="text-xs lg:text-sm h-9 lg:h-10"
+                  required
+                />
+              </div>
+            )}
+
+            {/* No Asuransi - tampil jika pilih Non BPJS */}
+            {formData.jenisAsuransi === "NON_BPJS" && (
+              <div className="space-y-2">
+                <Label htmlFor="noAsuransi" className="text-xs lg:text-sm">
+                  No Asuransi <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="noAsuransi"
+                  placeholder="Masukkan nomor asuransi..."
+                  value={formData.noAsuransi}
+                  onChange={(e) =>
+                    setFormData({ ...formData, noAsuransi: e.target.value })
+                  }
+                  className="text-xs lg:text-sm h-9 lg:h-10"
+                  required
+                />
+              </div>
+            )}
 
             {/* Riwayat Sakit */}
             <div className="space-y-2">
-              <Label htmlFor="riwayatSakit">
+              <Label htmlFor="riwayatSakit" className="text-xs lg:text-sm">
                 Riwayat Sakit <span className="text-red-500">*</span>
               </Label>
               <Textarea
@@ -192,26 +264,28 @@ export default function EditKesehatanPage() {
                   setFormData({ ...formData, riwayatSakit: e.target.value })
                 }
                 rows={4}
+                className="text-xs lg:text-sm"
                 required
               />
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3 border-t pt-6">
+            <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => router.back()}
                 disabled={isSubmitting}
+                className="w-full sm:flex-1 text-xs lg:text-sm h-9 lg:h-10"
               >
                 Batal
               </Button>
               <Button
                 type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="w-full sm:flex-1 bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-9 lg:h-10"
                 disabled={isSubmitting}
               >
-                <Save className="mr-2 h-4 w-4" />
+                <Save className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
                 {isSubmitting ? "Menyimpan..." : "Simpan Perubahan"}
               </Button>
             </div>

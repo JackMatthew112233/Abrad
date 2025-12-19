@@ -251,21 +251,34 @@ export default function DetailPelanggaranSiswaPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
+      {/* Back Button - Mobile */}
+      <div className="lg:hidden">
+        <Button
+          variant="outline"
+          onClick={() => router.push("/pelanggaran")}
+          className="w-full text-xs h-9"
+        >
+          <ArrowLeft className="mr-2 h-3 w-3" />
+          Kembali
+        </Button>
+      </div>
+
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.push("/pelanggaran")}
+          className="hidden lg:flex"
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-emerald-700">
+          <h1 className="text-lg lg:text-2xl font-bold text-emerald-700">
             Detail Pelanggaran
           </h1>
-          <p className="text-zinc-600">
+          <p className="text-xs lg:text-sm text-zinc-600">
             Riwayat pelanggaran {siswa.nama}
           </p>
         </div>
@@ -274,65 +287,65 @@ export default function DetailPelanggaranSiswaPage() {
       {/* Riwayat Pelanggaran Table */}
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <CardTitle className="text-base font-semibold text-emerald-700">
+              <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
                 Riwayat Pelanggaran
               </CardTitle>
-              <p className="text-sm text-zinc-500 mt-1">
+              <p className="text-xs text-zinc-500 mt-1">
                 Daftar semua pelanggaran yang pernah dilakukan
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-zinc-500 mb-1">Total Pelanggaran</p>
-              <p className="text-3xl font-bold text-red-600">{pagination.total}</p>
+            <div className="text-left sm:text-right">
+              <p className="text-xs text-zinc-500 mb-1">Total Pelanggaran</p>
+              <p className="text-xl lg:text-2xl font-bold text-red-600">{pagination.total}</p>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="rounded-md border border-zinc-200">
-            <Table>
+        <CardContent className="p-0 sm:p-6">
+          <div className="overflow-x-auto">
+            <Table className="min-w-[700px]">
               <TableHeader>
-                <TableRow className="bg-emerald-50">
-                  <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Sanksi</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Keterangan</TableHead>
-                  <TableHead className="text-center font-semibold text-emerald-700">Bukti Pelanggaran</TableHead>
-                  <TableHead className="text-center font-semibold text-emerald-700 w-24">Aksi</TableHead>
+                <TableRow className="bg-emerald-50 hover:bg-emerald-50">
+                  <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tanggal</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Sanksi</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Keterangan</TableHead>
+                  <TableHead className="text-center font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Bukti</TableHead>
+                  <TableHead className="text-center font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap w-24">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-zinc-500">
+                    <TableCell colSpan={6} className="text-center py-8 text-zinc-500 text-xs lg:text-sm">
                       Memuat data...
                     </TableCell>
                   </TableRow>
                 ) : pelanggaranList.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-zinc-500">
+                    <TableCell colSpan={6} className="text-center py-8 text-zinc-500 text-xs lg:text-sm">
                       Tidak ada data pelanggaran
                     </TableCell>
                   </TableRow>
                 ) : (
                   pelanggaranList.map((pelanggaran, index) => (
                     <TableRow key={pelanggaran.id} className="hover:bg-zinc-50">
-                      <TableCell className="font-medium text-zinc-700">
+                      <TableCell className="font-medium text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
                         {(pagination.page - 1) * pagination.limit + index + 1}
                       </TableCell>
-                      <TableCell className="text-zinc-700">
+                      <TableCell className="text-zinc-700 text-xs lg:text-sm whitespace-nowrap">
                         {formatTanggal(pelanggaran.createdAt)}
                       </TableCell>
                       <TableCell>
                         <Badge
                           variant="outline"
-                          className={`${getSanksiVariant(pelanggaran.sanksi)} font-medium`}
+                          className={`${getSanksiVariant(pelanggaran.sanksi)} font-medium text-xs`}
                         >
                           {pelanggaran.sanksi}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-zinc-700 max-w-md">
+                      <TableCell className="text-zinc-700 text-xs lg:text-sm max-w-[200px] truncate">
                         {pelanggaran.keterangan}
                       </TableCell>
                       <TableCell className="text-center">
@@ -341,12 +354,12 @@ export default function DetailPelanggaranSiswaPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleViewBukti(pelanggaran.evidence!)}
-                            className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                            className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 h-8 w-8 p-0"
                           >
-                            <FileText className="h-4 w-4" />
+                            <FileText className="h-3 w-3 lg:h-4 lg:w-4" />
                           </Button>
                         ) : (
-                          <span className="text-zinc-400 text-xs">Tidak ada</span>
+                          <span className="text-zinc-400 text-xs">-</span>
                         )}
                       </TableCell>
                       <TableCell className="text-center">
@@ -355,17 +368,17 @@ export default function DetailPelanggaranSiswaPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => router.push(`/pelanggaran/edit/${pelanggaran.id}`)}
-                            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 w-8 p-0"
                           >
-                            <Pencil className="h-4 w-4" />
+                            <Pencil className="h-3 w-3 lg:h-4 lg:w-4" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteClick(pelanggaran.id)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 lg:h-4 lg:w-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -378,8 +391,8 @@ export default function DetailPelanggaranSiswaPage() {
 
           {/* Pagination */}
           {!isLoading && pagination.totalPages > 1 && (
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm text-zinc-600">
+            <div className="mt-4 px-4 sm:px-0 flex flex-col lg:flex-row items-center justify-between gap-3">
+              <p className="text-xs lg:text-sm text-zinc-500">
                 Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}
                 {Math.min(pagination.page * pagination.limit, pagination.total)} dari{" "}
                 {pagination.total} data
@@ -390,9 +403,10 @@ export default function DetailPelanggaranSiswaPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className="h-8"
+                  className="h-8 text-xs lg:text-sm"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-3 w-3 lg:h-4 lg:w-4" />
+                  <span className="hidden lg:inline ml-1">Prev</span>
                 </Button>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
@@ -406,13 +420,13 @@ export default function DetailPelanggaranSiswaPage() {
                     .map((page, index, array) => (
                       <div key={page} className="flex items-center">
                         {index > 0 && array[index - 1] !== page - 1 && (
-                          <span className="px-2 text-zinc-400">...</span>
+                          <span className="px-2 text-zinc-400 text-xs">...</span>
                         )}
                         <Button
                           variant={page === pagination.page ? "default" : "outline"}
                           size="sm"
                           onClick={() => handlePageChange(page)}
-                          className={`h-8 w-8 p-0 ${
+                          className={`h-8 w-8 p-0 text-xs lg:text-sm ${
                             page === pagination.page
                               ? "bg-emerald-600 hover:bg-emerald-700"
                               : ""
@@ -428,9 +442,10 @@ export default function DetailPelanggaranSiswaPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
-                  className="h-8"
+                  className="h-8 text-xs lg:text-sm"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <span className="hidden lg:inline mr-1">Next</span>
+                  <ChevronRight className="h-3 w-3 lg:h-4 lg:w-4" />
                 </Button>
               </div>
             </div>

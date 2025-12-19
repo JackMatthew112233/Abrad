@@ -18,6 +18,12 @@ enum Role {
   Admin
 }
 
+enum StatusUser {
+  MENUNGGU
+  DITERIMA
+  DITOLAK
+}
+
 enum JenisKelamin {
   LakiLaki
   Perempuan
@@ -105,14 +111,20 @@ enum JenisPengeluaranKoperasi {
   PINJAMAN
 }
 
+enum JenisAsuransi {
+  BPJS
+  NON_BPJS
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String     @id @default(cuid())
+  email     String     @unique
   password  String
   name      String?
-  role      Role     @default(User)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Role       @default(User)
+  status    StatusUser @default(MENUNGGU)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@map("users")
 }
@@ -156,6 +168,7 @@ model Siswa {
   pelanggaran     Pelanggaran[]
   kesehatan       Kesehatan[]
   nilai           Nilai[]
+  tahfidz         Tahfidz[]
 
   @@map("siswa")
   @@index([nama])
@@ -229,17 +242,36 @@ model Pelanggaran {
 }
 
 model Kesehatan {
-  id           String   @id @default(cuid())
-  siswaId      String
-  siswa        Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
-  noBpjs       String?
-  riwayatSakit String
-  tanggal      DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id            String         @id @default(cuid())
+  siswaId       String
+  siswa         Siswa          @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  jenisAsuransi JenisAsuransi?
+  noBpjs        String?
+  noAsuransi    String?
+  riwayatSakit  String
+  tanggal       DateTime
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@map("kesehatan")
   @@index([siswaId])
+  @@index([tanggal])
+}
+
+model Tahfidz {
+  id         String   @id @default(cuid())
+  siswaId    String
+  siswa      Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  juzKe      Int      // Juz 1-30
+  nilai      Decimal? // Nilai hafalan (opsional)
+  keterangan String?
+  tanggal    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("tahfidz")
+  @@index([siswaId])
+  @@index([juzKe])
   @@index([tanggal])
 }
 

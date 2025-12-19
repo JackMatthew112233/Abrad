@@ -172,11 +172,13 @@ export default function KoperasiPage() {
             </CardTitle>
             <Users className="h-4 w-4 text-emerald-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
             <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : stats.totalAnggota}
             </div>
-            <p className="text-xs text-zinc-500 mt-1">Anggota terdaftar</p>
+            <div className="space-y-1">
+              <p className="text-xs text-zinc-500">Anggota terdaftar</p>
+            </div>
           </CardContent>
         </Card>
 
@@ -187,13 +189,15 @@ export default function KoperasiPage() {
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-emerald-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
             <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : formatRupiah(stats.totalPemasukan)}
             </div>
-            <p className="text-xs text-zinc-500 mt-1">
-              Simpanan + Penyertaan Modal
-            </p>
+            <div className="space-y-1">
+              <p className="text-xs text-zinc-500">
+                Simpanan + Penyertaan Modal
+              </p>
+            </div>
           </CardContent>
         </Card>
 
@@ -202,13 +206,15 @@ export default function KoperasiPage() {
             <CardTitle className="text-sm font-medium text-zinc-700">
               Total Pengeluaran
             </CardTitle>
-            <TrendingDown className="h-4 w-4 text-red-600" />
+            <TrendingDown className="h-4 w-4 text-emerald-600" />
           </CardHeader>
-          <CardContent>
-            <div className="text-xl lg:text-2xl font-bold text-red-600">
+          <CardContent className="space-y-3">
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : formatRupiah(stats.totalPengeluaran)}
             </div>
-            <p className="text-xs text-zinc-500 mt-1">Belanja + Pinjaman</p>
+            <div className="space-y-1">
+              <p className="text-xs text-zinc-500">Belanja + Pinjaman</p>
+            </div>
           </CardContent>
         </Card>
 
@@ -219,11 +225,13 @@ export default function KoperasiPage() {
             </CardTitle>
             <Wallet className="h-4 w-4 text-emerald-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
             <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : formatRupiah(stats.saldo)}
             </div>
-            <p className="text-xs text-zinc-500 mt-1">Pemasukan - Pengeluaran</p>
+            <div className="space-y-1">
+              <p className="text-xs text-zinc-500">Pemasukan - Pengeluaran</p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -276,7 +284,7 @@ export default function KoperasiPage() {
 
           {/* Search Bar */}
           <div className="mt-4">
-            <div className="relative w-full lg:w-80">
+            <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 h-3 w-3 lg:h-4 lg:w-4 -translate-y-1/2 text-zinc-400" />
               <Input
                 type="text"
@@ -339,7 +347,12 @@ export default function KoperasiPage() {
                         {(pagination.page - 1) * pagination.limit + index + 1}
                       </TableCell>
                       <TableCell className="font-medium text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
-                        {item.nama}
+                        <button
+                          onClick={() => router.push(`/koperasi/anggota/${item.id}`)}
+                          className="text-emerald-700 hover:text-emerald-900 hover:underline cursor-pointer transition-colors"
+                        >
+                          {item.nama}
+                        </button>
                       </TableCell>
                       <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                         {item.noTelp || "-"}
@@ -361,42 +374,69 @@ export default function KoperasiPage() {
           </div>
 
           {/* Pagination */}
-          {!isLoading &&
-            filteredAnggota.length > 0 &&
-            pagination.totalPages > 1 && (
-              <div className="mt-4 px-4 sm:px-0 flex flex-col lg:flex-row items-center justify-between gap-3">
-                <p className="text-xs lg:text-sm text-zinc-500">
-                  Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}
-                  {Math.min(
-                    pagination.page * pagination.limit,
-                    pagination.total
-                  )}{" "}
-                  dari {pagination.total} anggota
-                </p>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(pagination.page - 1)}
-                    disabled={pagination.page === 1}
-                    className="h-8 text-xs lg:text-sm"
-                  >
-                    <ChevronLeft className="h-3 w-3 lg:h-4 lg:w-4" />
-                    <span className="hidden lg:inline ml-1">Prev</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(pagination.page + 1)}
-                    disabled={pagination.page === pagination.totalPages}
-                    className="h-8 text-xs lg:text-sm"
-                  >
-                    <span className="hidden lg:inline mr-1">Next</span>
-                    <ChevronRight className="h-3 w-3 lg:h-4 lg:w-4" />
-                  </Button>
+          {!isLoading && filteredAnggota.length > 0 && (
+            <div className="mt-4 px-4 sm:px-0 flex flex-col lg:flex-row items-center justify-between gap-3">
+              <p className="text-xs lg:text-sm text-zinc-500">
+                Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}
+                {Math.min(
+                  pagination.page * pagination.limit,
+                  pagination.total
+                )}{" "}
+                dari {pagination.total} anggota
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(pagination.page - 1)}
+                  disabled={pagination.page === 1}
+                  className="h-8 text-xs lg:text-sm"
+                >
+                  <ChevronLeft className="h-3 w-3 lg:h-4 lg:w-4" />
+                  <span className="hidden lg:inline ml-1">Prev</span>
+                </Button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
+                    .filter((page) => {
+                      return (
+                        page === 1 ||
+                        page === pagination.totalPages ||
+                        (page >= pagination.page - 1 && page <= pagination.page + 1)
+                      );
+                    })
+                    .map((page, index, array) => (
+                      <div key={page} className="flex items-center">
+                        {index > 0 && array[index - 1] !== page - 1 && (
+                          <span className="px-2 text-zinc-400 text-xs">...</span>
+                        )}
+                        <Button
+                          variant={page === pagination.page ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handlePageChange(page)}
+                          className={`h-8 w-8 p-0 text-xs lg:text-sm ${
+                            page === pagination.page
+                              ? "bg-emerald-600 hover:bg-emerald-700"
+                              : ""
+                          }`}
+                        >
+                          {page}
+                        </Button>
+                      </div>
+                    ))}
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(pagination.page + 1)}
+                  disabled={pagination.page === pagination.totalPages}
+                  className="h-8 text-xs lg:text-sm"
+                >
+                  <span className="hidden lg:inline mr-1">Next</span>
+                  <ChevronRight className="h-3 w-3 lg:h-4 lg:w-4" />
+                </Button>
               </div>
-            )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

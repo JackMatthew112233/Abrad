@@ -211,9 +211,9 @@ export default function AbsensiPage() {
   // If no jenis selected, show selection menu
   if (!jenisAbsensi) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 lg:space-y-6">
         {/* Header */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-8 shadow-lg">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 lg:p-8 shadow-lg">
           <div className="absolute -right-8 -top-8 opacity-20">
             <ClipboardCheck className="h-64 w-64 text-white" strokeWidth={0.5} />
           </div>
@@ -221,35 +221,35 @@ export default function AbsensiPage() {
             <Calendar className="h-32 w-32 text-white" strokeWidth={0.5} />
           </div>
           <div className="relative">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
-              <ClipboardCheck className="h-4 w-4" />
+            <div className="mb-2 lg:mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 lg:px-4 lg:py-1.5 text-xs lg:text-sm font-medium text-white backdrop-blur-sm">
+              <ClipboardCheck className="h-3 w-3 lg:h-4 lg:w-4" />
               Kelola Absensi
             </div>
-            <h1 className="mb-2 text-4xl font-bold text-white">
+            <h1 className="mb-1 lg:mb-2 text-2xl lg:text-4xl font-bold text-white">
               Pilih Jenis Absensi
             </h1>
-            <p className="max-w-2xl text-lg text-emerald-50">
+            <p className="max-w-2xl text-sm lg:text-lg text-emerald-50">
               Pilih jenis absensi yang ingin Anda kelola
             </p>
           </div>
         </div>
 
         {/* Menu Cards */}
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 lg:gap-6 md:grid-cols-3">
           <Card 
             className="border-emerald-200 bg-white hover:shadow-lg transition-shadow cursor-pointer"
             onClick={() => setJenisAbsensi("KELAS")}
           >
             <CardHeader className="text-center pb-2">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-                <ClipboardCheck className="h-8 w-8 text-emerald-600" />
+              <div className="mx-auto mb-3 lg:mb-4 flex h-12 w-12 lg:h-16 lg:w-16 items-center justify-center rounded-full bg-emerald-100">
+                <ClipboardCheck className="h-6 w-6 lg:h-8 lg:w-8 text-emerald-600" />
               </div>
-              <CardTitle className="text-xl font-bold text-emerald-700">
+              <CardTitle className="text-base lg:text-xl font-bold text-emerald-700">
                 Absensi Kelas
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-sm text-zinc-600">
+              <p className="text-xs lg:text-sm text-zinc-600">
                 Kelola kehadiran santri di kelas formal setiap hari
               </p>
             </CardContent>
@@ -260,15 +260,15 @@ export default function AbsensiPage() {
             onClick={() => setJenisAbsensi("ASRAMA")}
           >
             <CardHeader className="text-center pb-2">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-                <Users className="h-8 w-8 text-emerald-600" />
+              <div className="mx-auto mb-3 lg:mb-4 flex h-12 w-12 lg:h-16 lg:w-16 items-center justify-center rounded-full bg-emerald-100">
+                <Users className="h-6 w-6 lg:h-8 lg:w-8 text-emerald-600" />
               </div>
-              <CardTitle className="text-xl font-bold text-emerald-700">
+              <CardTitle className="text-base lg:text-xl font-bold text-emerald-700">
                 Absensi Asrama
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-sm text-zinc-600">
+              <p className="text-xs lg:text-sm text-zinc-600">
                 Pantau kehadiran santri di asrama dan kamar
               </p>
             </CardContent>
@@ -279,15 +279,15 @@ export default function AbsensiPage() {
             onClick={() => setJenisAbsensi("PENGAJIAN")}
           >
             <CardHeader className="text-center pb-2">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-                <FileText className="h-8 w-8 text-emerald-600" />
+              <div className="mx-auto mb-3 lg:mb-4 flex h-12 w-12 lg:h-16 lg:w-16 items-center justify-center rounded-full bg-emerald-100">
+                <FileText className="h-6 w-6 lg:h-8 lg:w-8 text-emerald-600" />
               </div>
-              <CardTitle className="text-xl font-bold text-emerald-700">
+              <CardTitle className="text-base lg:text-xl font-bold text-emerald-700">
                 Absensi Pengajian
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-sm text-zinc-600">
+              <p className="text-xs lg:text-sm text-zinc-600">
                 Catat kehadiran santri dalam kegiatan pengajian
               </p>
             </CardContent>
@@ -298,9 +298,9 @@ export default function AbsensiPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-8 shadow-lg">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 lg:p-8 shadow-lg">
         <div className="absolute -right-8 -top-8 opacity-20">
           <ClipboardCheck className="h-64 w-64 text-white" strokeWidth={0.5} />
         </div>
@@ -309,14 +309,14 @@ export default function AbsensiPage() {
         </div>
         <div className="relative flex items-center justify-between">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
-              <ClipboardCheck className="h-4 w-4" />
+            <div className="mb-2 lg:mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 lg:px-4 lg:py-1.5 text-xs lg:text-sm font-medium text-white backdrop-blur-sm">
+              <ClipboardCheck className="h-3 w-3 lg:h-4 lg:w-4" />
               Kelola Absensi - {jenisAbsensi === "KELAS" ? "Kelas" : jenisAbsensi === "ASRAMA" ? "Asrama" : "Pengajian"}
             </div>
-            <h1 className="mb-2 text-4xl font-bold text-white">
+            <h1 className="mb-1 lg:mb-2 text-2xl lg:text-4xl font-bold text-white">
               Absensi {jenisAbsensi === "KELAS" ? "Kelas" : jenisAbsensi === "ASRAMA" ? "Asrama" : "Pengajian"}
             </h1>
-            <p className="max-w-2xl text-lg text-emerald-50">
+            <p className="max-w-2xl text-sm lg:text-lg text-emerald-50">
               Kelola dan pantau kehadiran santri / santriwati setiap hari
             </p>
           </div>
@@ -325,7 +325,7 @@ export default function AbsensiPage() {
 
       {/* KPI Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-emerald-200 bg-white">
+        <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
               Hadir
@@ -333,7 +333,7 @@ export default function AbsensiPage() {
             <UserCheck className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">{stats.HADIR}</div>
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">{stats.HADIR}</div>
             <div className="space-y-1">
               <div className="flex items-center text-xs text-emerald-600">
                 <TrendingUp className="mr-1 h-3 w-3" />
@@ -347,7 +347,7 @@ export default function AbsensiPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-emerald-200 bg-white">
+        <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
               Tidak Hadir
@@ -355,13 +355,13 @@ export default function AbsensiPage() {
             <UserX className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">{stats.TIDAK_HADIR}</div>
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">{stats.TIDAK_HADIR}</div>
             <div className="space-y-1">
-              <div className="flex items-center text-xs text-emerald-600">
+              <div className="flex items-center text-xs text-zinc-500">
                 <span className="font-semibold">
                   {totalKehadiran > 0 ? ((stats.TIDAK_HADIR / totalKehadiran) * 100).toFixed(1) : "0"}%
                 </span>
-                <span className="ml-1 text-zinc-500">(dari total)</span>
+                <span className="ml-1">(dari total)</span>
               </div>
               <p className="text-xs text-zinc-500">
                 Tanpa keterangan
@@ -370,7 +370,7 @@ export default function AbsensiPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-emerald-200 bg-white">
+        <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
               Sakit
@@ -378,13 +378,13 @@ export default function AbsensiPage() {
             <Heart className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">{stats.SAKIT}</div>
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">{stats.SAKIT}</div>
             <div className="space-y-1">
-              <div className="flex items-center text-xs text-emerald-600">
+              <div className="flex items-center text-xs text-zinc-500">
                 <span className="font-semibold">
                   {totalKehadiran > 0 ? ((stats.SAKIT / totalKehadiran) * 100).toFixed(1) : "0"}%
                 </span>
-                <span className="ml-1 text-zinc-500">(dari total)</span>
+                <span className="ml-1">(dari total)</span>
               </div>
               <p className="text-xs text-zinc-500">
                 Dengan surat keterangan
@@ -393,7 +393,7 @@ export default function AbsensiPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-emerald-200 bg-white">
+        <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
               Izin
@@ -401,13 +401,13 @@ export default function AbsensiPage() {
             <FileText className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">{stats.IZIN}</div>
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">{stats.IZIN}</div>
             <div className="space-y-1">
-              <div className="flex items-center text-xs text-emerald-600">
+              <div className="flex items-center text-xs text-zinc-500">
                 <span className="font-semibold">
                   {totalKehadiran > 0 ? ((stats.IZIN / totalKehadiran) * 100).toFixed(1) : "0"}%
                 </span>
-                <span className="ml-1 text-zinc-500">(dari total)</span>
+                <span className="ml-1">(dari total)</span>
               </div>
               <p className="text-xs text-zinc-500">
                 Izin resmi
@@ -420,41 +420,47 @@ export default function AbsensiPage() {
       {/* Tabel Statistik Absensi Per Santri */}
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-semibold text-emerald-700">
-              Statistik Kehadiran Santri / Santriwati
-            </CardTitle>
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <CardTitle className="text-base lg:text-lg font-semibold text-emerald-700">
+                Statistik Kehadiran Santri / Santriwati
+              </CardTitle>
+              <p className="mt-1 text-xs lg:text-sm text-zinc-500">
+                Total {pagination.total} data kehadiran
+              </p>
+            </div>
             <div className="flex gap-2">
               <Button
                 onClick={() => setShowInputDialog(true)}
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9"
               >
-                <ClipboardCheck className="mr-2 h-4 w-4" />
+                <ClipboardCheck className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
                 Input Absensi
               </Button>
               <Button
                 onClick={() => setShowDownloadDialog(true)}
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9"
               >
-                <Download className="mr-2 h-4 w-4" />
-                Unduh Riwayat Absensi
+                <Download className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                <span className="hidden sm:inline">Unduh Riwayat</span>
+                <span className="sm:hidden">Unduh</span>
               </Button>
             </div>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4 flex gap-3">
+          
+          {/* Search & Filter */}
+          <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 lg:gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 h-3 w-3 lg:h-4 lg:w-4 -translate-y-1/2 text-zinc-400" />
               <Input
-                placeholder="Cari nama santri / santriwati..."
+                placeholder="Cari nama santri..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-9 text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
               />
             </div>
             <Select value={filterTingkatan} onValueChange={setFilterTingkatan}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
                 <SelectValue placeholder="Semua Tingkatan" />
               </SelectTrigger>
               <SelectContent>
@@ -464,7 +470,7 @@ export default function AbsensiPage() {
               </SelectContent>
             </Select>
             <Select value={filterKelas} onValueChange={setFilterKelas}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
                 <SelectValue placeholder="Semua Kelas" />
               </SelectTrigger>
               <SelectContent>
@@ -484,47 +490,48 @@ export default function AbsensiPage() {
               </SelectContent>
             </Select>
           </div>
-
+        </CardHeader>
+        <CardContent className="p-0 sm:p-6">
           {isLoadingTable ? (
-            <div className="text-center py-8 text-zinc-500">Memuat data...</div>
+            <div className="text-center py-8 text-zinc-500 text-xs lg:text-sm">Memuat data...</div>
           ) : (
-            <div className="rounded-md border overflow-x-auto">
-              <Table>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[700px]">
                 <TableHeader>
                   <TableRow className="bg-emerald-50 hover:bg-emerald-50">
-                    <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
-                    <TableHead className="font-semibold text-emerald-700 text-center">Hadir</TableHead>
-                    <TableHead className="font-semibold text-emerald-700 text-center">Tidak Hadir</TableHead>
-                    <TableHead className="font-semibold text-emerald-700 text-center">Izin</TableHead>
-                    <TableHead className="font-semibold text-emerald-700 text-center">Sakit</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm text-center whitespace-nowrap">Hadir</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm text-center whitespace-nowrap">Tidak Hadir</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm text-center whitespace-nowrap">Izin</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm text-center whitespace-nowrap">Sakit</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredAbsensi.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center text-zinc-500">
+                      <TableCell colSpan={7} className="h-32 text-center text-zinc-500 text-xs lg:text-sm">
                         {searchQuery ? "Tidak ada data yang sesuai pencarian" : "Belum ada data absensi"}
                       </TableCell>
                     </TableRow>
                   ) : (
                     filteredAbsensi.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell className="font-medium">
+                      <TableRow key={item.id} className="hover:bg-zinc-50">
+                        <TableCell className="font-medium text-xs lg:text-sm whitespace-nowrap">
                           <button
-                            onClick={() => router.push(`/absensi/detail/${item.id}`)}
-                            className="text-emerald-600 hover:text-emerald-700 hover:underline text-left"
+                            onClick={() => router.push(`/absensi/detail/${item.id}?jenis=${jenisAbsensi}`)}
+                            className="text-emerald-700 hover:text-emerald-900 hover:underline cursor-pointer transition-colors"
                           >
                             {item.nama || "-"}
                           </button>
                         </TableCell>
-                        <TableCell>{item.kelas ? item.kelas.replace("_", " ") : "-"}</TableCell>
-                        <TableCell>{item.tingkatan || "-"}</TableCell>
-                        <TableCell className="text-center">{item.hadir}</TableCell>
-                        <TableCell className="text-center">{item.tidakHadir}</TableCell>
-                        <TableCell className="text-center">{item.izin}</TableCell>
-                        <TableCell className="text-center">{item.sakit}</TableCell>
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{item.kelas ? item.kelas.replace("_", " ") : "-"}</TableCell>
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{item.tingkatan || "-"}</TableCell>
+                        <TableCell className="text-center text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{item.hadir}</TableCell>
+                        <TableCell className="text-center text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{item.tidakHadir}</TableCell>
+                        <TableCell className="text-center text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{item.izin}</TableCell>
+                        <TableCell className="text-center text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{item.sakit}</TableCell>
                       </TableRow>
                     ))
                   )}
@@ -535,20 +542,20 @@ export default function AbsensiPage() {
 
           {/* Pagination */}
           {!isLoadingTable && filteredAbsensi.length > 0 && (
-            <div className="mt-4 flex items-center justify-between">
-              <div className="text-sm text-zinc-500">
+            <div className="mt-4 px-4 sm:px-0 flex flex-col lg:flex-row items-center justify-between gap-3">
+              <p className="text-xs lg:text-sm text-zinc-500">
                 Menampilkan {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} dari {pagination.total} data
-              </div>
+              </p>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                  className="h-8 text-xs lg:text-sm"
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  Sebelumnya
+                  <ChevronLeft className="h-3 w-3 lg:h-4 lg:w-4" />
+                  <span className="hidden lg:inline ml-1">Prev</span>
                 </Button>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
@@ -569,11 +576,11 @@ export default function AbsensiPage() {
                         variant={pagination.page === pageNum ? "default" : "outline"}
                         size="sm"
                         onClick={() => handlePageChange(pageNum)}
-                        className={
+                        className={`h-8 w-8 p-0 text-xs lg:text-sm ${
                           pagination.page === pageNum
                             ? "bg-emerald-600 hover:bg-emerald-700"
-                            : "border-emerald-200 text-emerald-700 hover:bg-emerald-50"
-                        }
+                            : ""
+                        }`}
                       >
                         {pageNum}
                       </Button>
@@ -585,10 +592,10 @@ export default function AbsensiPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                  className="h-8 text-xs lg:text-sm"
                 >
-                  Selanjutnya
-                  <ChevronRight className="h-4 w-4 ml-1" />
+                  <span className="hidden lg:inline mr-1">Next</span>
+                  <ChevronRight className="h-3 w-3 lg:h-4 lg:w-4" />
                 </Button>
               </div>
             </div>

@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Delete,
   Body,
   Param,
@@ -49,11 +50,45 @@ export class KoperasiController {
     return this.koperasiService.getAnggotaById(id);
   }
 
+  @Get('anggota/:id/pemasukan')
+  async getPemasukanByAnggotaId(
+    @Param('id') id: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.koperasiService.getPemasukanByAnggotaId(
+      id,
+      page ? parseInt(page) : 1,
+      limit ? parseInt(limit) : 10,
+    );
+  }
+
+  @Get('anggota/:id/pengeluaran')
+  async getPengeluaranByAnggotaId(
+    @Param('id') id: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.koperasiService.getPengeluaranByAnggotaId(
+      id,
+      page ? parseInt(page) : 1,
+      limit ? parseInt(limit) : 10,
+    );
+  }
+
   @Post('anggota')
   async createAnggota(
     @Body() body: { nama: string; alamat?: string; noTelp?: string },
   ) {
     return this.koperasiService.createAnggota(body);
+  }
+
+  @Put('anggota/:id')
+  async updateAnggota(
+    @Param('id') id: string,
+    @Body() body: { nama?: string; alamat?: string; noTelp?: string },
+  ) {
+    return this.koperasiService.updateAnggota(id, body);
   }
 
   @Delete('anggota/:id')

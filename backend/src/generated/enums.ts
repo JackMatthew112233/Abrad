@@ -17,6 +17,15 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const StatusUser = {
+  MENUNGGU: 'MENUNGGU',
+  DITERIMA: 'DITERIMA',
+  DITOLAK: 'DITOLAK'
+} as const
+
+export type StatusUser = (typeof StatusUser)[keyof typeof StatusUser]
+
+
 export const JenisKelamin = {
   LakiLaki: 'LakiLaki',
   Perempuan: 'Perempuan'
@@ -135,3 +144,11 @@ export const JenisPengeluaranKoperasi = {
 } as const
 
 export type JenisPengeluaranKoperasi = (typeof JenisPengeluaranKoperasi)[keyof typeof JenisPengeluaranKoperasi]
+
+
+export const JenisAsuransi = {
+  BPJS: 'BPJS',
+  NON_BPJS: 'NON_BPJS'
+} as const
+
+export type JenisAsuransi = (typeof JenisAsuransi)[keyof typeof JenisAsuransi]

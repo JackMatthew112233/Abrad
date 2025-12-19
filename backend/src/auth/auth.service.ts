@@ -28,18 +28,20 @@ export class AuthService {
         password: hashedPassword,
         name: dto.name,
         role: dto.role,
+        status: 'MENUNGGU',
       },
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
+        status: true,
         createdAt: true,
       },
     });
 
     return {
-      message: 'Registrasi berhasil',
+      message: 'Registrasi berhasil. Menunggu persetujuan admin.',
       user,
     };
   }
@@ -59,10 +61,14 @@ export class AuthService {
       throw new UnauthorizedException('Email atau password salah');
     }
 
+    // Note: Status check is handled by frontend
+    // Users with MENUNGGU/DITOLAK status will be redirected to status page
+
     const payload = {
       sub: user.id,
       email: user.email,
       role: user.role,
+      status: user.status,
     };
 
     const token = await this.jwt.signAsync(payload);
@@ -74,6 +80,7 @@ export class AuthService {
         email: user.email,
         name: user.name,
         role: user.role,
+        status: user.status,
       },
       access_token: token,
     };
@@ -87,6 +94,7 @@ export class AuthService {
         email: true,
         name: true,
         role: true,
+        status: true,
       },
     });
   }

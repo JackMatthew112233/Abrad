@@ -2,10 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Wallet, ClipboardCheck, School, AlertTriangle, Heart, BookOpen, X, Landmark } from "lucide-react";
+import { 
+  LayoutDashboard, 
+  Users, 
+  Wallet, 
+  ClipboardCheck, 
+  School, 
+  AlertTriangle, 
+  Heart, 
+  BookOpen, 
+  X, 
+  Landmark,
+  UserCheck,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const menuItems = [
+const userMenuItems = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -48,13 +60,24 @@ const menuItems = [
   },
 ];
 
+const adminMenuItems = [
+  {
+    title: "Kelola Pendaftaran",
+    href: "/pendaftaran",
+    icon: UserCheck,
+  },
+];
+
 interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
+  userRole?: "User" | "Admin";
 }
 
-export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
+export function Sidebar({ isOpen = true, onClose, userRole = "User" }: SidebarProps) {
   const pathname = usePathname();
+  
+  const menuItems = userRole === "Admin" ? adminMenuItems : userMenuItems;
 
   return (
     <>
@@ -85,6 +108,7 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             <X className="h-5 w-5" />
           </button>
         </div>
+        
         <nav className="flex-1 space-y-1 overflow-y-auto p-4">
           {menuItems.map((item) => {
             const Icon = item.icon;
