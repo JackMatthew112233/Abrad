@@ -211,6 +211,14 @@ export class KeuanganService {
     // Count santri with biodata
     const jumlahSantriTerdaftar = await this.prisma.biodataKeuangan.count();
 
+    // Get total donasi
+    const donasiAggregate = await this.prisma.donasi.aggregate({
+      _sum: {
+        jumlahDonasi: true,
+      },
+    });
+    const totalDonasi = Number(donasiAggregate._sum.jumlahDonasi || 0);
+
     return {
       totalKomitmen,
       totalInfaq,
@@ -218,6 +226,7 @@ export class KeuanganService {
       totalPembayaranInfaq,
       totalPembayaranLaundry,
       jumlahSantriTerdaftar,
+      totalDonasi,
     };
   }
 
@@ -270,8 +279,17 @@ export class KeuanganService {
     }));
   }
 
-  async getChartDistribusi() {
-    // Get total pemasukan (pembayaran)
+  async getChartTargetRealisasi() {
+    // Get total target (komitmen) from biodata keuangan
+    const biodataKeuangan = await this.prisma.biodataKeuangan.aggregate({
+      _sum: {
+        komitmenInfaqLaundry: true,
+        infaq: true,
+        laundry: true,
+      },
+    });
+
+    // Get total realisasi (pembayaran)
     const pembayaran = await this.prisma.pembayaran.aggregate({
       _sum: {
         totalPembayaranInfaq: true,
@@ -279,7 +297,212 @@ export class KeuanganService {
       },
     });
 
-    // Get total pengeluaran
+    const totalTarget = Number(biodataKeuangan._sum.komitmenInfaqLaundry || 0);
+    const totalRealisasi = Number(pembayaran._sum.totalPembayaranInfaq || 0) + Number(pembayaran._sum.totalPembayaranLaundry || 0);
+
+    // Calculate percentage
+    const persentase = totalTarget > 0 ? Math.round((totalRealisasi / totalTarget) * 100) : 0;
+
+    // Get last 6 months of payment data for trend chart
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const pembayaranList = await this.prisma.pembayaran.findMany({
+      where: {
+        createdAt: {
+          gte: sixMonthsAgo,
+        },
+      },
+      select: {
+        totalPembayaranInfaq: true,
+        totalPembayaranLaundry: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    // Group by month for trend data
+    const monthlyData: Record<string, { realisasi: number }> = {};
+
+    pembayaranList.forEach((p) => {
+      const monthKey = new Intl.DateTimeFormat('id-ID', {
+        month: 'short',
+        year: 'numeric',
+      }).format(p.createdAt);
+
+      if (!monthlyData[monthKey]) {
+        monthlyData[monthKey] = { realisasi: 0 };
+      }
+
+      monthlyData[monthKey].realisasi += Number(p.totalPembayaranInfaq || 0) + Number(p.totalPembayaranLaundry || 0);
+    });
+
+    // Calculate monthly target (total target divided by 12 months as baseline)
+    const monthlyTarget = Math.round(totalTarget / 12);
+
+    // Convert to array format for line chart
+    const trendData = Object.entries(monthlyData).map(([bulan, data]) => ({
+      bulan: bulan.split(' ')[0], // Get just month name
+      target: Math.round(monthlyTarget / 1000000), // Convert to millions
+      realisasi: Math.round(data.realisasi / 1000000), // Convert to millions
+    }));
+
+    return {
+      target: totalTarget,
+      realisasi: totalRealisasi,
+      persentase,
+      sisa: totalTarget - totalRealisasi,
+      trendData, // New: monthly trend data for line chart
+      chartData: [
+        {
+          name: 'Target',
+          value: totalTarget,
+          color: '#94a3b8', // slate-400
+        },
+        {
+          name: 'Realisasi',
+          value: totalRealisasi,
+          color: '#10b981', // emerald-600
+        },
+      ],
+    };
+  }
+
+  async getChartDistribusi(filter?: string) {
+    // Filter: all (default), pemasukan, pengeluaran, donasi, jenis_SERAGAM, jenis_LISTRIK, etc
+    
+    if (filter === 'pemasukan') {
+      // Detail breakdown pemasukan
+      const pembayaran = await this.prisma.pembayaran.aggregate({
+        _sum: {
+          totalPembayaranInfaq: true,
+          totalPembayaranLaundry: true,
+        },
+      });
+
+      return [
+        {
+          name: 'Infaq',
+          value: Number(pembayaran._sum.totalPembayaranInfaq || 0),
+          color: '#10b981',
+        },
+        {
+          name: 'Laundry',
+          value: Number(pembayaran._sum.totalPembayaranLaundry || 0),
+          color: '#22c55e',
+        },
+      ];
+    }
+    
+    if (filter === 'donasi') {
+      // Detail breakdown donasi by nama
+      const donasiList = await this.prisma.donasi.findMany({
+        select: {
+          nama: true,
+          jumlahDonasi: true,
+        },
+      });
+
+      // Group by nama and sum
+      const groupedData: Record<string, number> = {};
+      donasiList.forEach((item) => {
+        if (!groupedData[item.nama]) {
+          groupedData[item.nama] = 0;
+        }
+        groupedData[item.nama] += Number(item.jumlahDonasi);
+      });
+
+      const colors = ['#10b981', '#22c55e', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'];
+      
+      return Object.entries(groupedData)
+        .map(([nama, total], index) => ({
+          name: nama,
+          value: total,
+          color: colors[index % colors.length],
+        }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 10); // Top 10
+    }
+    
+    if (filter === 'pengeluaran') {
+      // Pengeluaran breakdown by jenis
+      const pengeluaranByJenis = await this.prisma.pengeluaran.groupBy({
+        by: ['jenis'],
+        _sum: {
+          harga: true,
+        },
+      });
+
+      const colors = ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6'];
+      
+      return pengeluaranByJenis.map((item, index) => {
+        const jenisMap: Record<string, string> = {
+          SERAGAM: 'Seragam',
+          LISTRIK: 'Listrik',
+          INTERNET: 'Internet',
+          LAUK: 'Lauk',
+          BERAS: 'Beras',
+          PERCETAKAN: 'Percetakan',
+          JASA: 'Jasa',
+          LAUNDRY: 'Laundry',
+          PERBAIKAN_FASILITAS_PONDOK: 'Perbaikan Fasilitas',
+          PENGELUARAN_NON_RUTIN: 'Non Rutin',
+          LAINNYA: 'Lainnya',
+        };
+        
+        return {
+          name: jenisMap[item.jenis] || item.jenis,
+          value: Number(item._sum.harga || 0),
+          color: colors[index % colors.length],
+        };
+      });
+    }
+    
+    if (filter && filter.startsWith('jenis_')) {
+      // Show specific jenis breakdown by month or detail
+      const jenis = filter.replace('jenis_', '');
+      
+      const pengeluaranList = await this.prisma.pengeluaran.findMany({
+        where: {
+          jenis: jenis as any,
+        },
+        select: {
+          nama: true,
+          harga: true,
+        },
+      });
+
+      // Group by nama and sum
+      const groupedData: Record<string, number> = {};
+      pengeluaranList.forEach((item) => {
+        if (!groupedData[item.nama]) {
+          groupedData[item.nama] = 0;
+        }
+        groupedData[item.nama] += Number(item.harga);
+      });
+
+      const colors = ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981', '#14b8a6'];
+      
+      return Object.entries(groupedData)
+        .map(([nama, total], index) => ({
+          name: nama,
+          value: total,
+          color: colors[index % colors.length],
+        }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 10); // Top 10
+    }
+    
+    // Default: Pemasukan vs Pengeluaran
+    const pembayaran = await this.prisma.pembayaran.aggregate({
+      _sum: {
+        totalPembayaranInfaq: true,
+        totalPembayaranLaundry: true,
+      },
+    });
+
     const pengeluaran = await this.prisma.pengeluaran.aggregate({
       _sum: {
         harga: true,

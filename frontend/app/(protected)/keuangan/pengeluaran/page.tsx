@@ -6,6 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft, Edit, Trash2, ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -198,21 +205,21 @@ export default function RiwayatPengeluaranPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="flex items-center gap-3 lg:gap-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.back()}
-          className="text-zinc-600 hover:text-zinc-900"
+          className="text-zinc-600 hover:text-zinc-900 h-8 w-8 lg:h-10 lg:w-10"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-4 w-4 lg:h-5 lg:w-5" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-emerald-700">
+          <h1 className="text-lg lg:text-2xl font-bold text-emerald-700">
             Riwayat Pengeluaran
           </h1>
-          <p className="text-zinc-600">
+          <p className="text-xs lg:text-sm text-zinc-600">
             Semua riwayat pengeluaran
           </p>
         </div>
@@ -220,73 +227,85 @@ export default function RiwayatPengeluaranPage() {
 
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <CardTitle className="text-base font-semibold text-emerald-700">
+          <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
             Daftar Pengeluaran
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 sm:p-6">
           {isLoading ? (
-            <div className="text-center py-12 text-zinc-500">Loading...</div>
+            <div className="text-center py-12 text-zinc-500 text-xs lg:text-sm px-6">Loading...</div>
           ) : pengeluaranList.length === 0 ? (
-            <div className="text-center py-12 text-zinc-500">
+            <div className="text-center py-12 text-zinc-500 text-xs lg:text-sm px-6">
               Belum ada riwayat pengeluaran
             </div>
           ) : (
             <>
-              <div className="rounded-md border border-zinc-200">
-                <Table>
+              <div className="overflow-x-auto">
+                <Table className="min-w-[800px]">
                   <TableHeader>
                     <TableRow className="bg-emerald-50">
-                      <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Jenis</TableHead>
-                      <TableHead className="text-right font-semibold text-emerald-700">Harga</TableHead>
-                      <TableHead className="text-center font-semibold text-emerald-700">Bukti</TableHead>
-                      <TableHead className="text-center font-semibold text-emerald-700">Aksi</TableHead>
+                      <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tanggal</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Jenis</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Harga</TableHead>
+                      <TableHead className="text-center font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Bukti</TableHead>
+                      <TableHead className="text-center font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {pengeluaranList.map((pengeluaran, index) => (
                       <TableRow key={pengeluaran.id} className="hover:bg-zinc-50">
-                        <TableCell className="text-zinc-600">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {(pagination.page - 1) * pagination.limit + index + 1}
                         </TableCell>
-                        <TableCell className="text-zinc-600 text-sm">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {new Date(pengeluaran.tanggalPengeluaran).toLocaleDateString("id-ID", {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
                           })}
                         </TableCell>
-                        <TableCell className="text-zinc-900">{pengeluaran.nama}</TableCell>
-                        <TableCell className="text-zinc-600">{pengeluaran.jenis}</TableCell>
-                        <TableCell className="text-right font-semibold text-red-600">
+                        <TableCell className="text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{pengeluaran.nama}</TableCell>
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
+                          {pengeluaran.jenis === "SERAGAM" && "Seragam"}
+                          {pengeluaran.jenis === "LISTRIK" && "Listrik"}
+                          {pengeluaran.jenis === "INTERNET" && "Internet"}
+                          {pengeluaran.jenis === "LAUK" && "Lauk"}
+                          {pengeluaran.jenis === "BERAS" && "Beras"}
+                          {pengeluaran.jenis === "PERCETAKAN" && "Percetakan"}
+                          {pengeluaran.jenis === "JASA" && "Jasa"}
+                          {pengeluaran.jenis === "LAUNDRY" && "Laundry"}
+                          {pengeluaran.jenis === "PERBAIKAN_FASILITAS_PONDOK" && "Perbaikan Fasilitas Pondok"}
+                          {pengeluaran.jenis === "PENGELUARAN_NON_RUTIN" && "Pengeluaran Non Rutin"}
+                          {pengeluaran.jenis === "LAINNYA" && "Lainnya"}
+                        </TableCell>
+                        <TableCell className="text-right font-semibold text-red-600 text-xs lg:text-sm whitespace-nowrap">
                           {formatRupiah(pengeluaran.harga)}
                         </TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="text-center whitespace-nowrap">
                           {pengeluaran.bukti ? (
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => window.open(pengeluaran.bukti!, "_blank")}
-                              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 h-8 w-8 p-0"
                             >
-                              <FileText className="h-4 w-4" />
+                              <FileText className="h-3 w-3 lg:h-4 lg:w-4" />
                             </Button>
                           ) : (
-                            <span className="text-zinc-400 text-sm">-</span>
+                            <span className="text-zinc-400 text-xs">-</span>
                           )}
                         </TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="text-center whitespace-nowrap">
                           <div className="flex items-center justify-center gap-1">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleEditPengeluaran(pengeluaran)}
-                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 w-8 p-0"
                             >
-                              <Edit className="h-4 w-4" />
+                              <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
                             </Button>
                             <Button
                               variant="ghost"
@@ -295,9 +314,9 @@ export default function RiwayatPengeluaranPage() {
                                 setSelectedPengeluaran(pengeluaran);
                                 setShowDeleteDialog(true);
                               }}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-3 w-3 lg:h-4 lg:w-4" />
                             </Button>
                           </div>
                         </TableCell>
@@ -309,45 +328,57 @@ export default function RiwayatPengeluaranPage() {
 
               {/* Pagination */}
               {pagination.totalPages > 1 && (
-                <div className="flex items-center justify-between mt-4">
-                  <p className="text-sm text-zinc-600">
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-3 mt-4 px-4 sm:px-0">
+                  <p className="text-xs lg:text-sm text-zinc-600">
                     Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}
                     {Math.min(pagination.page * pagination.limit, pagination.total)} dari{" "}
                     {pagination.total} pengeluaran
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handlePageChange(pagination.page - 1)}
                       disabled={pagination.page === 1}
+                      className="h-8 text-xs lg:text-sm"
                     >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
-                      Sebelumnya
+                      <ChevronLeft className="h-3 w-3 lg:h-4 lg:w-4" />
+                      <span className="hidden lg:inline ml-1">Prev</span>
                     </Button>
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
-                        (pageNum) => (
-                          <Button
-                            key={pageNum}
-                            variant={pageNum === pagination.page ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => handlePageChange(pageNum)}
-                            className={pageNum === pagination.page ? "bg-emerald-600 hover:bg-emerald-700" : ""}
-                          >
-                            {pageNum}
-                          </Button>
-                        )
-                      )}
+                      {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
+                        .filter((page) => {
+                          return (
+                            page === 1 ||
+                            page === pagination.totalPages ||
+                            (page >= pagination.page - 1 && page <= pagination.page + 1)
+                          );
+                        })
+                        .map((pageNum, index, array) => (
+                          <div key={pageNum} className="flex items-center">
+                            {index > 0 && array[index - 1] !== pageNum - 1 && (
+                              <span className="px-2 text-zinc-400 text-xs">...</span>
+                            )}
+                            <Button
+                              variant={pageNum === pagination.page ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => handlePageChange(pageNum)}
+                              className={`h-8 w-8 p-0 text-xs lg:text-sm ${pageNum === pagination.page ? "bg-emerald-600 hover:bg-emerald-700" : ""}`}
+                            >
+                              {pageNum}
+                            </Button>
+                          </div>
+                        ))}
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handlePageChange(pagination.page + 1)}
                       disabled={pagination.page === pagination.totalPages}
+                      className="h-8 text-xs lg:text-sm"
                     >
-                      Selanjutnya
-                      <ChevronRight className="h-4 w-4 ml-1" />
+                      <span className="hidden lg:inline mr-1">Next</span>
+                      <ChevronRight className="h-3 w-3 lg:h-4 lg:w-4" />
                     </Button>
                   </div>
                 </div>
@@ -387,13 +418,29 @@ export default function RiwayatPengeluaranPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-jenis">Jenis Pengeluaran</Label>
-              <Input
-                id="edit-jenis"
+              <Select
                 value={editFormData.jenis}
-                onChange={(e) =>
-                  setEditFormData({ ...editFormData, jenis: e.target.value })
+                onValueChange={(value) =>
+                  setEditFormData({ ...editFormData, jenis: value })
                 }
-              />
+              >
+                <SelectTrigger id="edit-jenis">
+                  <SelectValue placeholder="Pilih jenis pengeluaran" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="SERAGAM">Seragam</SelectItem>
+                  <SelectItem value="LISTRIK">Listrik</SelectItem>
+                  <SelectItem value="INTERNET">Internet</SelectItem>
+                  <SelectItem value="LAUK">Lauk</SelectItem>
+                  <SelectItem value="BERAS">Beras</SelectItem>
+                  <SelectItem value="PERCETAKAN">Percetakan</SelectItem>
+                  <SelectItem value="JASA">Jasa</SelectItem>
+                  <SelectItem value="LAUNDRY">Laundry</SelectItem>
+                  <SelectItem value="PERBAIKAN_FASILITAS_PONDOK">Perbaikan Fasilitas Pondok</SelectItem>
+                  <SelectItem value="PENGELUARAN_NON_RUTIN">Pengeluaran Non Rutin</SelectItem>
+                  <SelectItem value="LAINNYA">Lainnya</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-harga">Harga</Label>

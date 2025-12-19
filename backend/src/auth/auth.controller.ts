@@ -46,4 +46,26 @@ export class AuthController {
   getProfile(@Req() req: Request) {
     return req.user;
   }
+
+  @Post('update-email')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async updateEmail(
+    @Req() req: Request,
+    @Body(ValidationPipe) body: { email: string; password: string },
+  ) {
+    const user = req.user as { id: string };
+    return this.authService.updateEmail(user.id, body.email, body.password);
+  }
+
+  @Post('update-password')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async updatePassword(
+    @Req() req: Request,
+    @Body(ValidationPipe) body: { oldPassword: string; newPassword: string },
+  ) {
+    const user = req.user as { id: string };
+    return this.authService.updatePassword(user.id, body.oldPassword, body.newPassword);
+  }
 }

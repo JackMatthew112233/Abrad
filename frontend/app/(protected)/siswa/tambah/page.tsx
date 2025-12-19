@@ -47,6 +47,7 @@ export default function TambahSiswaPage() {
     pendidikanIbu: "",
     noTelpIbu: "",
     jenisKelamin: "",
+    status: "AKTIF",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -97,39 +98,62 @@ export default function TambahSiswaPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="space-y-3">
+        {/* Mobile: Full width button */}
         <Button
-          variant="ghost"
-          size="icon"
+          variant="outline"
           onClick={() => router.back()}
-          className="text-zinc-600 hover:text-zinc-900"
+          className="text-xs h-8 w-full lg:hidden"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-3 w-3 mr-2" />
+          Kembali
         </Button>
-        <div>
-          <h1 className="text-2xl font-bold text-emerald-700">
-            Tambah Biodata Santri / Santriwati
+
+        {/* Desktop: Icon button with title */}
+        <div className="hidden lg:flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.back()}
+            className="text-zinc-600 hover:text-zinc-900"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold text-emerald-700">
+              Tambah Biodata
+            </h1>
+            <p className="text-sm text-zinc-600">
+              Isi formulir dibawah untuk menambahkan biodata santri atau santriwati baru
+            </p>
+          </div>
+        </div>
+
+        {/* Mobile: Centered title */}
+        <div className="text-center lg:hidden">
+          <h1 className="text-lg font-bold text-emerald-700">
+            Tambah Biodata
           </h1>
-          <p className="text-zinc-600">
-            Isi formulir di bawah untuk menambahkan santri / santriwati baru
+          <p className="text-xs text-zinc-600">
+            Isi formulir dibawah untuk menambahkan biodata santri atau santriwati baru
           </p>
         </div>
       </div>
 
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <CardTitle className="text-base font-semibold text-emerald-700">
+          <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
             Formulir Biodata Santri / Santriwati
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-6 lg:space-y-8">
             {/* Data Siswa */}
-            <div className="space-y-4">
-              <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-3 lg:space-y-4">
+              <div className="grid gap-4 lg:gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="nama">Nama Santri / Santriwati</Label>
+                  <Label htmlFor="nama" className="text-xs lg:text-sm">Nama Santri / Santriwati</Label>
                   <Input
                     id="nama"
                     placeholder="Masukkan nama lengkap"
@@ -137,11 +161,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, nama: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tingkatan">Tingkatan</Label>
+                  <Label htmlFor="tingkatan" className="text-xs lg:text-sm">Tingkatan</Label>
                   <Select
                     value={formData.tingkatan}
                     onValueChange={(value) =>
@@ -159,7 +184,7 @@ export default function TambahSiswaPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="kelas">Kelas</Label>
+                  <Label htmlFor="kelas" className="text-xs lg:text-sm">Kelas</Label>
                   <Select
                     value={formData.kelas}
                     onValueChange={(value) =>
@@ -187,7 +212,7 @@ export default function TambahSiswaPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="jenisKelamin">Jenis Kelamin</Label>
+                  <Label htmlFor="jenisKelamin" className="text-xs lg:text-sm">Jenis Kelamin</Label>
                   <Select
                     value={formData.jenisKelamin}
                     onValueChange={(value) =>
@@ -205,7 +230,26 @@ export default function TambahSiswaPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nisn">NISN</Label>
+                  <Label htmlFor="status" className="text-xs lg:text-sm">Status</Label>
+                  <Select
+                    value={formData.status}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, status: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AKTIF">Aktif</SelectItem>
+                      <SelectItem value="TIDAK_AKTIF">Tidak Aktif</SelectItem>
+                      <SelectItem value="LULUS">Lulus</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="nisn" className="text-xs lg:text-sm">NISN</Label>
                   <Input
                     id="nisn"
                     placeholder="Masukkan NISN"
@@ -213,11 +257,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, nisn: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="npsn">NPSN</Label>
+                  <Label htmlFor="npsn" className="text-xs lg:text-sm">NPSN</Label>
                   <Input
                     id="npsn"
                     placeholder="Masukkan NPSN"
@@ -225,11 +270,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, npsn: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="sekolahAsal">Sekolah Asal</Label>
+                  <Label htmlFor="sekolahAsal" className="text-xs lg:text-sm">Sekolah Asal</Label>
                   <Input
                     id="sekolahAsal"
                     placeholder="Masukkan sekolah asal"
@@ -237,11 +283,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, sekolahAsal: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nis">NIS</Label>
+                  <Label htmlFor="nis" className="text-xs lg:text-sm">NIS</Label>
                   <Input
                     id="nis"
                     placeholder="Masukkan NIS"
@@ -249,11 +296,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, nis: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nik">NIK</Label>
+                  <Label htmlFor="nik" className="text-xs lg:text-sm">NIK</Label>
                   <Input
                     id="nik"
                     placeholder="Masukkan NIK (16 digit)"
@@ -262,11 +310,12 @@ export default function TambahSiswaPage() {
                       setFormData({ ...formData, nik: e.target.value })
                     }
                     maxLength={16}
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tempatLahir">Tempat Lahir</Label>
+                  <Label htmlFor="tempatLahir" className="text-xs lg:text-sm">Tempat Lahir</Label>
                   <Input
                     id="tempatLahir"
                     placeholder="Masukkan tempat lahir"
@@ -274,11 +323,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, tempatLahir: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tanggalLahir">Tanggal Lahir</Label>
+                  <Label htmlFor="tanggalLahir" className="text-xs lg:text-sm">Tanggal Lahir</Label>
                   <Input
                     id="tanggalLahir"
                     type="date"
@@ -286,11 +336,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, tanggalLahir: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="kodePos">Kode Pos</Label>
+                  <Label htmlFor="kodePos" className="text-xs lg:text-sm">Kode Pos</Label>
                   <Input
                     id="kodePos"
                     placeholder="Masukkan kode pos"
@@ -298,11 +349,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, kodePos: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="noKartuKeluarga">No Kartu Keluarga</Label>
+                  <Label htmlFor="noKartuKeluarga" className="text-xs lg:text-sm">No Kartu Keluarga</Label>
                   <Input
                     id="noKartuKeluarga"
                     placeholder="Masukkan nomor kartu keluarga"
@@ -310,11 +362,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, noKartuKeluarga: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="alamat">Alamat</Label>
+                  <Label htmlFor="alamat" className="text-xs lg:text-sm">Alamat</Label>
                   <Textarea
                     id="alamat"
                     placeholder="Masukkan alamat lengkap"
@@ -323,16 +376,17 @@ export default function TambahSiswaPage() {
                       setFormData({ ...formData, alamat: e.target.value })
                     }
                     rows={3}
+                    className="text-xs lg:text-sm placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
               </div>
             </div>
 
             {/* Data Ayah */}
-            <div className="space-y-4">
-              <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-3 lg:space-y-4">
+              <div className="grid gap-4 lg:gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="namaAyah">Nama Ayah</Label>
+                  <Label htmlFor="namaAyah" className="text-xs lg:text-sm">Nama Ayah</Label>
                   <Input
                     id="namaAyah"
                     placeholder="Masukkan nama ayah"
@@ -340,11 +394,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, namaAyah: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nikAyah">NIK Ayah</Label>
+                  <Label htmlFor="nikAyah" className="text-xs lg:text-sm">NIK Ayah</Label>
                   <Input
                     id="nikAyah"
                     placeholder="Masukkan NIK ayah (16 digit)"
@@ -353,11 +408,12 @@ export default function TambahSiswaPage() {
                       setFormData({ ...formData, nikAyah: e.target.value })
                     }
                     maxLength={16}
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="ttlAyah">TTL Ayah</Label>
+                  <Label htmlFor="ttlAyah" className="text-xs lg:text-sm">TTL Ayah</Label>
                   <Input
                     id="ttlAyah"
                     placeholder="Contoh: Jakarta, 01 Januari 1980"
@@ -365,11 +421,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, ttlAyah: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pekerjaanAyah">Pekerjaan Ayah</Label>
+                  <Label htmlFor="pekerjaanAyah" className="text-xs lg:text-sm">Pekerjaan Ayah</Label>
                   <Input
                     id="pekerjaanAyah"
                     placeholder="Masukkan pekerjaan ayah"
@@ -377,11 +434,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, pekerjaanAyah: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pendidikanAyah">Pendidikan Terakhir Ayah</Label>
+                  <Label htmlFor="pendidikanAyah" className="text-xs lg:text-sm">Pendidikan Terakhir Ayah</Label>
                   <Input
                     id="pendidikanAyah"
                     placeholder="Masukkan pendidikan terakhir ayah"
@@ -389,11 +447,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, pendidikanAyah: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="noTelpAyah">No Telp Ayah</Label>
+                  <Label htmlFor="noTelpAyah" className="text-xs lg:text-sm">No Telp Ayah</Label>
                   <Input
                     id="noTelpAyah"
                     placeholder="Masukkan nomor telepon ayah"
@@ -401,16 +460,17 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, noTelpAyah: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
               </div>
             </div>
 
             {/* Data Ibu */}
-            <div className="space-y-4">
-              <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-3 lg:space-y-4">
+              <div className="grid gap-4 lg:gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="namaIbu">Nama Ibu</Label>
+                  <Label htmlFor="namaIbu" className="text-xs lg:text-sm">Nama Ibu</Label>
                   <Input
                     id="namaIbu"
                     placeholder="Masukkan nama ibu"
@@ -418,11 +478,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, namaIbu: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nikIbu">NIK Ibu</Label>
+                  <Label htmlFor="nikIbu" className="text-xs lg:text-sm">NIK Ibu</Label>
                   <Input
                     id="nikIbu"
                     placeholder="Masukkan NIK ibu (16 digit)"
@@ -431,11 +492,12 @@ export default function TambahSiswaPage() {
                       setFormData({ ...formData, nikIbu: e.target.value })
                     }
                     maxLength={16}
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="ttlIbu">TTL Ibu</Label>
+                  <Label htmlFor="ttlIbu" className="text-xs lg:text-sm">TTL Ibu</Label>
                   <Input
                     id="ttlIbu"
                     placeholder="Contoh: Jakarta, 01 Januari 1980"
@@ -443,11 +505,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, ttlIbu: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pekerjaanIbu">Pekerjaan Ibu</Label>
+                  <Label htmlFor="pekerjaanIbu" className="text-xs lg:text-sm">Pekerjaan Ibu</Label>
                   <Input
                     id="pekerjaanIbu"
                     placeholder="Masukkan pekerjaan ibu"
@@ -455,11 +518,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, pekerjaanIbu: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pendidikanIbu">Pendidikan Terakhir Ibu</Label>
+                  <Label htmlFor="pendidikanIbu" className="text-xs lg:text-sm">Pendidikan Terakhir Ibu</Label>
                   <Input
                     id="pendidikanIbu"
                     placeholder="Masukkan pendidikan terakhir ibu"
@@ -467,11 +531,12 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, pendidikanIbu: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="noTelpIbu">No Telp Ibu</Label>
+                  <Label htmlFor="noTelpIbu" className="text-xs lg:text-sm">No Telp Ibu</Label>
                   <Input
                     id="noTelpIbu"
                     placeholder="Masukkan nomor telepon ibu"
@@ -479,23 +544,25 @@ export default function TambahSiswaPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, noTelpIbu: e.target.value })
                     }
+                    className="text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 border-t pt-6">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 lg:gap-3 border-t pt-4 lg:pt-6">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => router.back()}
                 disabled={isLoading}
+                className="text-xs lg:text-sm h-9 lg:h-10"
               >
                 Batal
               </Button>
               <Button
                 type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-9 lg:h-10"
                 disabled={isLoading}
               >
                 {isLoading ? "Menyimpan..." : "Simpan Data"}

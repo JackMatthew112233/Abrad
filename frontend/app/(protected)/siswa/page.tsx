@@ -138,24 +138,24 @@ export default function SiswaPage() {
   const siswaAktif = stats.siswaAktif;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-8 shadow-lg">
-        <div className="absolute -right-8 -top-8 opacity-20">
+      <div className="relative overflow-hidden rounded-xl lg:rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 lg:p-8 shadow-lg">
+        <div className="absolute -right-8 -top-8 opacity-20 hidden lg:block">
           <GraduationCap className="h-64 w-64 text-white" strokeWidth={0.5} />
         </div>
-        <div className="absolute bottom-4 right-24 opacity-15">
+        <div className="absolute bottom-4 right-24 opacity-15 hidden lg:block">
           <BookOpen className="h-32 w-32 text-white" strokeWidth={0.5} />
         </div>
         <div className="relative">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
-            <Users className="h-4 w-4" />
+          <div className="mb-2 lg:mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 lg:px-4 py-1 lg:py-1.5 text-xs lg:text-sm font-medium text-white backdrop-blur-sm">
+            <Users className="h-3 w-3 lg:h-4 lg:w-4" />
             Data Santri / Santriwati
           </div>
-          <h1 className="mb-2 text-4xl font-bold text-white">
+          <h1 className="mb-1 lg:mb-2 text-2xl lg:text-4xl font-bold text-white">
             Santri / Santriwati
           </h1>
-          <p className="max-w-2xl text-lg text-emerald-50">
+          <p className="max-w-2xl text-sm lg:text-lg text-emerald-50">
             Kelola data biodata santri / santriwati pesantren dengan mudah
           </p>
         </div>
@@ -247,25 +247,30 @@ export default function SiswaPage() {
       </div>
 
       <Card className="border-zinc-200 bg-white">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base font-semibold text-emerald-700">
-            Daftar Santri / Santriwati
-          </CardTitle>
-          <div className="flex gap-2">
-            <Button
-              onClick={() => setShowDownloadDialog(true)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Unduh Biodata Santri / Santriwati
-            </Button>
-            <Button
-              onClick={() => router.push("/siswa/tambah")}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Tambah Biodata
-            </Button>
+        <CardHeader className="space-y-3 lg:space-y-0">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+            <CardTitle className="text-base font-semibold text-emerald-700">
+              Daftar Santri / Santriwati
+            </CardTitle>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button
+                onClick={() => setShowDownloadDialog(true)}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm"
+                size="sm"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Unduh Biodata Santri / Santriwati</span>
+                <span className="sm:hidden">Unduh Biodata</span>
+              </Button>
+              <Button
+                onClick={() => router.push("/siswa/tambah")}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm"
+                size="sm"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Tambah Biodata
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -276,7 +281,7 @@ export default function SiswaPage() {
                 placeholder="Cari nama atau NIK santri / santriwati..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 text-xs lg:text-sm placeholder:text-xs lg:placeholder:text-sm"
               />
             </div>
           </div>
@@ -288,33 +293,33 @@ export default function SiswaPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-emerald-50 hover:bg-emerald-50">
-                    <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">NIS</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">NIK</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">NISN</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">NPSN</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Jenis Kelamin</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Tempat, Tanggal Lahir</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Sekolah Asal</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Alamat</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Kode Pos</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">No. KK</TableHead>
-                    <TableHead className="font-semibold text-emerald-700">Status</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">NIS</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">NIK</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">NISN</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">NPSN</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Jenis Kelamin</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tempat, Tanggal Lahir</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Sekolah Asal</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Alamat</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kode Pos</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No. KK</TableHead>
+                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredSiswa.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={14} className="text-center text-zinc-500">
+                      <TableCell colSpan={14} className="text-center text-zinc-500 py-8">
                         {searchQuery ? "Tidak ada data yang sesuai pencarian" : "Belum ada data santri / santriwati"}
                       </TableCell>
                     </TableRow>
                   ) : (
                     filteredSiswa.map((siswa) => (
                       <TableRow key={siswa.id}>
-                        <TableCell className="font-medium">
+                        <TableCell className="font-medium text-xs lg:text-sm whitespace-nowrap">
                           <button
                             onClick={() => router.push(`/siswa/${siswa.id}`)}
                             className="text-emerald-600 hover:text-emerald-700 hover:underline text-left"
@@ -322,20 +327,20 @@ export default function SiswaPage() {
                             {siswa.nama || "-"}
                           </button>
                         </TableCell>
-                        <TableCell>{siswa.nis || "-"}</TableCell>
-                        <TableCell>{siswa.nik || "-"}</TableCell>
-                        <TableCell>{siswa.nisn || "-"}</TableCell>
-                        <TableCell>{siswa.npsn || "-"}</TableCell>
-                        <TableCell>{siswa.tingkatan || "-"}</TableCell>
-                        <TableCell>{siswa.kelas ? siswa.kelas.replace("_", " ") : "-"}</TableCell>
-                        <TableCell>
+                        <TableCell className="text-xs lg:text-sm">{siswa.nis || "-"}</TableCell>
+                        <TableCell className="text-xs lg:text-sm">{siswa.nik || "-"}</TableCell>
+                        <TableCell className="text-xs lg:text-sm">{siswa.nisn || "-"}</TableCell>
+                        <TableCell className="text-xs lg:text-sm">{siswa.npsn || "-"}</TableCell>
+                        <TableCell className="text-xs lg:text-sm">{siswa.tingkatan || "-"}</TableCell>
+                        <TableCell className="text-xs lg:text-sm whitespace-nowrap">{siswa.kelas ? siswa.kelas.replace("_", " ") : "-"}</TableCell>
+                        <TableCell className="text-xs lg:text-sm whitespace-nowrap">
                           {siswa.jenisKelamin ? (
                             siswa.jenisKelamin === "LakiLaki" ? "Laki-laki" : "Perempuan"
                           ) : (
                             "-"
                           )}
                         </TableCell>
-                        <TableCell className="max-w-[200px]">
+                        <TableCell className="max-w-[200px] text-xs lg:text-sm">
                           {siswa.tempatLahir && siswa.tanggalLahir ? (
                             <>
                               {siswa.tempatLahir},{" "}
@@ -349,25 +354,25 @@ export default function SiswaPage() {
                             "-"
                           )}
                         </TableCell>
-                        <TableCell className="max-w-[200px]">
+                        <TableCell className="max-w-[200px] text-xs lg:text-sm">
                           <div className="truncate" title={siswa.sekolahAsal || "-"}>
                             {siswa.sekolahAsal || "-"}
                           </div>
                         </TableCell>
-                        <TableCell className="max-w-[250px]">
+                        <TableCell className="max-w-[250px] text-xs lg:text-sm">
                           <div className="truncate" title={siswa.alamat || "-"}>
                             {siswa.alamat || "-"}
                           </div>
                         </TableCell>
-                        <TableCell>{siswa.kodePos || "-"}</TableCell>
-                        <TableCell>{siswa.noKartuKeluarga || "-"}</TableCell>
-                        <TableCell>
+                        <TableCell className="text-xs lg:text-sm">{siswa.kodePos || "-"}</TableCell>
+                        <TableCell className="text-xs lg:text-sm">{siswa.noKartuKeluarga || "-"}</TableCell>
+                        <TableCell className="whitespace-nowrap">
                           <Badge
                             variant="outline"
                             className={
                               siswa.isAktif
-                                ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-                                : "border-zinc-300 bg-zinc-50 text-zinc-700"
+                                ? "border-emerald-300 bg-emerald-50 text-emerald-700 text-xs"
+                                : "border-zinc-300 bg-zinc-50 text-zinc-700 text-xs"
                             }
                           >
                             {siswa.isAktif ? "Aktif" : "Non-Aktif"}
@@ -383,32 +388,32 @@ export default function SiswaPage() {
 
           {/* Pagination */}
           {!isLoading && filteredSiswa.length > 0 && (
-            <div className="mt-4 flex items-center justify-between">
-              <div className="text-sm text-zinc-500">
+            <div className="mt-4 flex flex-col lg:flex-row items-center justify-between gap-3">
+              <div className="text-xs lg:text-sm text-zinc-500 text-center lg:text-left">
                 Menampilkan {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} dari {pagination.total} data
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 lg:gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 h-8 px-2 lg:px-3"
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  Sebelumnya
+                  <ChevronLeft className="h-4 w-4 lg:mr-1" />
+                  <span className="hidden lg:inline">Sebelumnya</span>
                 </Button>
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  {Array.from({ length: Math.min(3, pagination.totalPages) }, (_, i) => {
                     let pageNum;
-                    if (pagination.totalPages <= 5) {
+                    if (pagination.totalPages <= 3) {
                       pageNum = i + 1;
-                    } else if (pagination.page <= 3) {
+                    } else if (pagination.page <= 2) {
                       pageNum = i + 1;
-                    } else if (pagination.page >= pagination.totalPages - 2) {
-                      pageNum = pagination.totalPages - 4 + i;
+                    } else if (pagination.page >= pagination.totalPages - 1) {
+                      pageNum = pagination.totalPages - 2 + i;
                     } else {
-                      pageNum = pagination.page - 2 + i;
+                      pageNum = pagination.page - 1 + i;
                     }
                     
                     return (
@@ -419,8 +424,8 @@ export default function SiswaPage() {
                         onClick={() => handlePageChange(pageNum)}
                         className={
                           pagination.page === pageNum
-                            ? "bg-emerald-600 hover:bg-emerald-700"
-                            : "border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                            ? "bg-emerald-600 hover:bg-emerald-700 h-8 w-8 lg:w-auto lg:px-3"
+                            : "border-emerald-200 text-emerald-700 hover:bg-emerald-50 h-8 w-8 lg:w-auto lg:px-3"
                         }
                       >
                         {pageNum}
@@ -433,10 +438,10 @@ export default function SiswaPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 h-8 px-2 lg:px-3"
                 >
-                  Selanjutnya
-                  <ChevronRight className="h-4 w-4 ml-1" />
+                  <span className="hidden lg:inline">Selanjutnya</span>
+                  <ChevronRight className="h-4 w-4 lg:ml-1" />
                 </Button>
               </div>
             </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, Menu } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,7 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
-export function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
   const router = useRouter();
   const [user, setUser] = useState<{
     name: string;
@@ -65,14 +69,23 @@ export function Header() {
 
   if (!user) {
     return (
-      <header className="sticky top-0 z-40 flex h-16 items-center justify-end border-b border-zinc-200/50 bg-white/80 px-6 backdrop-blur-md">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-zinc-200/50 bg-white/80 px-4 backdrop-blur-md lg:justify-end lg:px-6">
+        <button className="rounded-lg p-2 hover:bg-zinc-100 lg:hidden">
+          <Menu className="h-5 w-5 text-zinc-400" />
+        </button>
         <div className="h-9 w-32 animate-pulse rounded-lg bg-zinc-200" />
       </header>
     );
   }
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-end border-b border-zinc-200/50 bg-gradient-to-r from-white via-emerald-50/30 to-white px-6 backdrop-blur-md shadow-sm">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-zinc-200/50 bg-gradient-to-r from-white via-emerald-50/30 to-white px-4 backdrop-blur-md shadow-sm lg:justify-end lg:px-6">
+      <button
+        onClick={onMenuClick}
+        className="rounded-lg p-2 text-zinc-700 hover:bg-emerald-50 hover:text-emerald-600 lg:hidden"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
 
       <DropdownMenu>
         <DropdownMenuTrigger className="group flex items-center gap-3 rounded-xl border border-transparent px-3 py-2 transition-all duration-200 hover:border-emerald-200 hover:bg-emerald-50/50 hover:shadow-sm focus:outline-none">

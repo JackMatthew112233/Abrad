@@ -37,7 +37,7 @@ export type PengeluaranSumAggregateOutputType = {
 export type PengeluaranMinAggregateOutputType = {
   id: string | null
   nama: string | null
-  jenis: string | null
+  jenis: $Enums.JenisPengeluaran | null
   harga: runtime.Decimal | null
   bukti: string | null
   tanggalPengeluaran: Date | null
@@ -48,7 +48,7 @@ export type PengeluaranMinAggregateOutputType = {
 export type PengeluaranMaxAggregateOutputType = {
   id: string | null
   nama: string | null
-  jenis: string | null
+  jenis: $Enums.JenisPengeluaran | null
   harga: runtime.Decimal | null
   bukti: string | null
   tanggalPengeluaran: Date | null
@@ -200,7 +200,7 @@ export type PengeluaranGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type PengeluaranGroupByOutputType = {
   id: string
   nama: string
-  jenis: string
+  jenis: $Enums.JenisPengeluaran
   harga: runtime.Decimal
   bukti: string | null
   tanggalPengeluaran: Date
@@ -234,7 +234,7 @@ export type PengeluaranWhereInput = {
   NOT?: Prisma.PengeluaranWhereInput | Prisma.PengeluaranWhereInput[]
   id?: Prisma.StringFilter<"Pengeluaran"> | string
   nama?: Prisma.StringFilter<"Pengeluaran"> | string
-  jenis?: Prisma.StringFilter<"Pengeluaran"> | string
+  jenis?: Prisma.EnumJenisPengeluaranFilter<"Pengeluaran"> | $Enums.JenisPengeluaran
   harga?: Prisma.DecimalFilter<"Pengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: Prisma.StringNullableFilter<"Pengeluaran"> | string | null
   tanggalPengeluaran?: Prisma.DateTimeFilter<"Pengeluaran"> | Date | string
@@ -259,7 +259,7 @@ export type PengeluaranWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PengeluaranWhereInput[]
   NOT?: Prisma.PengeluaranWhereInput | Prisma.PengeluaranWhereInput[]
   nama?: Prisma.StringFilter<"Pengeluaran"> | string
-  jenis?: Prisma.StringFilter<"Pengeluaran"> | string
+  jenis?: Prisma.EnumJenisPengeluaranFilter<"Pengeluaran"> | $Enums.JenisPengeluaran
   harga?: Prisma.DecimalFilter<"Pengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: Prisma.StringNullableFilter<"Pengeluaran"> | string | null
   tanggalPengeluaran?: Prisma.DateTimeFilter<"Pengeluaran"> | Date | string
@@ -289,7 +289,7 @@ export type PengeluaranScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PengeluaranScalarWhereWithAggregatesInput | Prisma.PengeluaranScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Pengeluaran"> | string
   nama?: Prisma.StringWithAggregatesFilter<"Pengeluaran"> | string
-  jenis?: Prisma.StringWithAggregatesFilter<"Pengeluaran"> | string
+  jenis?: Prisma.EnumJenisPengeluaranWithAggregatesFilter<"Pengeluaran"> | $Enums.JenisPengeluaran
   harga?: Prisma.DecimalWithAggregatesFilter<"Pengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: Prisma.StringNullableWithAggregatesFilter<"Pengeluaran"> | string | null
   tanggalPengeluaran?: Prisma.DateTimeWithAggregatesFilter<"Pengeluaran"> | Date | string
@@ -300,7 +300,7 @@ export type PengeluaranScalarWhereWithAggregatesInput = {
 export type PengeluaranCreateInput = {
   id?: string
   nama: string
-  jenis: string
+  jenis: $Enums.JenisPengeluaran
   harga: runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: string | null
   tanggalPengeluaran: Date | string
@@ -311,7 +311,7 @@ export type PengeluaranCreateInput = {
 export type PengeluaranUncheckedCreateInput = {
   id?: string
   nama: string
-  jenis: string
+  jenis: $Enums.JenisPengeluaran
   harga: runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: string | null
   tanggalPengeluaran: Date | string
@@ -322,7 +322,7 @@ export type PengeluaranUncheckedCreateInput = {
 export type PengeluaranUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
-  jenis?: Prisma.StringFieldUpdateOperationsInput | string
+  jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalPengeluaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -333,7 +333,7 @@ export type PengeluaranUpdateInput = {
 export type PengeluaranUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
-  jenis?: Prisma.StringFieldUpdateOperationsInput | string
+  jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalPengeluaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -344,7 +344,7 @@ export type PengeluaranUncheckedUpdateInput = {
 export type PengeluaranCreateManyInput = {
   id?: string
   nama: string
-  jenis: string
+  jenis: $Enums.JenisPengeluaran
   harga: runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: string | null
   tanggalPengeluaran: Date | string
@@ -355,7 +355,7 @@ export type PengeluaranCreateManyInput = {
 export type PengeluaranUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
-  jenis?: Prisma.StringFieldUpdateOperationsInput | string
+  jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalPengeluaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -366,7 +366,7 @@ export type PengeluaranUpdateManyMutationInput = {
 export type PengeluaranUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
-  jenis?: Prisma.StringFieldUpdateOperationsInput | string
+  jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   bukti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalPengeluaran?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -413,6 +413,10 @@ export type PengeluaranMinOrderByAggregateInput = {
 
 export type PengeluaranSumOrderByAggregateInput = {
   harga?: Prisma.SortOrder
+}
+
+export type EnumJenisPengeluaranFieldUpdateOperationsInput = {
+  set?: $Enums.JenisPengeluaran
 }
 
 
@@ -469,7 +473,7 @@ export type $PengeluaranPayload<ExtArgs extends runtime.Types.Extensions.Interna
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     nama: string
-    jenis: string
+    jenis: $Enums.JenisPengeluaran
     harga: runtime.Decimal
     bukti: string | null
     tanggalPengeluaran: Date
@@ -900,7 +904,7 @@ export interface Prisma__PengeluaranClient<T, Null = never, ExtArgs extends runt
 export interface PengeluaranFieldRefs {
   readonly id: Prisma.FieldRef<"Pengeluaran", 'String'>
   readonly nama: Prisma.FieldRef<"Pengeluaran", 'String'>
-  readonly jenis: Prisma.FieldRef<"Pengeluaran", 'String'>
+  readonly jenis: Prisma.FieldRef<"Pengeluaran", 'JenisPengeluaran'>
   readonly harga: Prisma.FieldRef<"Pengeluaran", 'Decimal'>
   readonly bukti: Prisma.FieldRef<"Pengeluaran", 'String'>
   readonly tanggalPengeluaran: Prisma.FieldRef<"Pengeluaran", 'DateTime'>

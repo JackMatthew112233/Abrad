@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Wallet, TrendingUp, Users, CreditCard, DollarSign, Receipt, List, Download, Search, ChevronLeft, ChevronRight, X, FileText } from "lucide-react";
+import { Plus, Wallet, TrendingUp, Users, CreditCard, DollarSign, Receipt, List, Download, Search, ChevronLeft, ChevronRight, X, FileText, Menu, Heart } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -19,6 +19,8 @@ import {
   Bar,
   PieChart,
   Pie,
+  LineChart,
+  Line,
   Cell,
   XAxis,
   YAxis,
@@ -42,6 +44,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
@@ -66,6 +75,7 @@ interface Statistik {
   totalPembayaranInfaq: number;
   totalPembayaranLaundry: number;
   jumlahSantriTerdaftar: number;
+  totalDonasi: number;
 }
 
 interface PaginationInfo {
@@ -85,6 +95,7 @@ export default function KeuanganPage() {
     totalPembayaranInfaq: 0,
     totalPembayaranLaundry: 0,
     jumlahSantriTerdaftar: 0,
+    totalDonasi: 0,
   });
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
@@ -95,6 +106,7 @@ export default function KeuanganPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [chartPembayaran, setChartPembayaran] = useState<any[]>([]);
+  const [chartTargetRealisasi, setChartTargetRealisasi] = useState<any>(null);
   const [chartDistribusi, setChartDistribusi] = useState<any[]>([]);
   const [pembayaranTerbaru, setPembayaranTerbaru] = useState<any[]>([]);
   const [pengeluaranTerbaru, setPengeluaranTerbaru] = useState<any[]>([]);
@@ -116,12 +128,19 @@ export default function KeuanganPage() {
   const [filterTanggal, setFilterTanggal] = useState("");
   const [filterBulan, setFilterBulan] = useState("");
   const [filterTahun, setFilterTahun] = useState("");
+  
+  // Filter distribusi
+  const [filterDistribusi, setFilterDistribusi] = useState("all");
 
   useEffect(() => {
     fetchData();
     fetchChartData();
     fetchRecentData();
   }, []);
+  
+  useEffect(() => {
+    fetchChartData();
+  }, [filterDistribusi]);
 
   const fetchData = async (page: number = 1) => {
     try {
@@ -151,19 +170,34 @@ export default function KeuanganPage() {
 
   const fetchChartData = async () => {
     try {
-      const [pembayaranResponse, distribusiResponse] = await Promise.all([
+      const distribusiUrl = filterDistribusi === "all" 
+        ? `${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-distribusi`
+        : `${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-distribusi?filter=${filterDistribusi}`;
+      
+      const [pembayaranResponse, targetRealisasiResponse, distribusiResponse] = await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-pembayaran`, {
           credentials: "include",
         }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-distribusi`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-target-realisasi`, {
+          credentials: "include",
+        }),
+        fetch(distribusiUrl, {
           credentials: "include",
         }),
       ]);
 
-      if (pembayaranResponse.ok && distribusiResponse.ok) {
+      if (pembayaranResponse.ok) {
         const pembayaranData = await pembayaranResponse.json();
-        const distribusiData = await distribusiResponse.json();
         setChartPembayaran(pembayaranData);
+      }
+
+      if (targetRealisasiResponse.ok) {
+        const targetRealisasiData = await targetRealisasiResponse.json();
+        setChartTargetRealisasi(targetRealisasiData);
+      }
+
+      if (distribusiResponse.ok) {
+        const distribusiData = await distribusiResponse.json();
         setChartDistribusi(distribusiData);
       }
     } catch (error) {
@@ -218,7 +252,7 @@ export default function KeuanganPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-8 shadow-lg">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 lg:p-8 shadow-lg">
         <div className="absolute -right-8 -top-8 opacity-20">
           <Wallet className="h-64 w-64 text-white" strokeWidth={0.5} />
         </div>
@@ -226,14 +260,14 @@ export default function KeuanganPage() {
           <DollarSign className="h-32 w-32 text-white" strokeWidth={0.5} />
         </div>
         <div className="relative">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
-            <Wallet className="h-4 w-4" />
+          <div className="mb-2 lg:mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 lg:px-4 lg:py-1.5 text-xs lg:text-sm font-medium text-white backdrop-blur-sm">
+            <Wallet className="h-3 w-3 lg:h-4 lg:w-4" />
             Manajemen Keuangan
           </div>
-          <h1 className="mb-2 text-4xl font-bold text-white">
+          <h1 className="mb-1 lg:mb-2 text-2xl lg:text-4xl font-bold text-white">
             Keuangan Pesantren
           </h1>
-          <p className="max-w-2xl text-lg text-emerald-50">
+          <p className="max-w-2xl text-sm lg:text-lg text-emerald-50">
             Kelola biodata keuangan dan pembayaran santri / santriwati dengan mudah
           </p>
         </div>
@@ -249,7 +283,7 @@ export default function KeuanganPage() {
             <Wallet className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : formatRupiah(stats.totalKomitmen)}
             </div>
             <div className="space-y-1">
@@ -266,17 +300,17 @@ export default function KeuanganPage() {
         <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
-              Total Biaya Infaq
+              Total Infaq
             </CardTitle>
             <CreditCard className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : formatRupiah(stats.totalInfaq)}
             </div>
             <div className="space-y-1">
               <p className="text-xs text-zinc-500">
-                Total komitmen biaya infaq
+                Total komitmen infaq
               </p>
             </div>
           </CardContent>
@@ -285,17 +319,17 @@ export default function KeuanganPage() {
         <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
-              Total Biaya Laundry
+              Total Laundry
             </CardTitle>
             <Receipt className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">
               {isLoading ? "..." : formatRupiah(stats.totalLaundry)}
             </div>
             <div className="space-y-1">
               <p className="text-xs text-zinc-500">
-                Total komitmen biaya laundry
+                Total komitmen laundry
               </p>
             </div>
           </CardContent>
@@ -304,17 +338,17 @@ export default function KeuanganPage() {
         <Card className="border-zinc-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
-              Santri Terdaftar
+              Total Donasi
             </CardTitle>
-            <Users className="h-4 w-4 text-emerald-600" />
+            <Heart className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">
-              {isLoading ? "..." : stats.jumlahSantriTerdaftar}
+            <div className="text-xl lg:text-2xl font-bold text-emerald-700">
+              {isLoading ? "..." : formatRupiah(stats.totalDonasi)}
             </div>
             <div className="space-y-1">
               <p className="text-xs text-zinc-500">
-                Santri dengan biodata keuangan
+                Total donasi dari santri/santriwati
               </p>
             </div>
           </CardContent>
@@ -324,68 +358,84 @@ export default function KeuanganPage() {
       {/* Data Table */}
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
-              <CardTitle className="text-lg font-semibold text-emerald-700">
+              <CardTitle className="text-base lg:text-lg font-semibold text-emerald-700">
                 Daftar Biodata Keuangan
               </CardTitle>
-              <p className="mt-1 text-sm text-zinc-500">
+              <p className="mt-1 text-xs lg:text-sm text-zinc-500">
                 Total {pagination.total} biodata keuangan santri
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button
-                onClick={() => router.push("/keuangan/biodata/tambah")}
-                className="bg-emerald-600 hover:bg-emerald-700"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Tambah Biodata Keuangan
-              </Button>
-              <Button
-                onClick={() => router.push("/keuangan/pembayaran/tambah")}
-                className="bg-emerald-600 hover:bg-emerald-700"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Tambah Pembayaran
-              </Button>
-              <Button
-                onClick={() => router.push("/keuangan/pengeluaran/tambah")}
-                className="bg-emerald-600 hover:bg-emerald-700"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Tambah Pengeluaran
-              </Button>
-              <Button
-                onClick={() => setShowDownloadDialog(true)}
-                className="bg-emerald-600 hover:bg-emerald-700"
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Unduh Riwayat Pembayaran
-              </Button>
-              <Button
-                onClick={() => setShowDownloadPengeluaranDialog(true)}
-                className="bg-emerald-600 hover:bg-emerald-700"
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Unduh Riwayat Pengeluaran
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9">
+                  <Menu className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                  Menu
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem
+                  onClick={() => router.push("/keuangan/biodata/tambah")}
+                  className="cursor-pointer text-xs"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Tambah Biodata Keuangan
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/keuangan/pembayaran/tambah")}
+                  className="cursor-pointer text-xs"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Tambah Pembayaran
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/keuangan/pengeluaran/tambah")}
+                  className="cursor-pointer text-xs"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Tambah Pengeluaran
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/keuangan/donasi/tambah")}
+                  className="cursor-pointer text-xs"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Tambah Donasi
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setShowDownloadDialog(true)}
+                  className="cursor-pointer text-xs"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Unduh Riwayat Pembayaran
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setShowDownloadPengeluaranDialog(true)}
+                  className="cursor-pointer text-xs"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Unduh Riwayat Pengeluaran
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           
           {/* Search Bar */}
-          <div className="mt-4 flex items-center gap-3">
+          <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 lg:gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 h-3 w-3 lg:h-4 lg:w-4 -translate-y-1/2 text-zinc-400" />
               <Input
                 type="text"
                 placeholder="Cari nama santri..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
               />
             </div>
             <Select value={filterTingkatan} onValueChange={setFilterTingkatan}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
                 <SelectValue placeholder="Semua Tingkatan" />
               </SelectTrigger>
               <SelectContent>
@@ -395,7 +445,7 @@ export default function KeuanganPage() {
               </SelectContent>
             </Select>
             <Select value={filterKelas} onValueChange={setFilterKelas}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
                 <SelectValue placeholder="Semua Kelas" />
               </SelectTrigger>
               <SelectContent>
@@ -416,47 +466,47 @@ export default function KeuanganPage() {
             </Select>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="rounded-md border border-zinc-200">
-            <Table>
+        <CardContent className="p-0 sm:p-6">
+          <div className="overflow-x-auto">
+            <Table className="min-w-[800px]">
               <TableHeader>
                 <TableRow className="bg-emerald-50">
-                  <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Jenis Kelamin</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
-                  <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
-                  <TableHead className="text-right font-semibold text-emerald-700">
+                  <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Jenis Kelamin</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
+                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                  <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
                     Total Komitmen
                   </TableHead>
-                  <TableHead className="text-right font-semibold text-emerald-700">
-                    Total Biaya Infaq
+                  <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
+                    Total Infaq
                   </TableHead>
-                  <TableHead className="text-right font-semibold text-emerald-700">
-                    Total Biaya Laundry
+                  <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
+                    Total Laundry
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="h-32 text-center text-zinc-500">
+                    <TableCell colSpan={8} className="h-32 text-center text-zinc-500 text-xs lg:text-sm">
                       Loading...
                     </TableCell>
                   </TableRow>
                 ) : filteredBiodata.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="h-32 text-center text-zinc-500">
+                    <TableCell colSpan={8} className="h-32 text-center text-zinc-500 text-xs lg:text-sm">
                       Tidak ada data biodata keuangan
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredBiodata.map((item, index) => (
                     <TableRow key={item.id} className="hover:bg-zinc-50">
-                      <TableCell className="text-zinc-600">
+                      <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                         {(pagination.page - 1) * pagination.limit + index + 1}
                       </TableCell>
-                      <TableCell className="font-medium text-zinc-900">
+                      <TableCell className="font-medium text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                         <button
                           onClick={() => router.push(`/keuangan/biodata/${item.id}`)}
                           className="text-emerald-700 hover:text-emerald-900 hover:underline cursor-pointer transition-colors"
@@ -464,22 +514,22 @@ export default function KeuanganPage() {
                           {item.siswa.nama}
                         </button>
                       </TableCell>
-                      <TableCell className="text-zinc-600">
+                      <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                         {item.siswa.jenisKelamin === "LakiLaki" ? "Laki-Laki" : item.siswa.jenisKelamin === "Perempuan" ? "Perempuan" : "-"}
                       </TableCell>
-                      <TableCell className="text-zinc-600">
+                      <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                         {item.siswa.kelas ? item.siswa.kelas.replace("_", " ") : "-"}
                       </TableCell>
-                      <TableCell className="text-zinc-600">
+                      <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                         {item.siswa.tingkatan || "-"}
                       </TableCell>
-                      <TableCell className="text-right text-zinc-900">
+                      <TableCell className="text-right text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                         {formatRupiah(item.komitmenInfaqLaundry)}
                       </TableCell>
-                      <TableCell className="text-right text-zinc-900">
+                      <TableCell className="text-right text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                         {formatRupiah(item.infaq)}
                       </TableCell>
-                      <TableCell className="text-right text-zinc-900">
+                      <TableCell className="text-right text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                         {formatRupiah(item.laundry)}
                       </TableCell>
                     </TableRow>
@@ -491,8 +541,8 @@ export default function KeuanganPage() {
 
           {/* Pagination */}
           {!isLoading && filteredBiodata.length > 0 && (
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm text-zinc-500">
+            <div className="mt-4 px-4 sm:px-0 flex flex-col lg:flex-row items-center justify-between gap-3">
+              <p className="text-xs lg:text-sm text-zinc-500">
                 Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}
                 {Math.min(pagination.page * pagination.limit, pagination.total)} dari{" "}
                 {pagination.total} biodata
@@ -503,9 +553,10 @@ export default function KeuanganPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className="h-8"
+                  className="h-8 text-xs lg:text-sm"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-3 w-3 lg:h-4 lg:w-4" />
+                  <span className="hidden lg:inline ml-1">Prev</span>
                 </Button>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
@@ -519,13 +570,13 @@ export default function KeuanganPage() {
                     .map((page, index, array) => (
                       <div key={page} className="flex items-center">
                         {index > 0 && array[index - 1] !== page - 1 && (
-                          <span className="px-2 text-zinc-400">...</span>
+                          <span className="px-2 text-zinc-400 text-xs">...</span>
                         )}
                         <Button
                           variant={page === pagination.page ? "default" : "outline"}
                           size="sm"
                           onClick={() => handlePageChange(page)}
-                          className={`h-8 w-8 p-0 ${
+                          className={`h-8 w-8 p-0 text-xs lg:text-sm ${
                             page === pagination.page
                               ? "bg-emerald-600 hover:bg-emerald-700"
                               : ""
@@ -541,9 +592,10 @@ export default function KeuanganPage() {
                   size="sm"
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
-                  className="h-8"
+                  className="h-8 text-xs lg:text-sm"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <span className="hidden lg:inline mr-1">Next</span>
+                  <ChevronRight className="h-3 w-3 lg:h-4 lg:w-4" />
                 </Button>
               </div>
             </div>
@@ -552,7 +604,7 @@ export default function KeuanganPage() {
       </Card>
 
       {/* Charts Section */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
         {/* Trend Pembayaran Bar Chart */}
         <Card className="border-zinc-200 bg-white">
           <CardHeader>
@@ -605,15 +657,134 @@ export default function KeuanganPage() {
           </CardContent>
         </Card>
 
-        {/* Distribusi Pie Chart */}
+        {/* Target vs Realisasi - Line Chart */}
         <Card className="border-zinc-200 bg-white">
           <CardHeader>
             <CardTitle className="text-base font-semibold text-emerald-700">
-              Distribusi Keuangan
+              Target vs Realisasi
             </CardTitle>
             <p className="text-xs text-zinc-500">
-              Pemasukan vs Pengeluaran
+              Trend bulanan (dalam jutaan rupiah)
             </p>
+          </CardHeader>
+          <CardContent>
+            {!chartTargetRealisasi ? (
+              <div className="flex h-[280px] items-center justify-center text-zinc-500 text-xs lg:text-sm">
+                Loading...
+              </div>
+            ) : chartTargetRealisasi.trendData?.length === 0 ? (
+              <div className="flex h-[280px] items-center justify-center text-zinc-500 text-xs lg:text-sm">
+                Belum ada data trend
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Line Chart */}
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={chartTargetRealisasi.trendData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis
+                      dataKey="bulan"
+                      tick={{ fontSize: 11 }}
+                      stroke="#71717a"
+                    />
+                    <YAxis tick={{ fontSize: 11 }} stroke="#71717a" />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "white",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "8px",
+                      }}
+                      formatter={(value: number) => `Rp ${value}jt`}
+                    />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="target"
+                      stroke="#94a3b8"
+                      strokeWidth={2}
+                      name="Target/Bulan"
+                      dot={{ fill: "#94a3b8", strokeWidth: 2, r: 4 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="realisasi"
+                      stroke="#10b981"
+                      strokeWidth={2}
+                      name="Realisasi"
+                      dot={{ fill: "#10b981", strokeWidth: 2, r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+
+                {/* Stats Summary */}
+                <div className="space-y-2 pt-2 border-t">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-zinc-600">Total Target:</span>
+                    <span className="text-xs font-semibold text-zinc-900">
+                      {formatRupiah(chartTargetRealisasi.target)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-zinc-600">Total Realisasi:</span>
+                    <span className="text-xs font-semibold text-emerald-700">
+                      {formatRupiah(chartTargetRealisasi.realisasi)} ({chartTargetRealisasi.persentase}%)
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Distribusi Pie Chart */}
+        <Card className="border-zinc-200 bg-white">
+          <CardHeader className="space-y-3">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-semibold text-emerald-700">
+                  Distribusi Keuangan
+                </CardTitle>
+                <Select value={filterDistribusi} onValueChange={setFilterDistribusi}>
+                  <SelectTrigger className="w-[140px] text-xs h-8">
+                    <SelectValue placeholder="Filter" />
+                  </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua</SelectItem>
+                  <SelectItem value="pengeluaran">Pengeluaran</SelectItem>
+                  <SelectItem value="pemasukan">Pemasukan</SelectItem>
+                  <SelectItem value="donasi">Donasi</SelectItem>
+                  <SelectItem value="jenis_SERAGAM">Pengeluaran Seragam</SelectItem>
+                  <SelectItem value="jenis_LISTRIK">Pengeluaran Listrik</SelectItem>
+                  <SelectItem value="jenis_INTERNET">Pengeluaran Internet</SelectItem>
+                  <SelectItem value="jenis_LAUK">Pengeluaran Lauk</SelectItem>
+                  <SelectItem value="jenis_BERAS">Pengeluaran Beras</SelectItem>
+                  <SelectItem value="jenis_PERCETAKAN">Pengeluaran Percetakan</SelectItem>
+                  <SelectItem value="jenis_JASA">Pengeluaran Jasa</SelectItem>
+                  <SelectItem value="jenis_LAUNDRY">Pengeluaran Laundry</SelectItem>
+                  <SelectItem value="jenis_PERBAIKAN_FASILITAS_PONDOK">Pengeluaran Perbaikan Fasilitas</SelectItem>
+                  <SelectItem value="jenis_PENGELUARAN_NON_RUTIN">Pengeluaran Non Rutin</SelectItem>
+                  <SelectItem value="jenis_LAINNYA">Pengeluaran Lainnya</SelectItem>
+                </SelectContent>
+              </Select>
+              </div>
+              <p className="text-xs text-zinc-500">
+                {filterDistribusi === "all" && "Pemasukan vs Pengeluaran"}
+                {filterDistribusi === "pemasukan" && "Infaq vs Laundry"}
+                {filterDistribusi === "pengeluaran" && "Breakdown per Jenis"}
+                {filterDistribusi === "donasi" && "Detail Donasi"}
+                {filterDistribusi === "jenis_SERAGAM" && "Detail Pengeluaran Seragam"}
+                {filterDistribusi === "jenis_LISTRIK" && "Detail Pengeluaran Listrik"}
+                {filterDistribusi === "jenis_INTERNET" && "Detail Pengeluaran Internet"}
+                {filterDistribusi === "jenis_LAUK" && "Detail Pengeluaran Lauk"}
+                {filterDistribusi === "jenis_BERAS" && "Detail Pengeluaran Beras"}
+                {filterDistribusi === "jenis_PERCETAKAN" && "Detail Pengeluaran Percetakan"}
+                {filterDistribusi === "jenis_JASA" && "Detail Pengeluaran Jasa"}
+                {filterDistribusi === "jenis_LAUNDRY" && "Detail Pengeluaran Laundry"}
+                {filterDistribusi === "jenis_PERBAIKAN_FASILITAS_PONDOK" && "Detail Pengeluaran Perbaikan Fasilitas"}
+                {filterDistribusi === "jenis_PENGELUARAN_NON_RUTIN" && "Detail Pengeluaran Non Rutin"}
+                {filterDistribusi === "jenis_LAINNYA" && "Detail Pengeluaran Lainnya"}
+              </p>
+            </div>
           </CardHeader>
           <CardContent className="flex items-center justify-center">
             {chartDistribusi.length === 0 ? (
@@ -657,83 +828,81 @@ export default function KeuanganPage() {
       </div>
 
       {/* Riwayat Terbaru Tables */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         {/* Riwayat Pembayaran Terbaru */}
-        <Card className="border-zinc-200 bg-white">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-base font-semibold text-emerald-700">
-                Riwayat Pembayaran Terbaru (Global)
+        <Card className="border-zinc-200 bg-white overflow-hidden">
+          <CardHeader className="space-y-3">
+            <div className="flex flex-col gap-2">
+              <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
+                Riwayat Pembayaran Terbaru
               </CardTitle>
               <p className="text-xs text-zinc-500">
-                10 Pembayaran terakhir dari semua santri
+                10 Pembayaran terakhir
               </p>
             </div>
             <Button
               onClick={() => router.push("/keuangan/pembayaran")}
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9 w-full"
               size="sm"
             >
-              <FileText className="mr-2 h-4 w-4" />
+              <FileText className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
               Lihat Semua Riwayat
             </Button>
           </CardHeader>
-          <CardContent>
+          <div className="overflow-x-auto">
             {pembayaranTerbaru.length === 0 ? (
-              <div className="text-center py-8 text-zinc-500">
+              <div className="text-center py-8 text-zinc-500 text-xs lg:text-sm px-6">
                 Belum ada riwayat pembayaran
               </div>
             ) : (
-              <div className="rounded-md border border-zinc-200">
-                <Table>
+              <Table className="min-w-[700px]">
                   <TableHeader>
                     <TableRow className="bg-emerald-50">
-                      <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
-                      <TableHead className="text-right font-semibold text-emerald-700">Total</TableHead>
+                      <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tanggal</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Total</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {pembayaranTerbaru.map((pembayaran, index) => (
                       <TableRow key={pembayaran.id} className="hover:bg-zinc-50">
-                        <TableCell className="text-zinc-600">{index + 1}</TableCell>
-                        <TableCell className="text-zinc-600 text-sm">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{index + 1}</TableCell>
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {new Date(pembayaran.tanggalPembayaran).toLocaleDateString("id-ID", {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
                           })}
                         </TableCell>
-                        <TableCell className="text-zinc-900">
+                        <TableCell className="text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                           {pembayaran.siswa.nama}
                         </TableCell>
-                        <TableCell className="text-zinc-600">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {pembayaran.siswa.tingkatan || "-"}
                         </TableCell>
-                        <TableCell className="text-zinc-600">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {pembayaran.siswa.kelas ? pembayaran.siswa.kelas.replace(/_/g, " ") : "-"}
                         </TableCell>
-                        <TableCell className="text-right font-semibold text-emerald-700">
+                        <TableCell className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
                           {formatRupiah(pembayaran.totalPembayaranInfaq + pembayaran.totalPembayaranLaundry)}
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              </div>
             )}
-          </CardContent>
+          </div>
         </Card>
 
         {/* Riwayat Pengeluaran Terbaru */}
-        <Card className="border-zinc-200 bg-white">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-base font-semibold text-emerald-700">
-                Riwayat Pengeluaran Terbaru (Global)
+        <Card className="border-zinc-200 bg-white overflow-hidden">
+          <CardHeader className="space-y-3">
+            <div className="flex flex-col gap-2">
+              <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
+                Riwayat Pengeluaran Terbaru
               </CardTitle>
               <p className="text-xs text-zinc-500">
                 10 Pengeluaran terakhir
@@ -741,57 +910,65 @@ export default function KeuanganPage() {
             </div>
             <Button
               onClick={() => router.push("/keuangan/pengeluaran")}
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9 w-full"
               size="sm"
             >
-              <FileText className="mr-2 h-4 w-4" />
+              <FileText className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
               Lihat Semua Riwayat
             </Button>
           </CardHeader>
-          <CardContent>
+          <div className="overflow-x-auto">
             {pengeluaranTerbaru.length === 0 ? (
-              <div className="text-center py-8 text-zinc-500">
+              <div className="text-center py-8 text-zinc-500 text-xs lg:text-sm px-6">
                 Belum ada riwayat pengeluaran
               </div>
             ) : (
-              <div className="rounded-md border border-zinc-200">
-                <Table>
+              <Table className="min-w-[600px]">
                   <TableHeader>
                     <TableRow className="bg-emerald-50">
-                      <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Nama</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Jenis</TableHead>
-                      <TableHead className="text-right font-semibold text-emerald-700">Harga</TableHead>
+                      <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tanggal</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Jenis</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Harga</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {pengeluaranTerbaru.map((pengeluaran, index) => (
                       <TableRow key={pengeluaran.id} className="hover:bg-zinc-50">
-                        <TableCell className="text-zinc-600">{index + 1}</TableCell>
-                        <TableCell className="text-zinc-600 text-sm">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{index + 1}</TableCell>
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {new Date(pengeluaran.tanggalPengeluaran).toLocaleDateString("id-ID", {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
                           })}
                         </TableCell>
-                        <TableCell className="text-zinc-900">
+                        <TableCell className="text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                           {pengeluaran.nama}
                         </TableCell>
-                        <TableCell className="text-zinc-600">
-                          {pengeluaran.jenis}
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
+                          {pengeluaran.jenis === "SERAGAM" && "Seragam"}
+                          {pengeluaran.jenis === "LISTRIK" && "Listrik"}
+                          {pengeluaran.jenis === "INTERNET" && "Internet"}
+                          {pengeluaran.jenis === "LAUK" && "Lauk"}
+                          {pengeluaran.jenis === "BERAS" && "Beras"}
+                          {pengeluaran.jenis === "PERCETAKAN" && "Percetakan"}
+                          {pengeluaran.jenis === "JASA" && "Jasa"}
+                          {pengeluaran.jenis === "LAUNDRY" && "Laundry"}
+                          {pengeluaran.jenis === "PERBAIKAN_FASILITAS_PONDOK" && "Perbaikan Fasilitas Pondok"}
+                          {pengeluaran.jenis === "PENGELUARAN_NON_RUTIN" && "Pengeluaran Non Rutin"}
+                          {pengeluaran.jenis === "LAINNYA" && "Lainnya"}
                         </TableCell>
-                        <TableCell className="text-right font-semibold text-red-600">
+                        <TableCell className="text-right font-semibold text-red-600 text-xs lg:text-sm whitespace-nowrap">
                           {formatRupiah(pengeluaran.harga)}
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              </div>
             )}
-          </CardContent>
+          </div>
         </Card>
       </div>
 

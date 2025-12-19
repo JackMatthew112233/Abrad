@@ -393,7 +393,11 @@ export const ModelName = {
   Kesehatan: 'Kesehatan',
   Pengeluaran: 'Pengeluaran',
   Nilai: 'Nilai',
-  MataPelajaran: 'MataPelajaran'
+  MataPelajaran: 'MataPelajaran',
+  Donasi: 'Donasi',
+  AnggotaKoperasi: 'AnggotaKoperasi',
+  PemasukanKoperasi: 'PemasukanKoperasi',
+  PengeluaranKoperasi: 'PengeluaranKoperasi'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siswa" | "biodataKeuangan" | "pembayaran" | "absensi" | "pelanggaran" | "kesehatan" | "pengeluaran" | "nilai" | "mataPelajaran"
+    modelProps: "user" | "siswa" | "biodataKeuangan" | "pembayaran" | "absensi" | "pelanggaran" | "kesehatan" | "pengeluaran" | "nilai" | "mataPelajaran" | "donasi" | "anggotaKoperasi" | "pemasukanKoperasi" | "pengeluaranKoperasi"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1153,6 +1157,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Donasi: {
+      payload: Prisma.$DonasiPayload<ExtArgs>
+      fields: Prisma.DonasiFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DonasiFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DonasiFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>
+        }
+        findFirst: {
+          args: Prisma.DonasiFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DonasiFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>
+        }
+        findMany: {
+          args: Prisma.DonasiFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>[]
+        }
+        create: {
+          args: Prisma.DonasiCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>
+        }
+        createMany: {
+          args: Prisma.DonasiCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DonasiCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>[]
+        }
+        delete: {
+          args: Prisma.DonasiDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>
+        }
+        update: {
+          args: Prisma.DonasiUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>
+        }
+        deleteMany: {
+          args: Prisma.DonasiDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DonasiUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DonasiUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>[]
+        }
+        upsert: {
+          args: Prisma.DonasiUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DonasiPayload>
+        }
+        aggregate: {
+          args: Prisma.DonasiAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDonasi>
+        }
+        groupBy: {
+          args: Prisma.DonasiGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DonasiGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DonasiCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DonasiCountAggregateOutputType> | number
+        }
+      }
+    }
+    AnggotaKoperasi: {
+      payload: Prisma.$AnggotaKoperasiPayload<ExtArgs>
+      fields: Prisma.AnggotaKoperasiFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AnggotaKoperasiFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AnggotaKoperasiFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>
+        }
+        findFirst: {
+          args: Prisma.AnggotaKoperasiFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AnggotaKoperasiFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>
+        }
+        findMany: {
+          args: Prisma.AnggotaKoperasiFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>[]
+        }
+        create: {
+          args: Prisma.AnggotaKoperasiCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>
+        }
+        createMany: {
+          args: Prisma.AnggotaKoperasiCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AnggotaKoperasiCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>[]
+        }
+        delete: {
+          args: Prisma.AnggotaKoperasiDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>
+        }
+        update: {
+          args: Prisma.AnggotaKoperasiUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>
+        }
+        deleteMany: {
+          args: Prisma.AnggotaKoperasiDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AnggotaKoperasiUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AnggotaKoperasiUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>[]
+        }
+        upsert: {
+          args: Prisma.AnggotaKoperasiUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnggotaKoperasiPayload>
+        }
+        aggregate: {
+          args: Prisma.AnggotaKoperasiAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAnggotaKoperasi>
+        }
+        groupBy: {
+          args: Prisma.AnggotaKoperasiGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AnggotaKoperasiGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AnggotaKoperasiCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AnggotaKoperasiCountAggregateOutputType> | number
+        }
+      }
+    }
+    PemasukanKoperasi: {
+      payload: Prisma.$PemasukanKoperasiPayload<ExtArgs>
+      fields: Prisma.PemasukanKoperasiFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PemasukanKoperasiFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PemasukanKoperasiFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>
+        }
+        findFirst: {
+          args: Prisma.PemasukanKoperasiFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PemasukanKoperasiFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>
+        }
+        findMany: {
+          args: Prisma.PemasukanKoperasiFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>[]
+        }
+        create: {
+          args: Prisma.PemasukanKoperasiCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>
+        }
+        createMany: {
+          args: Prisma.PemasukanKoperasiCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PemasukanKoperasiCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>[]
+        }
+        delete: {
+          args: Prisma.PemasukanKoperasiDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>
+        }
+        update: {
+          args: Prisma.PemasukanKoperasiUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>
+        }
+        deleteMany: {
+          args: Prisma.PemasukanKoperasiDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PemasukanKoperasiUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PemasukanKoperasiUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>[]
+        }
+        upsert: {
+          args: Prisma.PemasukanKoperasiUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PemasukanKoperasiPayload>
+        }
+        aggregate: {
+          args: Prisma.PemasukanKoperasiAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePemasukanKoperasi>
+        }
+        groupBy: {
+          args: Prisma.PemasukanKoperasiGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PemasukanKoperasiGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PemasukanKoperasiCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PemasukanKoperasiCountAggregateOutputType> | number
+        }
+      }
+    }
+    PengeluaranKoperasi: {
+      payload: Prisma.$PengeluaranKoperasiPayload<ExtArgs>
+      fields: Prisma.PengeluaranKoperasiFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PengeluaranKoperasiFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PengeluaranKoperasiFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>
+        }
+        findFirst: {
+          args: Prisma.PengeluaranKoperasiFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PengeluaranKoperasiFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>
+        }
+        findMany: {
+          args: Prisma.PengeluaranKoperasiFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>[]
+        }
+        create: {
+          args: Prisma.PengeluaranKoperasiCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>
+        }
+        createMany: {
+          args: Prisma.PengeluaranKoperasiCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PengeluaranKoperasiCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>[]
+        }
+        delete: {
+          args: Prisma.PengeluaranKoperasiDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>
+        }
+        update: {
+          args: Prisma.PengeluaranKoperasiUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>
+        }
+        deleteMany: {
+          args: Prisma.PengeluaranKoperasiDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PengeluaranKoperasiUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PengeluaranKoperasiUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>[]
+        }
+        upsert: {
+          args: Prisma.PengeluaranKoperasiUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengeluaranKoperasiPayload>
+        }
+        aggregate: {
+          args: Prisma.PengeluaranKoperasiAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePengeluaranKoperasi>
+        }
+        groupBy: {
+          args: Prisma.PengeluaranKoperasiGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PengeluaranKoperasiGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PengeluaranKoperasiCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PengeluaranKoperasiCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1234,6 +1534,7 @@ export const SiswaScalarFieldEnum = {
   noTelpIbu: 'noTelpIbu',
   jenisKelamin: 'jenisKelamin',
   isAktif: 'isAktif',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1347,6 +1648,60 @@ export const MataPelajaranScalarFieldEnum = {
 } as const
 
 export type MataPelajaranScalarFieldEnum = (typeof MataPelajaranScalarFieldEnum)[keyof typeof MataPelajaranScalarFieldEnum]
+
+
+export const DonasiScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  jumlahDonasi: 'jumlahDonasi',
+  evidence: 'evidence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DonasiScalarFieldEnum = (typeof DonasiScalarFieldEnum)[keyof typeof DonasiScalarFieldEnum]
+
+
+export const AnggotaKoperasiScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  alamat: 'alamat',
+  noTelp: 'noTelp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AnggotaKoperasiScalarFieldEnum = (typeof AnggotaKoperasiScalarFieldEnum)[keyof typeof AnggotaKoperasiScalarFieldEnum]
+
+
+export const PemasukanKoperasiScalarFieldEnum = {
+  id: 'id',
+  anggotaId: 'anggotaId',
+  jenis: 'jenis',
+  jumlah: 'jumlah',
+  tanggal: 'tanggal',
+  keterangan: 'keterangan',
+  bukti: 'bukti',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PemasukanKoperasiScalarFieldEnum = (typeof PemasukanKoperasiScalarFieldEnum)[keyof typeof PemasukanKoperasiScalarFieldEnum]
+
+
+export const PengeluaranKoperasiScalarFieldEnum = {
+  id: 'id',
+  anggotaId: 'anggotaId',
+  jenis: 'jenis',
+  jumlah: 'jumlah',
+  tanggal: 'tanggal',
+  keterangan: 'keterangan',
+  bukti: 'bukti',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PengeluaranKoperasiScalarFieldEnum = (typeof PengeluaranKoperasiScalarFieldEnum)[keyof typeof PengeluaranKoperasiScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1471,6 +1826,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'StatusSiswa'
+ */
+export type EnumStatusSiswaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusSiswa'>
+    
+
+
+/**
+ * Reference to a field of type 'StatusSiswa[]'
+ */
+export type ListEnumStatusSiswaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusSiswa[]'>
+    
+
+
+/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -1527,6 +1896,20 @@ export type ListEnumJenisSanksiFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'JenisPengeluaran'
+ */
+export type EnumJenisPengeluaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPengeluaran'>
+    
+
+
+/**
+ * Reference to a field of type 'JenisPengeluaran[]'
+ */
+export type ListEnumJenisPengeluaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPengeluaran[]'>
+    
+
+
+/**
  * Reference to a field of type 'JenisNilai'
  */
 export type EnumJenisNilaiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisNilai'>
@@ -1537,6 +1920,34 @@ export type EnumJenisNilaiFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'JenisNilai[]'
  */
 export type ListEnumJenisNilaiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisNilai[]'>
+    
+
+
+/**
+ * Reference to a field of type 'JenisPemasukanKoperasi'
+ */
+export type EnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPemasukanKoperasi'>
+    
+
+
+/**
+ * Reference to a field of type 'JenisPemasukanKoperasi[]'
+ */
+export type ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPemasukanKoperasi[]'>
+    
+
+
+/**
+ * Reference to a field of type 'JenisPengeluaranKoperasi'
+ */
+export type EnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPengeluaranKoperasi'>
+    
+
+
+/**
+ * Reference to a field of type 'JenisPengeluaranKoperasi[]'
+ */
+export type ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPengeluaranKoperasi[]'>
     
 
 
@@ -1658,6 +2069,10 @@ export type GlobalOmitConfig = {
   pengeluaran?: Prisma.PengeluaranOmit
   nilai?: Prisma.NilaiOmit
   mataPelajaran?: Prisma.MataPelajaranOmit
+  donasi?: Prisma.DonasiOmit
+  anggotaKoperasi?: Prisma.AnggotaKoperasiOmit
+  pemasukanKoperasi?: Prisma.PemasukanKoperasiOmit
+  pengeluaranKoperasi?: Prisma.PengeluaranKoperasiOmit
 }
 
 /* Types for Logging */

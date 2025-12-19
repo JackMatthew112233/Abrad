@@ -67,3 +67,23 @@ export type Nilai = Prisma.NilaiModel
  * 
  */
 export type MataPelajaran = Prisma.MataPelajaranModel
+/**
+ * Model Donasi
+ * 
+ */
+export type Donasi = Prisma.DonasiModel
+/**
+ * Model AnggotaKoperasi
+ * 
+ */
+export type AnggotaKoperasi = Prisma.AnggotaKoperasiModel
+/**
+ * Model PemasukanKoperasi
+ * 
+ */
+export type PemasukanKoperasi = Prisma.PemasukanKoperasiModel
+/**
+ * Model PengeluaranKoperasi
+ * 
+ */
+export type PengeluaranKoperasi = Prisma.PengeluaranKoperasiModel

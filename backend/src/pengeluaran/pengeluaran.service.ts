@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { uploadToSupabase } from '../utils/supabase-upload.util.js';
+import { JenisPengeluaran } from '../generated/enums.js';
 import ExcelJS from 'exceljs';
 
 @Injectable()
@@ -31,7 +32,7 @@ export class PengeluaranService {
     return this.prisma.pengeluaran.create({
       data: {
         nama: data.nama,
-        jenis: data.jenis,
+        jenis: data.jenis as JenisPengeluaran,
         harga: data.harga,
         bukti: buktiUrl,
         tanggalPengeluaran: new Date(data.tanggalPengeluaran),
@@ -119,7 +120,7 @@ export class PengeluaranService {
       where: { id },
       data: {
         nama: data.nama,
-        jenis: data.jenis,
+        jenis: data.jenis as JenisPengeluaran,
         harga: data.harga,
         tanggalPengeluaran: new Date(data.tanggalPengeluaran),
         ...(file && { bukti: buktiUrl }),
@@ -225,13 +226,31 @@ export class PengeluaranService {
     };
     worksheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
 
+    // Helper function to format jenis
+    const formatJenis = (jenis: string) => {
+      const jenisMap: Record<string, string> = {
+        SERAGAM: 'Seragam',
+        LISTRIK: 'Listrik',
+        INTERNET: 'Internet',
+        LAUK: 'Lauk',
+        BERAS: 'Beras',
+        PERCETAKAN: 'Percetakan',
+        JASA: 'Jasa',
+        LAUNDRY: 'Laundry',
+        PERBAIKAN_FASILITAS_PONDOK: 'Perbaikan Fasilitas Pondok',
+        PENGELUARAN_NON_RUTIN: 'Pengeluaran Non Rutin',
+        LAINNYA: 'Lainnya',
+      };
+      return jenisMap[jenis] || jenis;
+    };
+
     // Add data rows
     pengeluaranData.forEach((pengeluaran, index) => {
       worksheet.addRow({
         no: index + 1,
         tanggal: new Date(pengeluaran.tanggalPengeluaran).toLocaleDateString('id-ID'),
         nama: pengeluaran.nama,
-        jenis: pengeluaran.jenis,
+        jenis: formatJenis(pengeluaran.jenis),
         harga: Number(pengeluaran.harga),
       });
     });

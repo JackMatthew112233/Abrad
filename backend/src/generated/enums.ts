@@ -91,3 +91,47 @@ export const JenisNilai = {
 } as const
 
 export type JenisNilai = (typeof JenisNilai)[keyof typeof JenisNilai]
+
+
+export const StatusSiswa = {
+  AKTIF: 'AKTIF',
+  TIDAK_AKTIF: 'TIDAK_AKTIF',
+  LULUS: 'LULUS'
+} as const
+
+export type StatusSiswa = (typeof StatusSiswa)[keyof typeof StatusSiswa]
+
+
+export const JenisPengeluaran = {
+  SERAGAM: 'SERAGAM',
+  LISTRIK: 'LISTRIK',
+  INTERNET: 'INTERNET',
+  LAUK: 'LAUK',
+  BERAS: 'BERAS',
+  PERCETAKAN: 'PERCETAKAN',
+  JASA: 'JASA',
+  LAUNDRY: 'LAUNDRY',
+  PERBAIKAN_FASILITAS_PONDOK: 'PERBAIKAN_FASILITAS_PONDOK',
+  PENGELUARAN_NON_RUTIN: 'PENGELUARAN_NON_RUTIN',
+  LAINNYA: 'LAINNYA'
+} as const
+
+export type JenisPengeluaran = (typeof JenisPengeluaran)[keyof typeof JenisPengeluaran]
+
+
+export const JenisPemasukanKoperasi = {
+  SIMPANAN_POKOK: 'SIMPANAN_POKOK',
+  SIMPANAN_WAJIB: 'SIMPANAN_WAJIB',
+  SIMPANAN_SUKARELA: 'SIMPANAN_SUKARELA',
+  PENYERTAAN_MODAL: 'PENYERTAAN_MODAL'
+} as const
+
+export type JenisPemasukanKoperasi = (typeof JenisPemasukanKoperasi)[keyof typeof JenisPemasukanKoperasi]
+
+
+export const JenisPengeluaranKoperasi = {
+  BELANJA: 'BELANJA',
+  PINJAMAN: 'PINJAMAN'
+} as const
+
+export type JenisPengeluaranKoperasi = (typeof JenisPengeluaranKoperasi)[keyof typeof JenisPengeluaranKoperasi]

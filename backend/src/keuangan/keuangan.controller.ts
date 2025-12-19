@@ -79,9 +79,14 @@ export class KeuanganController {
     return this.keuanganService.getChartPembayaran();
   }
 
+  @Get('chart-target-realisasi')
+  async getChartTargetRealisasi() {
+    return this.keuanganService.getChartTargetRealisasi();
+  }
+
   @Get('chart-distribusi')
-  async getChartDistribusi() {
-    return this.keuanganService.getChartDistribusi();
+  async getChartDistribusi(@Query('filter') filter?: string) {
+    return this.keuanganService.getChartDistribusi(filter);
   }
 
   @Post('pembayaran')

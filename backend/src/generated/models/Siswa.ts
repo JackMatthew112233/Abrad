@@ -53,6 +53,7 @@ export type SiswaMinAggregateOutputType = {
   noTelpIbu: string | null
   jenisKelamin: $Enums.JenisKelamin | null
   isAktif: boolean | null
+  status: $Enums.StatusSiswa | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -86,6 +87,7 @@ export type SiswaMaxAggregateOutputType = {
   noTelpIbu: string | null
   jenisKelamin: $Enums.JenisKelamin | null
   isAktif: boolean | null
+  status: $Enums.StatusSiswa | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -119,6 +121,7 @@ export type SiswaCountAggregateOutputType = {
   noTelpIbu: number
   jenisKelamin: number
   isAktif: number
+  status: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -154,6 +157,7 @@ export type SiswaMinAggregateInputType = {
   noTelpIbu?: true
   jenisKelamin?: true
   isAktif?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -187,6 +191,7 @@ export type SiswaMaxAggregateInputType = {
   noTelpIbu?: true
   jenisKelamin?: true
   isAktif?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -220,6 +225,7 @@ export type SiswaCountAggregateInputType = {
   noTelpIbu?: true
   jenisKelamin?: true
   isAktif?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -326,6 +332,7 @@ export type SiswaGroupByOutputType = {
   noTelpIbu: string | null
   jenisKelamin: $Enums.JenisKelamin | null
   isAktif: boolean
+  status: $Enums.StatusSiswa
   createdAt: Date
   updatedAt: Date
   _count: SiswaCountAggregateOutputType | null
@@ -380,6 +387,7 @@ export type SiswaWhereInput = {
   noTelpIbu?: Prisma.StringNullableFilter<"Siswa"> | string | null
   jenisKelamin?: Prisma.EnumJenisKelaminNullableFilter<"Siswa"> | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFilter<"Siswa"> | boolean
+  status?: Prisma.EnumStatusSiswaFilter<"Siswa"> | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFilter<"Siswa"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Siswa"> | Date | string
   biodataKeuangan?: Prisma.XOR<Prisma.BiodataKeuanganNullableScalarRelationFilter, Prisma.BiodataKeuanganWhereInput> | null
@@ -419,6 +427,7 @@ export type SiswaOrderByWithRelationInput = {
   noTelpIbu?: Prisma.SortOrderInput | Prisma.SortOrder
   jenisKelamin?: Prisma.SortOrderInput | Prisma.SortOrder
   isAktif?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   biodataKeuangan?: Prisma.BiodataKeuanganOrderByWithRelationInput
@@ -461,6 +470,7 @@ export type SiswaWhereUniqueInput = Prisma.AtLeast<{
   noTelpIbu?: Prisma.StringNullableFilter<"Siswa"> | string | null
   jenisKelamin?: Prisma.EnumJenisKelaminNullableFilter<"Siswa"> | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFilter<"Siswa"> | boolean
+  status?: Prisma.EnumStatusSiswaFilter<"Siswa"> | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFilter<"Siswa"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Siswa"> | Date | string
   biodataKeuangan?: Prisma.XOR<Prisma.BiodataKeuanganNullableScalarRelationFilter, Prisma.BiodataKeuanganWhereInput> | null
@@ -500,6 +510,7 @@ export type SiswaOrderByWithAggregationInput = {
   noTelpIbu?: Prisma.SortOrderInput | Prisma.SortOrder
   jenisKelamin?: Prisma.SortOrderInput | Prisma.SortOrder
   isAktif?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SiswaCountOrderByAggregateInput
@@ -539,6 +550,7 @@ export type SiswaScalarWhereWithAggregatesInput = {
   noTelpIbu?: Prisma.StringNullableWithAggregatesFilter<"Siswa"> | string | null
   jenisKelamin?: Prisma.EnumJenisKelaminNullableWithAggregatesFilter<"Siswa"> | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolWithAggregatesFilter<"Siswa"> | boolean
+  status?: Prisma.EnumStatusSiswaWithAggregatesFilter<"Siswa"> | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Siswa"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Siswa"> | Date | string
 }
@@ -572,6 +584,7 @@ export type SiswaCreateInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganCreateNestedOneWithoutSiswaInput
@@ -611,6 +624,7 @@ export type SiswaUncheckedCreateInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedCreateNestedOneWithoutSiswaInput
@@ -650,6 +664,7 @@ export type SiswaUpdateInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUpdateOneWithoutSiswaNestedInput
@@ -689,6 +704,7 @@ export type SiswaUncheckedUpdateInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedUpdateOneWithoutSiswaNestedInput
@@ -728,6 +744,7 @@ export type SiswaCreateManyInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -761,6 +778,7 @@ export type SiswaUpdateManyMutationInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -794,6 +812,7 @@ export type SiswaUncheckedUpdateManyInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -827,6 +846,7 @@ export type SiswaCountOrderByAggregateInput = {
   noTelpIbu?: Prisma.SortOrder
   jenisKelamin?: Prisma.SortOrder
   isAktif?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -860,6 +880,7 @@ export type SiswaMaxOrderByAggregateInput = {
   noTelpIbu?: Prisma.SortOrder
   jenisKelamin?: Prisma.SortOrder
   isAktif?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -893,6 +914,7 @@ export type SiswaMinOrderByAggregateInput = {
   noTelpIbu?: Prisma.SortOrder
   jenisKelamin?: Prisma.SortOrder
   isAktif?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -920,6 +942,10 @@ export type NullableEnumJenisKelaminFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type EnumStatusSiswaFieldUpdateOperationsInput = {
+  set?: $Enums.StatusSiswa
 }
 
 export type SiswaCreateNestedOneWithoutBiodataKeuanganInput = {
@@ -1035,6 +1061,7 @@ export type SiswaCreateWithoutBiodataKeuanganInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   pembayaran?: Prisma.PembayaranCreateNestedManyWithoutSiswaInput
@@ -1073,6 +1100,7 @@ export type SiswaUncheckedCreateWithoutBiodataKeuanganInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   pembayaran?: Prisma.PembayaranUncheckedCreateNestedManyWithoutSiswaInput
@@ -1127,6 +1155,7 @@ export type SiswaUpdateWithoutBiodataKeuanganInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pembayaran?: Prisma.PembayaranUpdateManyWithoutSiswaNestedInput
@@ -1165,6 +1194,7 @@ export type SiswaUncheckedUpdateWithoutBiodataKeuanganInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pembayaran?: Prisma.PembayaranUncheckedUpdateManyWithoutSiswaNestedInput
@@ -1203,6 +1233,7 @@ export type SiswaCreateWithoutPembayaranInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganCreateNestedOneWithoutSiswaInput
@@ -1241,6 +1272,7 @@ export type SiswaUncheckedCreateWithoutPembayaranInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedCreateNestedOneWithoutSiswaInput
@@ -1295,6 +1327,7 @@ export type SiswaUpdateWithoutPembayaranInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUpdateOneWithoutSiswaNestedInput
@@ -1333,6 +1366,7 @@ export type SiswaUncheckedUpdateWithoutPembayaranInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedUpdateOneWithoutSiswaNestedInput
@@ -1371,6 +1405,7 @@ export type SiswaCreateWithoutAbsensiInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganCreateNestedOneWithoutSiswaInput
@@ -1409,6 +1444,7 @@ export type SiswaUncheckedCreateWithoutAbsensiInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedCreateNestedOneWithoutSiswaInput
@@ -1463,6 +1499,7 @@ export type SiswaUpdateWithoutAbsensiInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUpdateOneWithoutSiswaNestedInput
@@ -1501,6 +1538,7 @@ export type SiswaUncheckedUpdateWithoutAbsensiInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedUpdateOneWithoutSiswaNestedInput
@@ -1539,6 +1577,7 @@ export type SiswaCreateWithoutPelanggaranInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganCreateNestedOneWithoutSiswaInput
@@ -1577,6 +1616,7 @@ export type SiswaUncheckedCreateWithoutPelanggaranInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedCreateNestedOneWithoutSiswaInput
@@ -1631,6 +1671,7 @@ export type SiswaUpdateWithoutPelanggaranInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUpdateOneWithoutSiswaNestedInput
@@ -1669,6 +1710,7 @@ export type SiswaUncheckedUpdateWithoutPelanggaranInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedUpdateOneWithoutSiswaNestedInput
@@ -1707,6 +1749,7 @@ export type SiswaCreateWithoutKesehatanInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganCreateNestedOneWithoutSiswaInput
@@ -1745,6 +1788,7 @@ export type SiswaUncheckedCreateWithoutKesehatanInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedCreateNestedOneWithoutSiswaInput
@@ -1799,6 +1843,7 @@ export type SiswaUpdateWithoutKesehatanInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUpdateOneWithoutSiswaNestedInput
@@ -1837,6 +1882,7 @@ export type SiswaUncheckedUpdateWithoutKesehatanInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedUpdateOneWithoutSiswaNestedInput
@@ -1875,6 +1921,7 @@ export type SiswaCreateWithoutNilaiInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganCreateNestedOneWithoutSiswaInput
@@ -1913,6 +1960,7 @@ export type SiswaUncheckedCreateWithoutNilaiInput = {
   noTelpIbu?: string | null
   jenisKelamin?: $Enums.JenisKelamin | null
   isAktif?: boolean
+  status?: $Enums.StatusSiswa
   createdAt?: Date | string
   updatedAt?: Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedCreateNestedOneWithoutSiswaInput
@@ -1967,6 +2015,7 @@ export type SiswaUpdateWithoutNilaiInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUpdateOneWithoutSiswaNestedInput
@@ -2005,6 +2054,7 @@ export type SiswaUncheckedUpdateWithoutNilaiInput = {
   noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
   isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   biodataKeuangan?: Prisma.BiodataKeuanganUncheckedUpdateOneWithoutSiswaNestedInput
@@ -2110,6 +2160,7 @@ export type SiswaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   noTelpIbu?: boolean
   jenisKelamin?: boolean
   isAktif?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   biodataKeuangan?: boolean | Prisma.Siswa$biodataKeuanganArgs<ExtArgs>
@@ -2150,6 +2201,7 @@ export type SiswaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   noTelpIbu?: boolean
   jenisKelamin?: boolean
   isAktif?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["siswa"]>
@@ -2183,6 +2235,7 @@ export type SiswaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   noTelpIbu?: boolean
   jenisKelamin?: boolean
   isAktif?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["siswa"]>
@@ -2216,11 +2269,12 @@ export type SiswaSelectScalar = {
   noTelpIbu?: boolean
   jenisKelamin?: boolean
   isAktif?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SiswaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "kelas" | "tingkatan" | "nisn" | "npsn" | "sekolahAsal" | "nis" | "nik" | "tempatLahir" | "tanggalLahir" | "alamat" | "kodePos" | "namaAyah" | "nikAyah" | "ttlAyah" | "noKartuKeluarga" | "pekerjaanAyah" | "pendidikanAyah" | "noTelpAyah" | "namaIbu" | "nikIbu" | "ttlIbu" | "pekerjaanIbu" | "pendidikanIbu" | "noTelpIbu" | "jenisKelamin" | "isAktif" | "createdAt" | "updatedAt", ExtArgs["result"]["siswa"]>
+export type SiswaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "kelas" | "tingkatan" | "nisn" | "npsn" | "sekolahAsal" | "nis" | "nik" | "tempatLahir" | "tanggalLahir" | "alamat" | "kodePos" | "namaAyah" | "nikAyah" | "ttlAyah" | "noKartuKeluarga" | "pekerjaanAyah" | "pendidikanAyah" | "noTelpAyah" | "namaIbu" | "nikIbu" | "ttlIbu" | "pekerjaanIbu" | "pendidikanIbu" | "noTelpIbu" | "jenisKelamin" | "isAktif" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["siswa"]>
 export type SiswaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   biodataKeuangan?: boolean | Prisma.Siswa$biodataKeuanganArgs<ExtArgs>
   pembayaran?: boolean | Prisma.Siswa$pembayaranArgs<ExtArgs>
@@ -2272,6 +2326,7 @@ export type $SiswaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     noTelpIbu: string | null
     jenisKelamin: $Enums.JenisKelamin | null
     isAktif: boolean
+    status: $Enums.StatusSiswa
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["siswa"]>
@@ -2731,6 +2786,7 @@ export interface SiswaFieldRefs {
   readonly noTelpIbu: Prisma.FieldRef<"Siswa", 'String'>
   readonly jenisKelamin: Prisma.FieldRef<"Siswa", 'JenisKelamin'>
   readonly isAktif: Prisma.FieldRef<"Siswa", 'Boolean'>
+  readonly status: Prisma.FieldRef<"Siswa", 'StatusSiswa'>
   readonly createdAt: Prisma.FieldRef<"Siswa", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Siswa", 'DateTime'>
 }

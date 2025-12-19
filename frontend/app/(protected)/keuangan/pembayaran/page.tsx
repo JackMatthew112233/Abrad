@@ -201,21 +201,21 @@ export default function RiwayatPembayaranPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="flex items-center gap-3 lg:gap-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.back()}
-          className="text-zinc-600 hover:text-zinc-900"
+          className="text-zinc-600 hover:text-zinc-900 h-8 w-8 lg:h-10 lg:w-10"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-4 w-4 lg:h-5 lg:w-5" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-emerald-700">
+          <h1 className="text-lg lg:text-2xl font-bold text-emerald-700">
             Riwayat Pembayaran
           </h1>
-          <p className="text-zinc-600">
+          <p className="text-xs lg:text-sm text-zinc-600">
             Semua riwayat pembayaran dari seluruh santri
           </p>
         </div>
@@ -223,87 +223,87 @@ export default function RiwayatPembayaranPage() {
 
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <CardTitle className="text-base font-semibold text-emerald-700">
+          <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
             Daftar Pembayaran
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 sm:p-6">
           {isLoading ? (
-            <div className="text-center py-12 text-zinc-500">Loading...</div>
+            <div className="text-center py-12 text-zinc-500 text-xs lg:text-sm px-6">Loading...</div>
           ) : pembayaranList.length === 0 ? (
-            <div className="text-center py-12 text-zinc-500">
+            <div className="text-center py-12 text-zinc-500 text-xs lg:text-sm px-6">
               Belum ada riwayat pembayaran
             </div>
           ) : (
             <>
-              <div className="rounded-md border border-zinc-200">
-                <Table>
+              <div className="overflow-x-auto">
+                <Table className="min-w-[1200px]">
                   <TableHeader>
                     <TableRow className="bg-emerald-50">
-                      <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Nama Santri</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Jenis Kelamin</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Kelas</TableHead>
-                      <TableHead className="font-semibold text-emerald-700">Tingkatan</TableHead>
-                      <TableHead className="text-right font-semibold text-emerald-700">Pembayaran Infaq</TableHead>
-                      <TableHead className="text-right font-semibold text-emerald-700">Pembayaran Laundry</TableHead>
-                      <TableHead className="text-right font-semibold text-emerald-700">Total</TableHead>
-                      <TableHead className="text-center font-semibold text-emerald-700">Bukti</TableHead>
-                      <TableHead className="text-center font-semibold text-emerald-700">Aksi</TableHead>
+                      <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">No</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tanggal</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama Santri</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Jenis Kelamin</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
+                      <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Pembayaran Infaq</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Pembayaran Laundry</TableHead>
+                      <TableHead className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Total</TableHead>
+                      <TableHead className="text-center font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Bukti</TableHead>
+                      <TableHead className="text-center font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {pembayaranList.map((pembayaran, index) => (
                       <TableRow key={pembayaran.id} className="hover:bg-zinc-50">
-                        <TableCell className="text-zinc-600">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {(pagination.page - 1) * pagination.limit + index + 1}
                         </TableCell>
-                        <TableCell className="text-zinc-600 text-sm">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {new Date(pembayaran.tanggalPembayaran).toLocaleDateString("id-ID", {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
                           })}
                         </TableCell>
-                        <TableCell className="text-zinc-900">{pembayaran.siswa.nama}</TableCell>
-                        <TableCell className="text-zinc-600">
+                        <TableCell className="text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{pembayaran.siswa.nama}</TableCell>
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {pembayaran.siswa.jenisKelamin === "LakiLaki" ? "Laki-Laki" : "Perempuan"}
                         </TableCell>
-                        <TableCell className="text-zinc-600">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {pembayaran.siswa.kelas ? pembayaran.siswa.kelas.replace(/_/g, " ") : "-"}
                         </TableCell>
-                        <TableCell className="text-zinc-600">
+                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
                           {pembayaran.siswa.tingkatan || "-"}
                         </TableCell>
-                        <TableCell className="text-right text-zinc-900">
+                        <TableCell className="text-right text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                           {formatRupiah(pembayaran.totalPembayaranInfaq)}
                         </TableCell>
-                        <TableCell className="text-right text-zinc-900">
+                        <TableCell className="text-right text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
                           {formatRupiah(pembayaran.totalPembayaranLaundry)}
                         </TableCell>
-                        <TableCell className="text-right font-semibold text-emerald-700">
+                        <TableCell className="text-right font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
                           {formatRupiah(pembayaran.totalPembayaranInfaq + pembayaran.totalPembayaranLaundry)}
                         </TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="text-center whitespace-nowrap">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => window.open(pembayaran.buktiPembayaran, "_blank")}
-                            className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                            className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 h-8 w-8 p-0"
                           >
-                            <FileText className="h-4 w-4" />
+                            <FileText className="h-3 w-3 lg:h-4 lg:w-4" />
                           </Button>
                         </TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="text-center whitespace-nowrap">
                           <div className="flex items-center justify-center gap-1">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleEditPembayaran(pembayaran)}
-                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 w-8 p-0"
                             >
-                              <Edit className="h-4 w-4" />
+                              <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
                             </Button>
                             <Button
                               variant="ghost"
@@ -312,9 +312,9 @@ export default function RiwayatPembayaranPage() {
                                 setSelectedPembayaran(pembayaran);
                                 setShowDeleteDialog(true);
                               }}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-3 w-3 lg:h-4 lg:w-4" />
                             </Button>
                           </div>
                         </TableCell>
@@ -326,45 +326,57 @@ export default function RiwayatPembayaranPage() {
 
               {/* Pagination */}
               {pagination.totalPages > 1 && (
-                <div className="flex items-center justify-between mt-4">
-                  <p className="text-sm text-zinc-600">
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-3 mt-4 px-4 sm:px-0">
+                  <p className="text-xs lg:text-sm text-zinc-600">
                     Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}
                     {Math.min(pagination.page * pagination.limit, pagination.total)} dari{" "}
                     {pagination.total} pembayaran
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handlePageChange(pagination.page - 1)}
                       disabled={pagination.page === 1}
+                      className="h-8 text-xs lg:text-sm"
                     >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
-                      Sebelumnya
+                      <ChevronLeft className="h-3 w-3 lg:h-4 lg:w-4" />
+                      <span className="hidden lg:inline ml-1">Prev</span>
                     </Button>
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
-                        (pageNum) => (
-                          <Button
-                            key={pageNum}
-                            variant={pageNum === pagination.page ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => handlePageChange(pageNum)}
-                            className={pageNum === pagination.page ? "bg-emerald-600 hover:bg-emerald-700" : ""}
-                          >
-                            {pageNum}
-                          </Button>
-                        )
-                      )}
+                      {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
+                        .filter((page) => {
+                          return (
+                            page === 1 ||
+                            page === pagination.totalPages ||
+                            (page >= pagination.page - 1 && page <= pagination.page + 1)
+                          );
+                        })
+                        .map((pageNum, index, array) => (
+                          <div key={pageNum} className="flex items-center">
+                            {index > 0 && array[index - 1] !== pageNum - 1 && (
+                              <span className="px-2 text-zinc-400 text-xs">...</span>
+                            )}
+                            <Button
+                              variant={pageNum === pagination.page ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => handlePageChange(pageNum)}
+                              className={`h-8 w-8 p-0 text-xs lg:text-sm ${pageNum === pagination.page ? "bg-emerald-600 hover:bg-emerald-700" : ""}`}
+                            >
+                              {pageNum}
+                            </Button>
+                          </div>
+                        ))}
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handlePageChange(pagination.page + 1)}
                       disabled={pagination.page === pagination.totalPages}
+                      className="h-8 text-xs lg:text-sm"
                     >
-                      Selanjutnya
-                      <ChevronRight className="h-4 w-4 ml-1" />
+                      <span className="hidden lg:inline mr-1">Next</span>
+                      <ChevronRight className="h-3 w-3 lg:h-4 lg:w-4" />
                     </Button>
                   </div>
                 </div>

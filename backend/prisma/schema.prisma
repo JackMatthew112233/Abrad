@@ -73,6 +73,38 @@ enum JenisNilai {
   PRAKTIK
 }
 
+enum StatusSiswa {
+  AKTIF
+  TIDAK_AKTIF
+  LULUS
+}
+
+enum JenisPengeluaran {
+  SERAGAM
+  LISTRIK
+  INTERNET
+  LAUK
+  BERAS
+  PERCETAKAN
+  JASA
+  LAUNDRY
+  PERBAIKAN_FASILITAS_PONDOK
+  PENGELUARAN_NON_RUTIN
+  LAINNYA
+}
+
+enum JenisPemasukanKoperasi {
+  SIMPANAN_POKOK
+  SIMPANAN_WAJIB
+  SIMPANAN_SUKARELA
+  PENYERTAAN_MODAL
+}
+
+enum JenisPengeluaranKoperasi {
+  BELANJA
+  PINJAMAN
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -114,6 +146,7 @@ model Siswa {
   noTelpIbu      String?
   jenisKelamin   JenisKelamin?
   isAktif        Boolean       @default(true)
+  status         StatusSiswa   @default(AKTIF)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
@@ -211,14 +244,14 @@ model Kesehatan {
 }
 
 model Pengeluaran {
-  id                  String   @id @default(cuid())
+  id                  String            @id @default(cuid())
   nama                String
-  jenis               String
+  jenis               JenisPengeluaran
   harga               Decimal
   bukti               String?
   tanggalPengeluaran  DateTime
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
 
   @@map("pengeluaran")
   @@index([jenis])
@@ -254,4 +287,66 @@ model MataPelajaran {
 
   @@map("mata_pelajaran")
   @@index([kelas])
+}
+
+model Donasi {
+  id           String   @id @default(cuid())
+  nama         String
+  jumlahDonasi Decimal
+  evidence     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("donasi")
+  @@index([createdAt])
+}
+
+model AnggotaKoperasi {
+  id          String                @id @default(cuid())
+  nama        String
+  alamat      String?
+  noTelp      String?
+  pemasukan   PemasukanKoperasi[]
+  pengeluaran PengeluaranKoperasi[]
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  @@map("anggota_koperasi")
+  @@index([nama])
+}
+
+model PemasukanKoperasi {
+  id         String                 @id @default(cuid())
+  anggotaId  String
+  anggota    AnggotaKoperasi        @relation(fields: [anggotaId], references: [id], onDelete: Cascade)
+  jenis      JenisPemasukanKoperasi
+  jumlah     Decimal
+  tanggal    DateTime               @db.Date
+  keterangan String?
+  bukti      String?
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+
+  @@map("pemasukan_koperasi")
+  @@index([anggotaId])
+  @@index([jenis])
+  @@index([tanggal])
+}
+
+model PengeluaranKoperasi {
+  id         String                   @id @default(cuid())
+  anggotaId  String
+  anggota    AnggotaKoperasi          @relation(fields: [anggotaId], references: [id], onDelete: Cascade)
+  jenis      JenisPengeluaranKoperasi
+  jumlah     Decimal
+  tanggal    DateTime                 @db.Date
+  keterangan String?
+  bukti      String?
+  createdAt  DateTime                 @default(now())
+  updatedAt  DateTime                 @updatedAt
+
+  @@map("pengeluaran_koperasi")
+  @@index([anggotaId])
+  @@index([jenis])
+  @@index([tanggal])
 }

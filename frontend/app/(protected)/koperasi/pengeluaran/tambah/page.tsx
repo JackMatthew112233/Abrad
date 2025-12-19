@@ -6,36 +6,44 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { FileUpload } from "@/components/ui/file-upload";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft, Search, Save, X } from "lucide-react";
 import { toast } from "sonner";
 
-interface Siswa {
+interface Anggota {
   id: string;
   nama: string;
-  kelas?: string;
-  tingkatan?: string;
+  noTelp: string | null;
 }
 
-export default function TambahPembayaranPage() {
+export default function TambahPengeluaranPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Siswa[]>([]);
-  const [selectedSiswa, setSelectedSiswa] = useState<Siswa | null>(null);
+  const [searchResults, setSearchResults] = useState<Anggota[]>([]);
+  const [selectedAnggota, setSelectedAnggota] = useState<Anggota | null>(null);
   const [showResults, setShowResults] = useState(false);
-  const [buktiPembayaran, setBuktiPembayaran] = useState<File | null>(null);
+  const [bukti, setBukti] = useState<File | null>(null);
   const [useToday, setUseToday] = useState(true);
   const [formData, setFormData] = useState({
-    totalPembayaranInfaq: "",
-    totalPembayaranLaundry: "",
-    tanggalPembayaran: new Date().toISOString().split("T")[0],
+    jenis: "",
+    jumlah: "",
+    tanggal: new Date().toISOString().split("T")[0],
+    keterangan: "",
   });
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchQuery.length > 2) {
-        searchSiswa(searchQuery);
+        searchAnggota(searchQuery);
       } else {
         setSearchResults([]);
       }
@@ -44,13 +52,11 @@ export default function TambahPembayaranPage() {
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery]);
 
-  const searchSiswa = async (query: string) => {
+  const searchAnggota = async (query: string) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/keuangan/search-siswa?q=${query}`,
-        {
-          credentials: "include",
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/koperasi/anggota/search?q=${query}`,
+        { credentials: "include" }
       );
       if (response.ok) {
         const data = await response.json();
@@ -58,26 +64,26 @@ export default function TambahPembayaranPage() {
         setShowResults(true);
       }
     } catch (error) {
-      console.error("Error searching siswa:", error);
+      console.error("Error searching anggota:", error);
     }
   };
 
-  const selectSiswa = (siswa: Siswa) => {
-    setSelectedSiswa(siswa);
-    setSearchQuery(siswa.nama);
+  const selectAnggota = (anggota: Anggota) => {
+    setSelectedAnggota(anggota);
+    setSearchQuery(anggota.nama);
     setShowResults(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!selectedSiswa) {
-      toast.error("Pilih siswa terlebih dahulu");
+
+    if (!selectedAnggota) {
+      toast.error("Pilih anggota koperasi terlebih dahulu");
       return;
     }
 
-    if (!buktiPembayaran) {
-      toast.error("Upload bukti pembayaran terlebih dahulu");
+    if (!formData.jenis) {
+      toast.error("Pilih jenis pengeluaran");
       return;
     }
 
@@ -85,14 +91,19 @@ export default function TambahPembayaranPage() {
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append("siswaId", selectedSiswa.id);
-      formDataToSend.append("totalPembayaranInfaq", formData.totalPembayaranInfaq);
-      formDataToSend.append("totalPembayaranLaundry", formData.totalPembayaranLaundry);
-      formDataToSend.append("tanggalPembayaran", formData.tanggalPembayaran);
-      formDataToSend.append("buktiPembayaran", buktiPembayaran);
+      formDataToSend.append("anggotaId", selectedAnggota.id);
+      formDataToSend.append("jenis", formData.jenis);
+      formDataToSend.append("jumlah", formData.jumlah);
+      formDataToSend.append("tanggal", formData.tanggal);
+      if (formData.keterangan) {
+        formDataToSend.append("keterangan", formData.keterangan);
+      }
+      if (bukti) {
+        formDataToSend.append("bukti", bukti);
+      }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran`,
+        `${process.env.NEXT_PUBLIC_API_URL}/koperasi/pengeluaran`,
         {
           method: "POST",
           credentials: "include",
@@ -101,14 +112,14 @@ export default function TambahPembayaranPage() {
       );
 
       if (response.ok) {
-        toast.success("Pembayaran berhasil ditambahkan!");
-        router.push("/keuangan");
+        toast.success("Pengeluaran berhasil ditambahkan!");
+        router.push("/koperasi");
       } else {
         const error = await response.json();
-        toast.error(error.message || "Gagal menambahkan pembayaran");
+        toast.error(error.message || "Gagal menambahkan pengeluaran");
       }
     } catch (error) {
-      toast.error("Gagal menambahkan pembayaran");
+      toast.error("Gagal menambahkan pengeluaran");
     } finally {
       setIsLoading(false);
     }
@@ -140,10 +151,10 @@ export default function TambahPembayaranPage() {
         </Button>
         <div>
           <h1 className="text-lg lg:text-2xl font-bold text-emerald-700">
-            Tambah Pembayaran
+            Tambah Pengeluaran
           </h1>
           <p className="text-xs lg:text-sm text-zinc-600">
-            Isi formulir untuk menambahkan pembayaran santri/santriwati
+            Tambahkan pengeluaran koperasi (Belanja / Pinjaman)
           </p>
         </div>
       </div>
@@ -151,39 +162,33 @@ export default function TambahPembayaranPage() {
       <Card className="border-zinc-200 bg-white">
         <CardHeader className="p-4 lg:p-6">
           <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
-            Formulir Pembayaran
+            Formulir Pengeluaran
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 lg:p-6 pt-0">
           <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
+            {/* Anggota Search */}
             <div className="space-y-2">
-              <Label htmlFor="siswa" className="text-xs lg:text-sm">
-                Nama Santri / Santriwati <span className="text-red-500">*</span>
+              <Label htmlFor="anggota" className="text-xs lg:text-sm">
+                Anggota Koperasi <span className="text-red-500">*</span>
               </Label>
-              
-              {selectedSiswa ? (
+
+              {selectedAnggota ? (
                 <Card className="border-emerald-200 bg-emerald-50 p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="flex h-8 w-8 lg:h-10 lg:w-10 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-xs lg:text-sm">
-                        {selectedSiswa.nama.charAt(0).toUpperCase()}
+                        {selectedAnggota.nama?.charAt(0).toUpperCase()}
                       </div>
                       <div>
                         <p className="font-medium text-emerald-900 text-sm lg:text-base">
-                          {selectedSiswa.nama}
+                          {selectedAnggota.nama}
                         </p>
-                        <div className="flex gap-1 mt-0.5">
-                          {selectedSiswa.tingkatan && (
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-600 text-white">
-                              {selectedSiswa.tingkatan}
-                            </span>
-                          )}
-                          {selectedSiswa.kelas && (
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-600 text-white">
-                              {selectedSiswa.kelas.replace("_", " ")}
-                            </span>
-                          )}
-                        </div>
+                        {selectedAnggota.noTelp && (
+                          <p className="text-xs text-emerald-700">
+                            {selectedAnggota.noTelp}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <Button
@@ -191,7 +196,7 @@ export default function TambahPembayaranPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => {
-                        setSelectedSiswa(null);
+                        setSelectedAnggota(null);
                         setSearchQuery("");
                       }}
                       className="text-emerald-700 hover:text-red-600 h-8 w-8 p-0"
@@ -204,36 +209,32 @@ export default function TambahPembayaranPage() {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 h-3 w-3 lg:h-4 lg:w-4 -translate-y-1/2 text-zinc-400" />
                   <Input
-                    id="siswa"
-                    placeholder="Cari nama santri / santriwati..."
+                    id="anggota"
+                    placeholder="Cari anggota koperasi..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                    onFocus={() =>
+                      searchResults.length > 0 && setShowResults(true)
+                    }
                     className="pl-9 text-xs lg:text-sm h-9 lg:h-10"
-                    required
                   />
                   {showResults && searchResults.length > 0 && (
                     <div className="absolute z-10 mt-1 w-full rounded-lg border border-zinc-200 bg-white shadow-lg max-h-48 overflow-y-auto">
-                      {searchResults.map((siswa) => (
+                      {searchResults.map((anggota) => (
                         <button
-                          key={siswa.id}
+                          key={anggota.id}
                           type="button"
-                          onClick={() => selectSiswa(siswa)}
+                          onClick={() => selectAnggota(anggota)}
                           className="w-full px-3 py-2 text-left hover:bg-emerald-50 transition-colors border-b border-zinc-100 last:border-b-0"
                         >
-                          <p className="font-medium text-zinc-900 text-sm">{siswa.nama}</p>
-                          <div className="flex gap-1 mt-0.5">
-                            {siswa.tingkatan && (
-                              <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
-                                {siswa.tingkatan}
-                              </span>
-                            )}
-                            {siswa.kelas && (
-                              <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
-                                {siswa.kelas?.replace("_", " ")}
-                              </span>
-                            )}
-                          </div>
+                          <p className="font-medium text-zinc-900 text-sm">
+                            {anggota.nama}
+                          </p>
+                          {anggota.noTelp && (
+                            <p className="text-xs text-zinc-500">
+                              {anggota.noTelp}
+                            </p>
+                          )}
                         </button>
                       ))}
                     </div>
@@ -242,47 +243,55 @@ export default function TambahPembayaranPage() {
               )}
             </div>
 
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="infaq" className="text-xs lg:text-sm">
-                  Total Pembayaran Infaq <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="infaq"
-                  type="number"
-                  step="0.01"
-                  placeholder="Masukkan nominal infaq"
-                  value={formData.totalPembayaranInfaq}
-                  onChange={(e) =>
-                    setFormData({ ...formData, totalPembayaranInfaq: e.target.value })
-                  }
-                  className="text-xs lg:text-sm h-9 lg:h-10"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="laundry" className="text-xs lg:text-sm">
-                  Total Pembayaran Laundry <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="laundry"
-                  type="number"
-                  step="0.01"
-                  placeholder="Masukkan nominal laundry"
-                  value={formData.totalPembayaranLaundry}
-                  onChange={(e) =>
-                    setFormData({ ...formData, totalPembayaranLaundry: e.target.value })
-                  }
-                  className="text-xs lg:text-sm h-9 lg:h-10"
-                  required
-                />
-              </div>
+            {/* Jenis Pengeluaran */}
+            <div className="space-y-2">
+              <Label htmlFor="jenis" className="text-xs lg:text-sm">
+                Jenis Pengeluaran <span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={formData.jenis}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, jenis: value })
+                }
+              >
+                <SelectTrigger className="text-xs lg:text-sm h-9 lg:h-10">
+                  <SelectValue placeholder="Pilih jenis pengeluaran" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="BELANJA" className="text-xs lg:text-sm">
+                    Belanja
+                  </SelectItem>
+                  <SelectItem value="PINJAMAN" className="text-xs lg:text-sm">
+                    Pinjaman
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
+            {/* Jumlah */}
+            <div className="space-y-2">
+              <Label htmlFor="jumlah" className="text-xs lg:text-sm">
+                Jumlah (Rp) <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="jumlah"
+                type="number"
+                placeholder="Masukkan jumlah"
+                value={formData.jumlah}
+                onChange={(e) =>
+                  setFormData({ ...formData, jumlah: e.target.value })
+                }
+                className="text-xs lg:text-sm h-9 lg:h-10"
+                required
+                min="0"
+                step="1000"
+              />
+            </div>
+
+            {/* Tanggal */}
             <div className="space-y-2">
               <Label htmlFor="tanggal" className="text-xs lg:text-sm">
-                Tanggal Pembayaran <span className="text-red-500">*</span>
+                Tanggal <span className="text-red-500">*</span>
               </Label>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
@@ -295,46 +304,62 @@ export default function TambahPembayaranPage() {
                       if (e.target.checked) {
                         setFormData({
                           ...formData,
-                          tanggalPembayaran: new Date().toISOString().split("T")[0],
+                          tanggal: new Date().toISOString().split("T")[0],
                         });
                       }
                     }}
                     className="h-4 w-4 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500"
                   />
-                  <Label htmlFor="useToday" className="text-xs lg:text-sm font-normal cursor-pointer">
+                  <Label
+                    htmlFor="useToday"
+                    className="text-xs lg:text-sm font-normal cursor-pointer"
+                  >
                     Gunakan tanggal hari ini
                   </Label>
                 </div>
                 <Input
                   id="tanggal"
                   type="date"
-                  value={formData.tanggalPembayaran}
+                  value={formData.tanggal}
                   onChange={(e) => {
-                    setFormData({ ...formData, tanggalPembayaran: e.target.value });
+                    setFormData({ ...formData, tanggal: e.target.value });
                     setUseToday(false);
                   }}
                   disabled={useToday}
-                  required
-                  className={`text-xs lg:text-sm h-9 lg:h-10 ${useToday ? "bg-zinc-50 cursor-not-allowed" : ""}`}
+                  className={`text-xs lg:text-sm h-9 lg:h-10 ${
+                    useToday ? "bg-zinc-50 cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
             </div>
 
+            {/* Keterangan */}
             <div className="space-y-2">
-              <Label className="text-xs lg:text-sm">
-                Bukti Pembayaran <span className="text-red-500">*</span>
+              <Label htmlFor="keterangan" className="text-xs lg:text-sm">
+                Keterangan
               </Label>
-              <FileUpload
-                onFileSelect={setBuktiPembayaran}
-                accept="image/*,application/pdf"
-                maxSize={5}
-                required
+              <Textarea
+                id="keterangan"
+                placeholder="Keterangan tambahan (opsional)"
+                value={formData.keterangan}
+                onChange={(e) =>
+                  setFormData({ ...formData, keterangan: e.target.value })
+                }
+                className="text-xs lg:text-sm min-h-[60px]"
               />
-              <p className="text-xs text-zinc-500">
-                Upload gambar atau PDF bukti pembayaran (Wajib)
-              </p>
             </div>
 
+            {/* Bukti */}
+            <div className="space-y-2">
+              <Label className="text-xs lg:text-sm">Bukti (Opsional)</Label>
+              <FileUpload
+                onFileSelect={setBukti}
+                accept="image/*,application/pdf"
+                maxSize={5}
+              />
+            </div>
+
+            {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
               <Button
                 type="button"
@@ -348,10 +373,10 @@ export default function TambahPembayaranPage() {
               <Button
                 type="submit"
                 className="w-full sm:flex-1 bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-9 lg:h-10"
-                disabled={isLoading || !buktiPembayaran || !selectedSiswa}
+                disabled={isLoading || !selectedAnggota || !formData.jenis}
               >
                 <Save className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
-                {isLoading ? "Menyimpan..." : "Simpan Data"}
+                {isLoading ? "Menyimpan..." : "Simpan"}
               </Button>
             </div>
           </form>

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(frontend\\app\\(protected)\\keuangan/**)",
+      "Bash(dir /s /b \"C:\\Users\\ASUS\\pesantren\\frontend\\app\\(protected)\\keuangan\")",
+      "Edit(backend\\prisma/**)"
+    ]
+  }
+}

@@ -90,4 +90,70 @@ export class AuthService {
       },
     });
   }
+
+  async updateEmail(userId: string, newEmail: string, password: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User tidak ditemukan');
+    }
+
+    const passwordValid = await argon2.verify(user.password, password);
+    if (!passwordValid) {
+      throw new UnauthorizedException('Password salah');
+    }
+
+    // Check if email already exists
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: newEmail },
+    });
+
+    if (existingUser && existingUser.id !== userId) {
+      throw new ConflictException('Email sudah digunakan');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: { email: newEmail },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+      },
+    });
+
+    return {
+      message: 'Email berhasil diubah',
+      user: updatedUser,
+    };
+  }
+
+  async updatePassword(userId: string, oldPassword: string, newPassword: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User tidak ditemukan');
+    }
+
+    const passwordValid = await argon2.verify(user.password, oldPassword);
+    if (!passwordValid) {
+      throw new UnauthorizedException('Password lama salah');
+    }
+
+    const hashedPassword = await argon2.hash(newPassword);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    return {
+      message: 'Password berhasil diubah',
+    };
+  }
 }

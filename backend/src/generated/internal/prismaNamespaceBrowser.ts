@@ -60,7 +60,11 @@ export const ModelName = {
   Kesehatan: 'Kesehatan',
   Pengeluaran: 'Pengeluaran',
   Nilai: 'Nilai',
-  MataPelajaran: 'MataPelajaran'
+  MataPelajaran: 'MataPelajaran',
+  Donasi: 'Donasi',
+  AnggotaKoperasi: 'AnggotaKoperasi',
+  PemasukanKoperasi: 'PemasukanKoperasi',
+  PengeluaranKoperasi: 'PengeluaranKoperasi'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -121,6 +125,7 @@ export const SiswaScalarFieldEnum = {
   noTelpIbu: 'noTelpIbu',
   jenisKelamin: 'jenisKelamin',
   isAktif: 'isAktif',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -234,6 +239,60 @@ export const MataPelajaranScalarFieldEnum = {
 } as const
 
 export type MataPelajaranScalarFieldEnum = (typeof MataPelajaranScalarFieldEnum)[keyof typeof MataPelajaranScalarFieldEnum]
+
+
+export const DonasiScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  jumlahDonasi: 'jumlahDonasi',
+  evidence: 'evidence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DonasiScalarFieldEnum = (typeof DonasiScalarFieldEnum)[keyof typeof DonasiScalarFieldEnum]
+
+
+export const AnggotaKoperasiScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  alamat: 'alamat',
+  noTelp: 'noTelp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AnggotaKoperasiScalarFieldEnum = (typeof AnggotaKoperasiScalarFieldEnum)[keyof typeof AnggotaKoperasiScalarFieldEnum]
+
+
+export const PemasukanKoperasiScalarFieldEnum = {
+  id: 'id',
+  anggotaId: 'anggotaId',
+  jenis: 'jenis',
+  jumlah: 'jumlah',
+  tanggal: 'tanggal',
+  keterangan: 'keterangan',
+  bukti: 'bukti',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PemasukanKoperasiScalarFieldEnum = (typeof PemasukanKoperasiScalarFieldEnum)[keyof typeof PemasukanKoperasiScalarFieldEnum]
+
+
+export const PengeluaranKoperasiScalarFieldEnum = {
+  id: 'id',
+  anggotaId: 'anggotaId',
+  jenis: 'jenis',
+  jumlah: 'jumlah',
+  tanggal: 'tanggal',
+  keterangan: 'keterangan',
+  bukti: 'bukti',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PengeluaranKoperasiScalarFieldEnum = (typeof PengeluaranKoperasiScalarFieldEnum)[keyof typeof PengeluaranKoperasiScalarFieldEnum]
 
 
 export const SortOrder = {

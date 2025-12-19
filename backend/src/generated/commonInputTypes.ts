@@ -164,6 +164,13 @@ export type BoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
+export type EnumStatusSiswaFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatusSiswa | Prisma.EnumStatusSiswaFieldRefInput<$PrismaModel>
+  in?: $Enums.StatusSiswa[] | Prisma.ListEnumStatusSiswaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatusSiswa[] | Prisma.ListEnumStatusSiswaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatusSiswaFilter<$PrismaModel> | $Enums.StatusSiswa
+}
+
 export type EnumKelasNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.Kelas | Prisma.EnumKelasFieldRefInput<$PrismaModel> | null
   in?: $Enums.Kelas[] | Prisma.ListEnumKelasFieldRefInput<$PrismaModel> | null
@@ -214,6 +221,16 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type EnumStatusSiswaWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatusSiswa | Prisma.EnumStatusSiswaFieldRefInput<$PrismaModel>
+  in?: $Enums.StatusSiswa[] | Prisma.ListEnumStatusSiswaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatusSiswa[] | Prisma.ListEnumStatusSiswaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatusSiswaWithAggregatesFilter<$PrismaModel> | $Enums.StatusSiswa
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatusSiswaFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatusSiswaFilter<$PrismaModel>
 }
 
 export type DecimalFilter<$PrismaModel = never> = {
@@ -294,6 +311,23 @@ export type EnumJenisSanksiWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumJenisSanksiFilter<$PrismaModel>
 }
 
+export type EnumJenisPengeluaranFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPengeluaran | Prisma.EnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPengeluaran[] | Prisma.ListEnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPengeluaran[] | Prisma.ListEnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPengeluaranFilter<$PrismaModel> | $Enums.JenisPengeluaran
+}
+
+export type EnumJenisPengeluaranWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPengeluaran | Prisma.EnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPengeluaran[] | Prisma.ListEnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPengeluaran[] | Prisma.ListEnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPengeluaranWithAggregatesFilter<$PrismaModel> | $Enums.JenisPengeluaran
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumJenisPengeluaranFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumJenisPengeluaranFilter<$PrismaModel>
+}
+
 export type EnumJenisNilaiFilter<$PrismaModel = never> = {
   equals?: $Enums.JenisNilai | Prisma.EnumJenisNilaiFieldRefInput<$PrismaModel>
   in?: $Enums.JenisNilai[] | Prisma.ListEnumJenisNilaiFieldRefInput<$PrismaModel>
@@ -326,6 +360,40 @@ export type EnumKelasWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumKelasFilter<$PrismaModel>
   _max?: Prisma.NestedEnumKelasFilter<$PrismaModel>
+}
+
+export type EnumJenisPemasukanKoperasiFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPemasukanKoperasi | Prisma.EnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPemasukanKoperasi[] | Prisma.ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPemasukanKoperasi[] | Prisma.ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPemasukanKoperasiFilter<$PrismaModel> | $Enums.JenisPemasukanKoperasi
+}
+
+export type EnumJenisPemasukanKoperasiWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPemasukanKoperasi | Prisma.EnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPemasukanKoperasi[] | Prisma.ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPemasukanKoperasi[] | Prisma.ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPemasukanKoperasiWithAggregatesFilter<$PrismaModel> | $Enums.JenisPemasukanKoperasi
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumJenisPemasukanKoperasiFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumJenisPemasukanKoperasiFilter<$PrismaModel>
+}
+
+export type EnumJenisPengeluaranKoperasiFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPengeluaranKoperasi | Prisma.EnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPengeluaranKoperasi[] | Prisma.ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPengeluaranKoperasi[] | Prisma.ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPengeluaranKoperasiFilter<$PrismaModel> | $Enums.JenisPengeluaranKoperasi
+}
+
+export type EnumJenisPengeluaranKoperasiWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPengeluaranKoperasi | Prisma.EnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPengeluaranKoperasi[] | Prisma.ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPengeluaranKoperasi[] | Prisma.ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPengeluaranKoperasiWithAggregatesFilter<$PrismaModel> | $Enums.JenisPengeluaranKoperasi
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumJenisPengeluaranKoperasiFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumJenisPengeluaranKoperasiFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -491,6 +559,13 @@ export type NestedBoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
+export type NestedEnumStatusSiswaFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatusSiswa | Prisma.EnumStatusSiswaFieldRefInput<$PrismaModel>
+  in?: $Enums.StatusSiswa[] | Prisma.ListEnumStatusSiswaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatusSiswa[] | Prisma.ListEnumStatusSiswaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatusSiswaFilter<$PrismaModel> | $Enums.StatusSiswa
+}
+
 export type NestedEnumKelasNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.Kelas | Prisma.EnumKelasFieldRefInput<$PrismaModel> | null
   in?: $Enums.Kelas[] | Prisma.ListEnumKelasFieldRefInput<$PrismaModel> | null
@@ -541,6 +616,16 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumStatusSiswaWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatusSiswa | Prisma.EnumStatusSiswaFieldRefInput<$PrismaModel>
+  in?: $Enums.StatusSiswa[] | Prisma.ListEnumStatusSiswaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatusSiswa[] | Prisma.ListEnumStatusSiswaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatusSiswaWithAggregatesFilter<$PrismaModel> | $Enums.StatusSiswa
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatusSiswaFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatusSiswaFilter<$PrismaModel>
 }
 
 export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -621,6 +706,23 @@ export type NestedEnumJenisSanksiWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumJenisSanksiFilter<$PrismaModel>
 }
 
+export type NestedEnumJenisPengeluaranFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPengeluaran | Prisma.EnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPengeluaran[] | Prisma.ListEnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPengeluaran[] | Prisma.ListEnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPengeluaranFilter<$PrismaModel> | $Enums.JenisPengeluaran
+}
+
+export type NestedEnumJenisPengeluaranWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPengeluaran | Prisma.EnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPengeluaran[] | Prisma.ListEnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPengeluaran[] | Prisma.ListEnumJenisPengeluaranFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPengeluaranWithAggregatesFilter<$PrismaModel> | $Enums.JenisPengeluaran
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumJenisPengeluaranFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumJenisPengeluaranFilter<$PrismaModel>
+}
+
 export type NestedEnumJenisNilaiFilter<$PrismaModel = never> = {
   equals?: $Enums.JenisNilai | Prisma.EnumJenisNilaiFieldRefInput<$PrismaModel>
   in?: $Enums.JenisNilai[] | Prisma.ListEnumJenisNilaiFieldRefInput<$PrismaModel>
@@ -653,6 +755,40 @@ export type NestedEnumKelasWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumKelasFilter<$PrismaModel>
   _max?: Prisma.NestedEnumKelasFilter<$PrismaModel>
+}
+
+export type NestedEnumJenisPemasukanKoperasiFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPemasukanKoperasi | Prisma.EnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPemasukanKoperasi[] | Prisma.ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPemasukanKoperasi[] | Prisma.ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPemasukanKoperasiFilter<$PrismaModel> | $Enums.JenisPemasukanKoperasi
+}
+
+export type NestedEnumJenisPemasukanKoperasiWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPemasukanKoperasi | Prisma.EnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPemasukanKoperasi[] | Prisma.ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPemasukanKoperasi[] | Prisma.ListEnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPemasukanKoperasiWithAggregatesFilter<$PrismaModel> | $Enums.JenisPemasukanKoperasi
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumJenisPemasukanKoperasiFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumJenisPemasukanKoperasiFilter<$PrismaModel>
+}
+
+export type NestedEnumJenisPengeluaranKoperasiFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPengeluaranKoperasi | Prisma.EnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPengeluaranKoperasi[] | Prisma.ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPengeluaranKoperasi[] | Prisma.ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPengeluaranKoperasiFilter<$PrismaModel> | $Enums.JenisPengeluaranKoperasi
+}
+
+export type NestedEnumJenisPengeluaranKoperasiWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.JenisPengeluaranKoperasi | Prisma.EnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  in?: $Enums.JenisPengeluaranKoperasi[] | Prisma.ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.JenisPengeluaranKoperasi[] | Prisma.ListEnumJenisPengeluaranKoperasiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumJenisPengeluaranKoperasiWithAggregatesFilter<$PrismaModel> | $Enums.JenisPengeluaranKoperasi
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumJenisPengeluaranKoperasiFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumJenisPengeluaranKoperasiFilter<$PrismaModel>
 }
 
 
