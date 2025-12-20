@@ -10,14 +10,15 @@ Manual deployment guide using PM2 and Nginx. Database and file storage are handl
 2. [Prerequisites](#prerequisites)
 3. [Server Setup](#server-setup)
 4. [Supabase Setup](#supabase-setup)
-5. [Clone & Configure](#clone--configure)
-6. [Backend Deployment](#backend-deployment)
-7. [Frontend Deployment](#frontend-deployment)
-8. [Nginx Configuration](#nginx-configuration)
-9. [SSL Certificate](#ssl-certificate)
-10. [PM2 Management](#pm2-management)
-11. [Update & Maintenance](#update--maintenance)
-12. [Troubleshooting](#troubleshooting)
+5. [Cloudflare Domain Setup](#cloudflare-domain-setup)
+6. [Clone & Configure](#clone--configure)
+7. [Backend Deployment](#backend-deployment)
+8. [Frontend Deployment](#frontend-deployment)
+9. [Nginx Configuration](#nginx-configuration)
+10. [SSL Certificate](#ssl-certificate)
+11. [PM2 Management](#pm2-management)
+12. [Update & Maintenance](#update--maintenance)
+13. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -67,7 +68,7 @@ Manual deployment guide using PM2 and Nginx. Database and file storage are handl
 
 - Ubuntu 20.04+ / Debian 11+
 - Minimum 1GB RAM, 1 CPU
-- Domain name pointed to server IP
+- Domain name pointed to server IP (e.g., `abrad.id`)
 
 ### Supabase Account
 
@@ -152,6 +153,147 @@ From Supabase Dashboard > Settings > API:
 
 ---
 
+## Cloudflare Domain Setup
+
+This guide shows how to configure **abrad.id** domain with Cloudflare for DNS management, SSL, and CDN.
+
+### 1. Add Domain to Cloudflare
+
+1. Login to [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Click **"Add a Site"** button
+3. Enter domain: `abrad.id`
+4. Select plan (Free plan is sufficient)
+5. Click **"Continue"**
+
+### 2. Update Nameservers at Domain Registrar
+
+Cloudflare will provide two nameservers. Update them at your domain registrar:
+
+1. Go to your domain registrar (e.g., Niagahoster, Namecheap, GoDaddy)
+2. Find DNS/Nameserver settings for `abrad.id`
+3. Replace existing nameservers with Cloudflare's:
+   ```
+   ns1.cloudflare.com
+   ns2.cloudflare.com
+   ```
+   > Note: Actual nameservers may vary, use the ones shown in Cloudflare dashboard
+
+4. Save changes and wait for propagation (can take up to 24-48 hours)
+
+### 3. Configure DNS Records
+
+In Cloudflare Dashboard > DNS > Records, add the following:
+
+#### A Records (Point to your server IP)
+
+| Type | Name | Content | Proxy | TTL |
+|------|------|---------|-------|-----|
+| A | `@` | `YOUR_SERVER_IP` | Proxied (orange cloud) | Auto |
+| A | `www` | `YOUR_SERVER_IP` | Proxied (orange cloud) | Auto |
+| A | `api` | `YOUR_SERVER_IP` | Proxied (orange cloud) | Auto |
+
+> Replace `YOUR_SERVER_IP` with your actual server IP address
+
+#### Example DNS Setup
+
+```
+Type    Name    Content         Proxy Status    TTL
+A       @       103.xxx.xxx.xx  Proxied         Auto
+A       www     103.xxx.xxx.xx  Proxied         Auto
+A       api     103.xxx.xxx.xx  Proxied         Auto
+```
+
+### 4. Configure SSL/TLS Settings
+
+1. Go to **SSL/TLS** in Cloudflare Dashboard
+2. Set encryption mode to **"Full (strict)"**
+   - This requires valid SSL certificate on your origin server
+   - Use Certbot/Let's Encrypt on your server
+
+3. Under **Edge Certificates**:
+   - Enable **"Always Use HTTPS"**
+   - Enable **"Automatic HTTPS Rewrites"**
+   - Set **Minimum TLS Version** to `TLS 1.2`
+
+### 5. Configure Page Rules (Optional)
+
+Go to **Rules** > **Page Rules** and add:
+
+#### Force HTTPS
+- URL: `*abrad.id/*`
+- Setting: **Always Use HTTPS**
+
+#### Cache Static Assets
+- URL: `*abrad.id/_next/static/*`
+- Setting: **Cache Level** = Cache Everything
+- Setting: **Edge Cache TTL** = 1 month
+
+### 6. Performance Settings
+
+Go to **Speed** > **Optimization**:
+
+1. **Auto Minify**: Enable for JavaScript, CSS, HTML
+2. **Brotli**: Enable
+3. **Early Hints**: Enable
+4. **Rocket Loader**: Disable (can break Next.js)
+
+### 7. Security Settings
+
+Go to **Security** > **Settings**:
+
+1. **Security Level**: Medium
+2. **Challenge Passage**: 30 minutes
+3. **Browser Integrity Check**: Enable
+
+Go to **Security** > **WAF**:
+
+1. Enable **Managed Rules** (if available on your plan)
+2. Enable **Rate Limiting** for API protection (optional)
+
+### 8. Verify Domain is Active
+
+1. Check Cloudflare Dashboard - domain status should be **"Active"**
+2. Test DNS propagation:
+   ```bash
+   # Check A record
+   dig abrad.id +short
+   
+   # Check if using Cloudflare
+   curl -I https://abrad.id
+   # Should see "cf-ray" header in response
+   ```
+
+### 9. Final DNS Configuration
+
+After setup, your DNS should look like:
+
+```
+abrad.id           →  YOUR_SERVER_IP (Proxied)
+www.abrad.id       →  YOUR_SERVER_IP (Proxied)
+api.abrad.id       →  YOUR_SERVER_IP (Proxied)
+```
+
+With the following URLs:
+- **Frontend**: `https://abrad.id` or `https://www.abrad.id`
+- **Backend API**: `https://api.abrad.id`
+
+### 10. Update Environment Variables
+
+After Cloudflare setup, update your environment files:
+
+**Backend `.env`:**
+```env
+APP_URL="https://abrad.id"
+API_URL="https://api.abrad.id"
+```
+
+**Frontend `.env.local`:**
+```env
+NEXT_PUBLIC_API_URL=https://api.abrad.id
+```
+
+---
+
 ## Clone & Configure
 
 ### 1. Clone Repository
@@ -216,16 +358,16 @@ Edit `src/main.ts` to allow your domain:
 
 ```typescript
 app.enableCors({
-  origin: ['https://yourdomain.com', 'https://www.yourdomain.com'],
+  origin: ['https://abrad.id', 'https://www.abrad.id'],
   credentials: true,
 });
 ```
 
-Or use environment variable:
+Or use environment variable (recommended):
 
 ```typescript
 app.enableCors({
-  origin: process.env.CORS_ORIGIN?.split(',') || 'http://localhost:3000',
+  origin: process.env.APP_URL || 'http://localhost:3000',
   credentials: true,
 });
 ```
@@ -233,7 +375,7 @@ app.enableCors({
 Then add to `.env`:
 
 ```env
-CORS_ORIGIN=https://yourdomain.com,https://www.yourdomain.com
+APP_URL=https://abrad.id
 ```
 
 ### 3. Run Database Migrations
@@ -270,13 +412,13 @@ nano .env.local
 ```
 
 ```env
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+NEXT_PUBLIC_API_URL=https://api.abrad.id
 ```
 
 Or if using same domain with path prefix:
 
 ```env
-NEXT_PUBLIC_API_URL=https://yourdomain.com/api
+NEXT_PUBLIC_API_URL=https://abrad.id/api
 ```
 
 ### 2. Build Frontend
@@ -365,10 +507,10 @@ sudo nano /etc/nginx/sites-available/pesantren
 ```
 
 ```nginx
-# Backend API (api.yourdomain.com)
+# Backend API (api.abrad.id)
 server {
     listen 80;
-    server_name api.yourdomain.com;
+    server_name api.abrad.id;
 
     location / {
         proxy_pass http://127.0.0.1:4000;
@@ -386,10 +528,10 @@ server {
     client_max_body_size 10M;
 }
 
-# Frontend (yourdomain.com)
+# Frontend (abrad.id)
 server {
     listen 80;
-    server_name yourdomain.com www.yourdomain.com;
+    server_name abrad.id www.abrad.id;
 
     location / {
         proxy_pass http://127.0.0.1:3000;
@@ -416,7 +558,7 @@ server {
 ```nginx
 server {
     listen 80;
-    server_name yourdomain.com www.yourdomain.com;
+    server_name abrad.id www.abrad.id;
 
     # API routes
     location /api/ {
@@ -469,11 +611,11 @@ sudo apt install -y certbot python3-certbot-nginx
 ### Obtain Certificate
 
 ```bash
-# Separate subdomains
-sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com -d api.yourdomain.com
+# Separate subdomains (recommended for abrad.id)
+sudo certbot --nginx -d abrad.id -d www.abrad.id -d api.abrad.id
 
 # Or single domain
-sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+sudo certbot --nginx -d abrad.id -d www.abrad.id
 ```
 
 ### Auto-Renewal Test
@@ -663,13 +805,14 @@ pnpm build
 | `JWT_SECRET` | JWT signing secret | Random 32+ chars |
 | `PORT` | Backend port | `4000` |
 | `NODE_ENV` | Environment | `production` |
-| `CORS_ORIGIN` | Allowed origins | `https://yourdomain.com` |
+| `APP_URL` | Frontend URL (for CORS) | `https://abrad.id` |
+| `API_URL` | Backend API URL | `https://api.abrad.id` |
 
 ### Frontend (.env.local)
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `NEXT_PUBLIC_API_URL` | Backend API URL | `https://api.yourdomain.com` |
+| `NEXT_PUBLIC_API_URL` | Backend API URL | `https://api.abrad.id` |
 
 ---
 
