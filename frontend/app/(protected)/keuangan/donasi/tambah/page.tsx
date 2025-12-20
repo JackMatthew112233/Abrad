@@ -264,7 +264,7 @@ export default function TambahDonasiPage() {
               </Label>
               <FileUpload
                 accept="image/*"
-                onChange={(files) => setEvidence(files[0] || null)}
+                onFileSelect={(file) => setEvidence(file)}
                 className="text-xs lg:text-sm"
               />
               {evidence && (
