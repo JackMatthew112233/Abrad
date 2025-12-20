@@ -300,19 +300,19 @@ NEXT_PUBLIC_API_URL=https://api.abrad.id
 
 ```bash
 cd ~
-git clone https://github.com/YOUR_USERNAME/pesantren.git
-cd pesantren
+git clone https://github.com/YOUR_USERNAME/Abrad.git
+cd Abrad
 ```
 
 ### 2. Install Dependencies
 
 ```bash
 # Backend
-cd ~/pesantren/backend
+cd ~/Abrad/backend
 pnpm install
 
 # Frontend
-cd ~/pesantren/frontend
+cd ~/Abrad/frontend
 pnpm install
 ```
 
@@ -323,7 +323,7 @@ pnpm install
 ### 1. Configure Environment Variables
 
 ```bash
-cd ~/pesantren/backend
+cd ~/Abrad/backend
 nano .env
 ```
 
@@ -385,7 +385,7 @@ APP_URL=https://abrad.id
 ### 3. Run Database Migrations
 
 ```bash
-cd ~/pesantren/backend
+cd ~/Abrad/backend
 pnpm prisma migrate deploy
 pnpm prisma generate
 ```
@@ -411,7 +411,7 @@ pnpm start:prod
 ### 1. Configure Environment Variables
 
 ```bash
-cd ~/pesantren/frontend
+cd ~/Abrad/frontend
 nano .env.local
 ```
 
@@ -438,30 +438,30 @@ pnpm build
 ### 1. Create Ecosystem File
 
 ```bash
-nano ~/pesantren/ecosystem.config.cjs
+nano ~/Abrad/ecosystem.config.cjs
 ```
 
 ```javascript
 module.exports = {
   apps: [
     {
-      name: 'pesantren-backend',
-      cwd: '~/pesantren/backend',
-      script: 'dist/main.js',
+      name: 'abrad-backend',
+      cwd: '~/Abrad/backend',
+      script: 'dist/src/main.js',
       instances: 1,
       exec_mode: 'fork',
       env: {
         NODE_ENV: 'production',
         PORT: 4000,
       },
-      error_file: '~/pesantren/logs/backend-error.log',
-      out_file: '~/pesantren/logs/backend-out.log',
+      error_file: '~/Abrad/logs/backend-error.log',
+      out_file: '~/Abrad/logs/backend-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
       max_memory_restart: '500M',
     },
     {
-      name: 'pesantren-frontend',
-      cwd: '~/pesantren/frontend',
+      name: 'abrad-frontend',
+      cwd: '~/Abrad/frontend',
       script: 'node_modules/next/dist/bin/next',
       args: 'start -p 3000',
       instances: 1,
@@ -470,8 +470,8 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3000,
       },
-      error_file: '~/pesantren/logs/frontend-error.log',
-      out_file: '~/pesantren/logs/frontend-out.log',
+      error_file: '~/Abrad/logs/frontend-error.log',
+      out_file: '~/Abrad/logs/frontend-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
       max_memory_restart: '500M',
     },
@@ -482,13 +482,13 @@ module.exports = {
 ### 2. Create Logs Directory
 
 ```bash
-mkdir -p ~/pesantren/logs
+mkdir -p ~/Abrad/logs
 ```
 
 ### 3. Start Applications
 
 ```bash
-cd ~/pesantren
+cd ~/Abrad
 pm2 start ecosystem.config.cjs
 ```
 
@@ -504,10 +504,8 @@ pm2 startup
 
 ## Nginx Configuration
 
-### Option A: Separate Subdomains
-
 ```bash
-sudo nano /etc/nginx/sites-available/pesantren
+sudo nano /etc/nginx/sites-available/abrad
 ```
 
 ```nginx
@@ -557,46 +555,10 @@ server {
 }
 ```
 
-### Option B: Single Domain with /api Prefix
-
-```nginx
-server {
-    listen 80;
-    server_name abrad.id www.abrad.id;
-
-    # API routes
-    location /api/ {
-        rewrite ^/api/(.*) /$1 break;
-        proxy_pass http://127.0.0.1:4000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    # Frontend
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    client_max_body_size 10M;
-}
-```
-
 ### Enable Site
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/pesantren /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/abrad /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo nginx -t
 sudo systemctl reload nginx
@@ -615,11 +577,7 @@ sudo apt install -y certbot python3-certbot-nginx
 ### Obtain Certificate
 
 ```bash
-# Separate subdomains (recommended for abrad.id)
 sudo certbot --nginx -d abrad.id -d www.abrad.id -d api.abrad.id
-
-# Or single domain
-sudo certbot --nginx -d abrad.id -d www.abrad.id
 ```
 
 ### Auto-Renewal Test
@@ -640,13 +598,13 @@ pm2 list
 
 # View logs
 pm2 logs
-pm2 logs pesantren-backend --lines 100
-pm2 logs pesantren-frontend --lines 100
+pm2 logs abrad-backend --lines 100
+pm2 logs abrad-frontend --lines 100
 
 # Restart
 pm2 restart all
-pm2 restart pesantren-backend
-pm2 restart pesantren-frontend
+pm2 restart abrad-backend
+pm2 restart abrad-frontend
 
 # Stop
 pm2 stop all
@@ -655,7 +613,7 @@ pm2 stop all
 pm2 monit
 
 # Show details
-pm2 show pesantren-backend
+pm2 show abrad-backend
 ```
 
 ---
@@ -665,7 +623,7 @@ pm2 show pesantren-backend
 ### Deploy Updates
 
 ```bash
-cd ~/pesantren
+cd ~/Abrad
 
 # Pull changes
 git pull origin main
@@ -689,14 +647,14 @@ pm2 restart all
 ### Create Update Script
 
 ```bash
-nano ~/pesantren/deploy.sh
+nano ~/Abrad/deploy.sh
 ```
 
 ```bash
 #!/bin/bash
 set -e
 
-cd ~/pesantren
+cd ~/Abrad
 
 echo "📥 Pulling latest changes..."
 git pull origin main
@@ -721,13 +679,13 @@ pm2 list
 ```
 
 ```bash
-chmod +x ~/pesantren/deploy.sh
+chmod +x ~/Abrad/deploy.sh
 ```
 
 Usage:
 
 ```bash
-~/pesantren/deploy.sh
+~/Abrad/deploy.sh
 ```
 
 ---
@@ -758,7 +716,7 @@ sudo ss -tlnp | grep -E '3000|4000|80|443'
 pm2 list
 
 # Check logs
-pm2 logs pesantren-backend --lines 50
+pm2 logs abrad-backend --lines 50
 
 # Restart
 pm2 restart all
@@ -768,10 +726,10 @@ pm2 restart all
 
 ```bash
 # Check .env file
-cat ~/pesantren/backend/.env | grep DATABASE
+cat ~/Abrad/backend/.env | grep DATABASE
 
 # Test connection (from backend folder)
-cd ~/pesantren/backend
+cd ~/Abrad/backend
 pnpm prisma db pull
 ```
 
@@ -836,7 +794,7 @@ pnpm build
 
 ```bash
 # Deploy updates
-~/pesantren/deploy.sh
+~/Abrad/deploy.sh
 
 # View logs
 pm2 logs
