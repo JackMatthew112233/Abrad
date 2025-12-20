@@ -329,10 +329,10 @@ nano .env
 
 ```env
 # Supabase PostgreSQL (pooled connection for app)
-DATABASE_URL="postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
+DATABASE_URL="postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true&connect_timeout=3600&statement_timeout=3600000&pool_timeout=3600"
 
 # Supabase PostgreSQL (direct connection for migrations)
-DIRECT_URL="postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres"
+DIRECT_URL="postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres?connect_timeout=3600&statement_timeout=3600000"
 
 # Supabase Credentials
 SUPABASE_URL="https://[PROJECT_REF].supabase.co"
@@ -345,6 +345,10 @@ JWT_SECRET="your-super-secure-jwt-secret-min-32-characters"
 # Server
 PORT=4000
 NODE_ENV=production
+
+# App URLs
+APP_URL="https://abrad.id"
+API_URL="https://api.abrad.id"
 ```
 
 > **Generate JWT Secret:**
