@@ -603,13 +603,20 @@ export default function DetailNilaiSiswaPage() {
               <Label htmlFor="tahunAjaran" className="text-right whitespace-nowrap">
                 Tahun Ajaran
               </Label>
-              <Input
-                id="tahunAjaran"
+              <Select
                 value={selectedTahunAjaran}
-                onChange={(e) => setSelectedTahunAjaran(e.target.value)}
-                className="col-span-3"
-                placeholder="2024/2025"
-              />
+                onValueChange={setSelectedTahunAjaran}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Pilih tahun ajaran" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="2023/2024">2023/2024</SelectItem>
+                  <SelectItem value="2024/2025">2024/2025</SelectItem>
+                  <SelectItem value="2025/2026">2025/2026</SelectItem>
+                  <SelectItem value="2026/2027">2026/2027</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
@@ -675,10 +682,20 @@ export default function DetailNilaiSiswaPage() {
                 </div>
                 <div className="grid gap-2">
                   <Label>Tahun Ajaran</Label>
-                  <Input
+                  <Select
                     value={ekstraFormData.tahunAjaran}
-                    onChange={(e) => setEkstraFormData({ ...ekstraFormData, tahunAjaran: e.target.value })}
-                  />
+                    onValueChange={(val) => setEkstraFormData({ ...ekstraFormData, tahunAjaran: val })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih tahun ajaran" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2023/2024">2023/2024</SelectItem>
+                      <SelectItem value="2024/2025">2024/2025</SelectItem>
+                      <SelectItem value="2025/2026">2025/2026</SelectItem>
+                      <SelectItem value="2026/2027">2026/2027</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>

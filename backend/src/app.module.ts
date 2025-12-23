@@ -19,6 +19,7 @@ import { WaliKelasModule } from './wali-kelas/wali-kelas.module.js';
 import { EkstrakurikulerModule } from './ekstrakurikuler/ekstrakurikuler.module.js';
 import { NilaiEkstrakurikulerModule } from './nilai-ekstrakurikuler/nilai-ekstrakurikuler.module.js';
 import { SekolahModule } from './sekolah/sekolah.module.js';
+import { BackupModule } from './backup/backup.module.js';
 
 @Module({
   imports: [
@@ -36,11 +37,11 @@ import { SekolahModule } from './sekolah/sekolah.module.js';
     TahfidzModule,
     DashboardModule,
     PendaftaranModule,
-    PendaftaranModule,
     WaliKelasModule,
+    EkstrakurikulerModule,
     NilaiEkstrakurikulerModule,
     SekolahModule,
-    NilaiEkstrakurikulerModule,
+    BackupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -414,21 +414,62 @@ export class NilaiService {
     const mapelMap = new Map();
     allMapel.forEach(m => mapelMap.set(m.nama, { kategori: m.kategori, id: m.id }));
 
-    const nilaiList = await this.prisma.nilai.findMany({
+    // Handle Year Format Variations (e.g. 2025/2026 vs 2025-2026) to ensure we find grades
+    // regardless of which separator was used during input.
+    const cleanTahun = tahunAjaran.trim();
+    const slashTahun = cleanTahun.replace(/-/g, '/'); // 2025/2026
+    const dashTahun = cleanTahun.replace(/\//g, '-'); // 2025-2026
+    const possibleYears = [
+      cleanTahun,
+      slashTahun,
+      dashTahun,
+      slashTahun.replace(/\s/g, ''),
+      dashTahun.replace(/\s/g, '')
+    ]; // Add strict no-space versions too just in case
+
+    const filteredNilaiList = await this.prisma.nilai.findMany({
       where: {
         siswaId,
         jenisNilai: 'UAS',
-        semester,
-        tahunAjaran,
+        semester: {
+          equals: semester,
+          mode: 'insensitive',
+        },
+        tahunAjaran: {
+          in: possibleYears
+        }
       },
     });
+
+    // Alias for legacy support if needed, though strictly we use filteredNilaiList now
+    const nilaiList = filteredNilaiList;
+
+    console.log("=== DEBUG RAPORT PREVIEW (FIXED) ===");
+    console.log(`Siswa: ${siswaId}, Semester: ${semester}, Tahun Input: ${tahunAjaran}`);
+    console.log(`Query Years: ${JSON.stringify(possibleYears)}`);
+    console.log(`Found Nilai: ${filteredNilaiList.length}`);
+    if (filteredNilaiList.length > 0) console.log("Sample Nilai:", filteredNilaiList[0]);
+    if (nilaiList.length === 0) {
+      // Debug: try finding ANY nilai for this student
+      const anyNilai = await this.prisma.nilai.count({ where: { siswaId } });
+      console.log(`Total Nilai for student (any type/sem): ${anyNilai}`);
+      // Debug: check unique tahunAjaran in DB
+      const allNilaiForStudent = await this.prisma.nilai.findMany({
+        where: { siswaId, jenisNilai: 'UAS' },
+        select: { tahunAjaran: true, semester: true, mataPelajaran: true },
+      });
+      console.log("All UAS Nilai for student:", allNilaiForStudent);
+    }
 
     // Group Grades
     const kepesantrenan: any[] = [];
     const kekhususan: any[] = [];
+    const programTahsin: any[] = [];
+    const programTahfidz: any[] = [];
+    const programTahfidzSuratPilihan: any[] = [];
     const umum: any[] = []; // In case we have others
 
-    for (const n of nilaiList) {
+    for (const n of filteredNilaiList) {
       const mapelData = mapelMap.get(n.mataPelajaran);
       const kategori = mapelData?.kategori || 'UMUM';
       const mapelId = mapelData?.id;
@@ -444,6 +485,12 @@ export class NilaiService {
         kepesantrenan.push(gradeItem);
       } else if (kategori === 'KEKHUSUSAN') {
         kekhususan.push(gradeItem);
+      } else if (kategori === 'PROGRAM_TAHSIN') {
+        programTahsin.push(gradeItem);
+      } else if (kategori === 'PROGRAM_TAHFIDZ') {
+        programTahfidz.push(gradeItem);
+      } else if (kategori === 'PROGRAM_TAHFIDZ_SURAT_PILIHAN') {
+        programTahfidzSuratPilihan.push(gradeItem);
       } else {
         umum.push(gradeItem); // Default fallback
       }
@@ -483,6 +530,9 @@ export class NilaiService {
       nilai: {
         kepesantrenan,
         kekhususan,
+        programTahsin,
+        programTahfidz,
+        programTahfidzSuratPilihan,
         umum
       },
       ekstrakurikuler: nilaiEkstra.map(ne => ({
@@ -1111,6 +1161,63 @@ export class NilaiService {
       currentRow++;
 
       data.nilai.kekhususan.forEach((item: any, index: number) => {
+        this.addGradeRow(
+          worksheet,
+          currentRow,
+          index + 1,
+          item.mataPelajaran,
+          Number(item.nilai),
+        );
+        currentRow++;
+      });
+    }
+
+    // III. PROGRAM TAHSIN
+    if (data.nilai.programTahsin && data.nilai.programTahsin.length > 0) {
+      worksheet.mergeCells(`A${currentRow}:D${currentRow}`);
+      worksheet.getCell(`A${currentRow}`).value = 'III. PROGRAM TAHSIN';
+      worksheet.getCell(`A${currentRow}`).font = { bold: true };
+      currentRow++;
+
+      data.nilai.programTahsin.forEach((item: any, index: number) => {
+        this.addGradeRow(
+          worksheet,
+          currentRow,
+          index + 1,
+          item.mataPelajaran,
+          Number(item.nilai),
+        );
+        currentRow++;
+      });
+    }
+
+    // IV. PROGRAM TAHFIDZ
+    if (data.nilai.programTahfidz && data.nilai.programTahfidz.length > 0) {
+      worksheet.mergeCells(`A${currentRow}:D${currentRow}`);
+      worksheet.getCell(`A${currentRow}`).value = 'IV. PROGRAM TAHFIDZ';
+      worksheet.getCell(`A${currentRow}`).font = { bold: true };
+      currentRow++;
+
+      data.nilai.programTahfidz.forEach((item: any, index: number) => {
+        this.addGradeRow(
+          worksheet,
+          currentRow,
+          index + 1,
+          item.mataPelajaran,
+          Number(item.nilai),
+        );
+        currentRow++;
+      });
+    }
+
+    // V. PROGRAM TAHFIDZ SURAT PILIHAN
+    if (data.nilai.programTahfidzSuratPilihan && data.nilai.programTahfidzSuratPilihan.length > 0) {
+      worksheet.mergeCells(`A${currentRow}:D${currentRow}`);
+      worksheet.getCell(`A${currentRow}`).value = 'V. PROGRAM TAHFIDZ SURAT PILIHAN';
+      worksheet.getCell(`A${currentRow}`).font = { bold: true };
+      currentRow++;
+
+      data.nilai.programTahfidzSuratPilihan.forEach((item: any, index: number) => {
         this.addGradeRow(
           worksheet,
           currentRow,

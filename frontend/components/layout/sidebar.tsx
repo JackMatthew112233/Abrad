@@ -15,6 +15,7 @@ import {
   Landmark,
   UserCheck,
   GraduationCap,
+  Database,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -71,6 +72,11 @@ const adminMenuItems = [
     title: "Kelola Pendaftaran",
     href: "/pendaftaran",
     icon: UserCheck,
+  },
+  {
+    title: "Backup Database",
+    href: "/backup",
+    icon: Database,
   },
 ];
 

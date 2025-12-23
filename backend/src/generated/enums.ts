@@ -159,6 +159,9 @@ export type JenisAsuransi = (typeof JenisAsuransi)[keyof typeof JenisAsuransi]
 export const KategoriMapel = {
   KEPESANTRENAN: 'KEPESANTRENAN',
   KEKHUSUSAN: 'KEKHUSUSAN',
+  PROGRAM_TAHSIN: 'PROGRAM_TAHSIN',
+  PROGRAM_TAHFIDZ: 'PROGRAM_TAHFIDZ',
+  PROGRAM_TAHFIDZ_SURAT_PILIHAN: 'PROGRAM_TAHFIDZ_SURAT_PILIHAN',
   UMUM: 'UMUM'
 } as const
 

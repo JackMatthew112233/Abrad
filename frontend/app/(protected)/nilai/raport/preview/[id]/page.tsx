@@ -58,6 +58,9 @@ interface RaportData {
     nilai: {
         kepesantrenan: NilaiItem[];
         kekhususan: NilaiItem[];
+        programTahsin: NilaiItem[];
+        programTahfidz: NilaiItem[];
+        programTahfidzSuratPilihan: NilaiItem[];
         umum: NilaiItem[];
     };
     ekstrakurikuler: any[];
@@ -88,32 +91,45 @@ export default function RaportPreviewPage() {
     const [generating, setGenerating] = useState(false);
     const [showPreview, setShowPreview] = useState(true);
 
+    const loadData = async () => {
+        // Only set loading true if it's the initial load or explicit refresh (optional, but good UX)
+        // If data exists, maybe standard loading indicator is annoying? But user asked for refresh.
+        // Let's keep existing logic but maybe don't wipe data immediately if just refreshing? 
+        // For simplicity, just use existing loading state.
+        setLoading(true);
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/nilai/raport/preview/${siswaId}?semester=${semester}&tahunAjaran=${tahunAjaran}`,
+                { credentials: "include" }
+            );
+            if (!res.ok) throw new Error("Gagal memuat data raport");
+            const result = await res.json();
+
+            // Initialize default editable fields if missing
+            if (!result.prestasi) result.prestasi = [];
+            if (!result.catatanWaliKelas) result.catatanWaliKelas = "";
+            if (!result.tanggapanOrangTua) result.tanggapanOrangTua = "";
+            if (!result.namaOrangTua) result.namaOrangTua = "";
+            if (!result.namaKepalaSekolah) result.namaKepalaSekolah = "";
+
+            // Ensure new category arrays exist
+            if (!result.nilai.programTahsin) result.nilai.programTahsin = [];
+            if (!result.nilai.programTahfidz) result.nilai.programTahfidz = [];
+            if (!result.nilai.programTahfidzSuratPilihan) result.nilai.programTahfidzSuratPilihan = [];
+
+            setData(result);
+            toast.success("Data berhasil diperbarui");
+        } catch (error) {
+            toast.error("Gagal memuat data");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Fetch Initial Data
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/nilai/raport/preview/${siswaId}?semester=${semester}&tahunAjaran=${tahunAjaran}`,
-                    { credentials: "include" }
-                );
-                if (!res.ok) throw new Error("Gagal memuat data raport");
-                const result = await res.json();
-
-                // Initialize default editable fields if missing
-                if (!result.prestasi) result.prestasi = [];
-                if (!result.catatanWaliKelas) result.catatanWaliKelas = "";
-                if (!result.tanggapanOrangTua) result.tanggapanOrangTua = "";
-                if (!result.namaOrangTua) result.namaOrangTua = "";
-                if (!result.namaKepalaSekolah) result.namaKepalaSekolah = ""; // Should fetch active headmaster if possible
-
-                setData(result);
-            } catch (error) {
-                toast.error("Gagal memuat data");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
+        loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [siswaId, semester, tahunAjaran]);
 
     const handleDownload = async () => {
@@ -226,24 +242,31 @@ export default function RaportPreviewPage() {
         // Optimistic Update
         let itemToMove: NilaiItem | undefined;
 
-        // Find and remove from source
-        const newKepesantrenan = data.nilai.kepesantrenan.filter(i => {
-            if (i.mataPelajaran === mapelName) { itemToMove = i; return false; }
-            return true;
-        });
-        const newKekhususan = data.nilai.kekhususan.filter(i => {
-            if (i.mataPelajaran === mapelName) { itemToMove = i; return false; }
-            return true;
-        });
-        const newUmum = data.nilai.umum.filter(i => {
-            if (i.mataPelajaran === mapelName) { itemToMove = i; return false; }
-            return true;
-        });
+        // Helper to remove implementation
+        const removeFn = (arr: NilaiItem[]) => {
+            if (!arr) return [];
+            const idx = arr.findIndex(i => i.mataPelajaran === mapelName);
+            if (idx !== -1) {
+                itemToMove = arr[idx];
+                return arr.filter((_, i) => i !== idx);
+            }
+            return arr;
+        };
+
+        const newKepesantrenan = removeFn(data.nilai.kepesantrenan);
+        const newKekhususan = removeFn(data.nilai.kekhususan);
+        const newProgramTahsin = removeFn(data.nilai.programTahsin || []);
+        const newProgramTahfidz = removeFn(data.nilai.programTahfidz || []);
+        const newProgramTahfidzSuratPilihan = removeFn(data.nilai.programTahfidzSuratPilihan || []);
+        const newUmum = removeFn(data.nilai.umum);
 
         if (itemToMove) {
             // Add to destination
             if (newCategory === "KEPESANTRENAN") newKepesantrenan.push(itemToMove);
             else if (newCategory === "KEKHUSUSAN") newKekhususan.push(itemToMove);
+            else if (newCategory === "PROGRAM_TAHSIN") newProgramTahsin.push(itemToMove);
+            else if (newCategory === "PROGRAM_TAHFIDZ") newProgramTahfidz.push(itemToMove);
+            else if (newCategory === "PROGRAM_TAHFIDZ_SURAT_PILIHAN") newProgramTahfidzSuratPilihan.push(itemToMove);
             else newUmum.push(itemToMove);
 
             setData({
@@ -251,11 +274,14 @@ export default function RaportPreviewPage() {
                 nilai: {
                     kepesantrenan: newKepesantrenan,
                     kekhususan: newKekhususan,
+                    programTahsin: newProgramTahsin,
+                    programTahfidz: newProgramTahfidz,
+                    programTahfidzSuratPilihan: newProgramTahfidzSuratPilihan,
                     umum: newUmum
                 }
             });
 
-            // Sync to backend
+            // Call API
             if (mapelId) {
                 try {
                     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/mata-pelajaran/${mapelId}`, {
@@ -264,12 +290,10 @@ export default function RaportPreviewPage() {
                         body: JSON.stringify({ kategori: newCategory }),
                         credentials: 'include'
                     });
-                    toast.success("Kategori mapel berhasil diperbarui");
+                    toast.success("Kategori disimpan");
                 } catch (e) {
-                    toast.error("Gagal menyimpan kategori mapel ke database");
+                    toast.error("Gagal menyimpan kategori");
                 }
-            } else {
-                toast.warning("ID Mapel tidak ditemukan, perubahan ini hanya sementara.");
             }
         }
     };
@@ -361,17 +385,31 @@ export default function RaportPreviewPage() {
 
                     {/* Section: Manajemen Mapel */}
                     <Card>
-                        <CardHeader className="py-3 px-4 bg-zinc-50 border-b">
+                        <CardHeader className="py-3 px-4 bg-zinc-50 border-b flex flex-row items-center justify-between">
                             <CardTitle className="text-sm font-semibold">Daftar Nilai Tersedia</CardTitle>
+                            <Button variant="ghost" size="sm" onClick={() => loadData()} className="h-6 px-2 text-xs text-zinc-600 hover:text-zinc-900" title="Refresh Data">
+                                <RefreshCw className="h-3 w-3 mr-1" /> Refresh
+                            </Button>
                         </CardHeader>
                         <CardContent className="p-0 max-h-60 overflow-y-auto">
-                            {[...data.nilai.kepesantrenan, ...data.nilai.kekhususan, ...data.nilai.umum].sort((a, b) => a.mataPelajaran.localeCompare(b.mataPelajaran)).map((item) => (
+                            {[
+                                ...data.nilai.kepesantrenan,
+                                ...data.nilai.kekhususan,
+                                ...(data.nilai.programTahsin || []),
+                                ...(data.nilai.programTahfidz || []),
+                                ...(data.nilai.programTahfidzSuratPilihan || []),
+                                ...data.nilai.umum
+                            ].sort((a, b) => a.mataPelajaran.localeCompare(b.mataPelajaran)).map((item) => (
                                 <div key={item.id} className="flex items-center justify-between p-3 border-b last:border-0 text-sm">
                                     <span className="truncate max-w-[180px]" title={item.mataPelajaran}>{item.mataPelajaran}</span>
                                     <Select
                                         value={
                                             data.nilai.kepesantrenan.find(i => i.id === item.id) ? "KEPESANTRENAN" :
-                                                data.nilai.kekhususan.find(i => i.id === item.id) ? "KEKHUSUSAN" : "UMUM"
+                                                data.nilai.kekhususan.find(i => i.id === item.id) ? "KEKHUSUSAN" :
+                                                    (data.nilai.programTahsin || []).find(i => i.id === item.id) ? "PROGRAM_TAHSIN" :
+                                                        (data.nilai.programTahfidz || []).find(i => i.id === item.id) ? "PROGRAM_TAHFIDZ" :
+                                                            (data.nilai.programTahfidzSuratPilihan || []).find(i => i.id === item.id) ? "PROGRAM_TAHFIDZ_SURAT_PILIHAN" :
+                                                                "UMUM"
                                         }
                                         onValueChange={(val) => updateCategory(item.mapelId, item.mataPelajaran, val)}
                                     >
@@ -381,6 +419,9 @@ export default function RaportPreviewPage() {
                                         <SelectContent>
                                             <SelectItem value="KEPESANTRENAN">Kepesantrenan</SelectItem>
                                             <SelectItem value="KEKHUSUSAN">Kekhususan</SelectItem>
+                                            <SelectItem value="PROGRAM_TAHSIN">Program Tahsin</SelectItem>
+                                            <SelectItem value="PROGRAM_TAHFIDZ">Program Tahfidz</SelectItem>
+                                            <SelectItem value="PROGRAM_TAHFIDZ_SURAT_PILIHAN">Program Tahfidz Surat Pilihan</SelectItem>
                                             <SelectItem value="UMUM">Belum Ada Kategori</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -418,6 +459,45 @@ export default function RaportPreviewPage() {
                                     </Button>
                                 </div>
                             ))}
+                        </CardContent>
+                    </Card>
+
+
+                    {/* Section: Ketidakhadiran */}
+                    <Card>
+                        <CardHeader className="py-3 px-4 bg-zinc-50 border-b">
+                            <CardTitle className="text-sm font-semibold">Ketidakhadiran</CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-4 space-y-3">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <Label className="text-xs">Sakit</Label>
+                                    <Input
+                                        type="number"
+                                        className="h-8 text-xs"
+                                        value={data.absensi?.SAKIT || 0}
+                                        onChange={(e) => setData({ ...data, absensi: { ...data.absensi, SAKIT: parseInt(e.target.value) || 0 } })}
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label className="text-xs">Izin</Label>
+                                    <Input
+                                        type="number"
+                                        className="h-8 text-xs"
+                                        value={data.absensi?.IZIN || 0}
+                                        onChange={(e) => setData({ ...data, absensi: { ...data.absensi, IZIN: parseInt(e.target.value) || 0 } })}
+                                    />
+                                </div>
+                                <div className="space-y-1 col-span-2">
+                                    <Label className="text-xs">Tanpa Keterangan</Label>
+                                    <Input
+                                        type="number"
+                                        className="h-8 text-xs"
+                                        value={data.absensi?.TIDAK_HADIR || 0}
+                                        onChange={(e) => setData({ ...data, absensi: { ...data.absensi, TIDAK_HADIR: parseInt(e.target.value) || 0 } })}
+                                    />
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
 
@@ -563,6 +643,51 @@ export default function RaportPreviewPage() {
                                         ))}
                                     </>
                                 )}
+
+                                {/* III. PROGRAM TAHSIN */}
+                                {data.nilai.programTahsin && data.nilai.programTahsin.length > 0 && (
+                                    <>
+                                        <tr><td colSpan={4} className="border border-black p-1 font-bold bg-zinc-50">III. PROGRAM TAHSIN</td></tr>
+                                        {data.nilai.programTahsin.map((item, idx) => (
+                                            <tr key={idx}>
+                                                <td className="border border-black p-1 text-center">{idx + 1}</td>
+                                                <td className="border border-black p-1">{item.mataPelajaran}</td>
+                                                <td className="border border-black p-1 text-center">{item.nilai}</td>
+                                                <td className="border border-black p-1 text-center">{item.predikat}</td>
+                                            </tr>
+                                        ))}
+                                    </>
+                                )}
+
+                                {/* IV. PROGRAM TAHFIDZ */}
+                                {data.nilai.programTahfidz && data.nilai.programTahfidz.length > 0 && (
+                                    <>
+                                        <tr><td colSpan={4} className="border border-black p-1 font-bold bg-zinc-50">IV. PROGRAM TAHFIDZ</td></tr>
+                                        {data.nilai.programTahfidz.map((item, idx) => (
+                                            <tr key={idx}>
+                                                <td className="border border-black p-1 text-center">{idx + 1}</td>
+                                                <td className="border border-black p-1">{item.mataPelajaran}</td>
+                                                <td className="border border-black p-1 text-center">{item.nilai}</td>
+                                                <td className="border border-black p-1 text-center">{item.predikat}</td>
+                                            </tr>
+                                        ))}
+                                    </>
+                                )}
+
+                                {/* V. PROGRAM TAHFIDZ SURAT PILIHAN */}
+                                {data.nilai.programTahfidzSuratPilihan && data.nilai.programTahfidzSuratPilihan.length > 0 && (
+                                    <>
+                                        <tr><td colSpan={4} className="border border-black p-1 font-bold bg-zinc-50">V. PROGRAM TAHFIDZ SURAT PILIHAN</td></tr>
+                                        {data.nilai.programTahfidzSuratPilihan.map((item, idx) => (
+                                            <tr key={idx}>
+                                                <td className="border border-black p-1 text-center">{idx + 1}</td>
+                                                <td className="border border-black p-1">{item.mataPelajaran}</td>
+                                                <td className="border border-black p-1 text-center">{item.nilai}</td>
+                                                <td className="border border-black p-1 text-center">{item.predikat}</td>
+                                            </tr>
+                                        ))}
+                                    </>
+                                )}
                             </tbody>
                         </table>
 
@@ -653,7 +778,11 @@ export default function RaportPreviewPage() {
                             </div>
                             <div></div>
                             <div>
-                                <div className="mb-16">Makassar, {data.meta.tanggal} <br /> Wali Kelas</div>
+                                <div className="mb-16">Makassar, {(() => {
+                                    const d = new Date(data.meta.tanggal || new Date());
+                                    const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                                    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+                                })()} <br /> Wali Kelas</div>
                                 <div className="font-bold underline">{data.waliKelas || ".........................."}</div>
                             </div>
                         </div>
