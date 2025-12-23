@@ -35,6 +35,8 @@ export type JenisKelamin = (typeof JenisKelamin)[keyof typeof JenisKelamin]
 
 
 export const Tingkatan = {
+  TK: 'TK',
+  SD: 'SD',
   WUSTHA: 'WUSTHA',
   ULYA: 'ULYA'
 } as const
@@ -43,15 +45,30 @@ export type Tingkatan = (typeof Tingkatan)[keyof typeof Tingkatan]
 
 
 export const Kelas = {
+  TK_1: 'TK_1',
+  TK_2: 'TK_2',
+  TK_3: 'TK_3',
+  I_SD_Putra: 'I_SD_Putra',
+  II_SD_Putra: 'II_SD_Putra',
+  III_SD_Putra: 'III_SD_Putra',
+  IV_SD_Putra: 'IV_SD_Putra',
+  V_SD_Putra: 'V_SD_Putra',
+  VI_SD_Putra: 'VI_SD_Putra',
+  I_SD_Putri: 'I_SD_Putri',
+  II_SD_Putri: 'II_SD_Putri',
+  III_SD_Putri: 'III_SD_Putri',
+  IV_SD_Putri: 'IV_SD_Putri',
+  V_SD_Putri: 'V_SD_Putri',
+  VI_SD_Putri: 'VI_SD_Putri',
   VII_Putra: 'VII_Putra',
   VIII_Putra: 'VIII_Putra',
   IX_Putra: 'IX_Putra',
-  X_Putra: 'X_Putra',
-  XI_Putra: 'XI_Putra',
-  XII_Putra: 'XII_Putra',
   VII_Putri: 'VII_Putri',
   VIII_Putri: 'VIII_Putri',
   IX_Putri: 'IX_Putri',
+  X_Putra: 'X_Putra',
+  XI_Putra: 'XI_Putra',
+  XII_Putra: 'XII_Putra',
   X_Putri: 'X_Putri',
   XI_Putri: 'XI_Putri',
   XII_Putri: 'XII_Putri'
@@ -73,7 +90,9 @@ export type StatusAbsensi = (typeof StatusAbsensi)[keyof typeof StatusAbsensi]
 export const JenisAbsensi = {
   KELAS: 'KELAS',
   ASRAMA: 'ASRAMA',
-  PENGAJIAN: 'PENGAJIAN'
+  PENGAJIAN: 'PENGAJIAN',
+  TAHZIN_TAHFIDZ: 'TAHZIN_TAHFIDZ',
+  GURU: 'GURU'
 } as const
 
 export type JenisAbsensi = (typeof JenisAbsensi)[keyof typeof JenisAbsensi]

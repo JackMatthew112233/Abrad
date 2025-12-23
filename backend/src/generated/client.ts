@@ -134,3 +134,13 @@ export type Ekstrakurikuler = Prisma.EkstrakurikulerModel
  * 
  */
 export type NilaiEkstrakurikuler = Prisma.NilaiEkstrakurikulerModel
+/**
+ * Model Guru
+ * 
+ */
+export type Guru = Prisma.GuruModel
+/**
+ * Model AbsensiGuru
+ * 
+ */
+export type AbsensiGuru = Prisma.AbsensiGuruModel

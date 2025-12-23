@@ -34,6 +34,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface BiodataKeuangan {
   id: string;
@@ -80,6 +87,7 @@ interface Pembayaran {
   totalPembayaranLaundry: number;
   buktiPembayaran: string;
   tanggalPembayaran: string;
+  periodePembayaran?: string;
   createdAt: string;
 }
 
@@ -99,6 +107,8 @@ export default function DetailBiodataKeuanganPage() {
     totalPembayaranInfaq: "",
     totalPembayaranLaundry: "",
     tanggalPembayaran: "",
+    periodeBulan: "",
+    periodeTahun: "",
   });
   const [newBukti, setNewBukti] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -193,10 +203,22 @@ export default function DetailBiodataKeuanganPage() {
 
   const handleEditPembayaran = (pembayaran: Pembayaran) => {
     setSelectedPembayaran(pembayaran);
+    // Parse periode pembayaran (format: "Januari 2025")
+    let periodeBulan = "";
+    let periodeTahun = "";
+    if (pembayaran.periodePembayaran) {
+      const parts = pembayaran.periodePembayaran.split(" ");
+      if (parts.length === 2) {
+        periodeBulan = parts[0];
+        periodeTahun = parts[1];
+      }
+    }
     setEditFormData({
       totalPembayaranInfaq: pembayaran.totalPembayaranInfaq.toString(),
       totalPembayaranLaundry: pembayaran.totalPembayaranLaundry.toString(),
       tanggalPembayaran: new Date(pembayaran.tanggalPembayaran).toISOString().split("T")[0],
+      periodeBulan,
+      periodeTahun,
     });
     setNewBukti(null);
     setShowEditDialog(true);
@@ -211,6 +233,9 @@ export default function DetailBiodataKeuanganPage() {
       formData.append("totalPembayaranInfaq", editFormData.totalPembayaranInfaq);
       formData.append("totalPembayaranLaundry", editFormData.totalPembayaranLaundry);
       formData.append("tanggalPembayaran", editFormData.tanggalPembayaran);
+      if (editFormData.periodeBulan && editFormData.periodeTahun) {
+        formData.append("periodePembayaran", `${editFormData.periodeBulan} ${editFormData.periodeTahun}`);
+      }
       
       if (newBukti) {
         formData.append("buktiPembayaran", newBukti);
@@ -428,6 +453,7 @@ export default function DetailBiodataKeuanganPage() {
                   <TableRow className="bg-emerald-50">
                     <TableHead className="w-12 font-semibold text-emerald-700">No</TableHead>
                     <TableHead className="font-semibold text-emerald-700">Tanggal</TableHead>
+                    <TableHead className="font-semibold text-emerald-700">Periode</TableHead>
                     <TableHead className="text-right font-semibold text-emerald-700">
                       Pembayaran Infaq
                     </TableHead>
@@ -455,6 +481,9 @@ export default function DetailBiodataKeuanganPage() {
                           month: "long",
                           year: "numeric",
                         })}
+                      </TableCell>
+                      <TableCell className="text-zinc-600">
+                        {pembayaran.periodePembayaran || "-"}
                       </TableCell>
                       <TableCell className="text-right text-zinc-900">
                         {formatRupiah(pembayaran.totalPembayaranInfaq)}
@@ -592,6 +621,52 @@ export default function DetailBiodataKeuanganPage() {
                   setEditFormData({ ...editFormData, tanggalPembayaran: e.target.value })
                 }
               />
+            </div>
+            <div className="space-y-2">
+              <Label>Periode Pembayaran</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Select
+                  value={editFormData.periodeBulan}
+                  onValueChange={(value) =>
+                    setEditFormData({ ...editFormData, periodeBulan: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Bulan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Januari">Januari</SelectItem>
+                    <SelectItem value="Februari">Februari</SelectItem>
+                    <SelectItem value="Maret">Maret</SelectItem>
+                    <SelectItem value="April">April</SelectItem>
+                    <SelectItem value="Mei">Mei</SelectItem>
+                    <SelectItem value="Juni">Juni</SelectItem>
+                    <SelectItem value="Juli">Juli</SelectItem>
+                    <SelectItem value="Agustus">Agustus</SelectItem>
+                    <SelectItem value="September">September</SelectItem>
+                    <SelectItem value="Oktober">Oktober</SelectItem>
+                    <SelectItem value="November">November</SelectItem>
+                    <SelectItem value="Desember">Desember</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={editFormData.periodeTahun}
+                  onValueChange={(value) =>
+                    setEditFormData({ ...editFormData, periodeTahun: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Tahun" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2023">2023</SelectItem>
+                    <SelectItem value="2024">2024</SelectItem>
+                    <SelectItem value="2025">2025</SelectItem>
+                    <SelectItem value="2026">2026</SelectItem>
+                    <SelectItem value="2027">2027</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-infaq">Total Pembayaran Infaq</Label>

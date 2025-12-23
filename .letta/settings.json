@@ -9,7 +9,9 @@
       "Edit(backend/prisma/**)",
       "Edit(frontend/app/(protected)/kesehatan/**)",
       "Edit(frontend/app/(protected)/nilai/**)",
-      "Edit(backend/src/**)"
+      "Edit(backend/src/**)",
+      "Bash(mkdir -p /home/aldev/Projects/Abrad/backend/src/guru)",
+      "Edit(frontend/app/(protected)/absensi/**)"
     ]
   }
 }

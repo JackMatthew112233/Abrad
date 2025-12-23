@@ -17,7 +17,10 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
-  Download
+  Download,
+  BookOpen,
+  GraduationCap,
+  UserPlus
 } from "lucide-react";
 import {
   Dialog,
@@ -66,6 +69,9 @@ interface AbsensiData {
   nama: string | null;
   kelas: string | null;
   tingkatan: string | null;
+  // Guru fields
+  nip?: string | null;
+  jabatan?: string | null;
   hadir: number;
   tidakHadir: number;
   sakit: number;
@@ -81,7 +87,7 @@ interface PaginationInfo {
 
 export default function AbsensiPage() {
   const router = useRouter();
-  const [jenisAbsensi, setJenisAbsensi] = useState<"KELAS" | "ASRAMA" | "PENGAJIAN" | null>(null);
+  const [jenisAbsensi, setJenisAbsensi] = useState<"KELAS" | "ASRAMA" | "PENGAJIAN" | "TAHZIN_TAHFIDZ" | "GURU" | null>(null);
   const [stats, setStats] = useState({
     HADIR: 0,
     TIDAK_HADIR: 0,
@@ -131,12 +137,14 @@ export default function AbsensiPage() {
   const fetchStats = async () => {
     if (!jenisAbsensi) return;
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/absensi/statistik?jenis=${jenisAbsensi}`,
-        {
-          credentials: "include",
-        }
-      );
+      // Use different endpoint for GURU
+      const url = jenisAbsensi === "GURU"
+        ? `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/statistik`
+        : `${process.env.NEXT_PUBLIC_API_URL}/absensi/statistik?jenis=${jenisAbsensi}`;
+      
+      const response = await fetch(url, {
+        credentials: "include",
+      });
       if (response.ok) {
         const data = await response.json();
         setStats(data);
@@ -150,12 +158,15 @@ export default function AbsensiPage() {
     if (!jenisAbsensi) return;
     try {
       setIsLoadingTable(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/absensi/statistik-per-siswa?jenis=${jenisAbsensi}&page=${page}&limit=20`,
-        {
-          credentials: "include",
-        }
-      );
+      
+      // Use different endpoint for GURU
+      const url = jenisAbsensi === "GURU"
+        ? `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/rekap?page=${page}&limit=20`
+        : `${process.env.NEXT_PUBLIC_API_URL}/absensi/statistik-per-siswa?jenis=${jenisAbsensi}&page=${page}&limit=20`;
+      
+      const response = await fetch(url, {
+        credentials: "include",
+      });
       if (response.ok) {
         const data = await response.json();
         setAbsensiData(data.data);
@@ -170,6 +181,14 @@ export default function AbsensiPage() {
 
   const fetchChartData = async () => {
     if (!jenisAbsensi) return;
+    
+    // Skip chart data for GURU (or implement guru-specific charts later)
+    if (jenisAbsensi === "GURU") {
+      setTrendKehadiranData([]);
+      setRadarData([]);
+      return;
+    }
+    
     try {
       const [trendResponse, radarResponse] = await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/absensi/trend-bulanan?jenis=${jenisAbsensi}`, {
@@ -203,6 +222,10 @@ export default function AbsensiPage() {
 
   const filteredAbsensi = absensiData.filter((item) => {
     const matchesSearch = item.nama?.toLowerCase().includes(searchQuery.toLowerCase());
+    // Skip tingkatan/kelas filter for GURU
+    if (jenisAbsensi === "GURU") {
+      return matchesSearch;
+    }
     const matchesTingkatan = !filterTingkatan || filterTingkatan === "all" || item.tingkatan === filterTingkatan;
     const matchesKelas = !filterKelas || filterKelas === "all" || item.kelas === filterKelas;
     return matchesSearch && matchesTingkatan && matchesKelas;
@@ -235,7 +258,7 @@ export default function AbsensiPage() {
         </div>
 
         {/* Menu Cards */}
-        <div className="grid gap-4 lg:gap-6 md:grid-cols-3">
+        <div className="grid gap-4 lg:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           <Card 
             className="border-emerald-200 bg-white hover:shadow-lg transition-shadow cursor-pointer"
             onClick={() => setJenisAbsensi("KELAS")}
@@ -292,6 +315,44 @@ export default function AbsensiPage() {
               </p>
             </CardContent>
           </Card>
+
+          <Card 
+            className="border-emerald-200 bg-white hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => setJenisAbsensi("TAHZIN_TAHFIDZ")}
+          >
+            <CardHeader className="text-center pb-2">
+              <div className="mx-auto mb-3 lg:mb-4 flex h-12 w-12 lg:h-16 lg:w-16 items-center justify-center rounded-full bg-emerald-100">
+                <BookOpen className="h-6 w-6 lg:h-8 lg:w-8 text-emerald-600" />
+              </div>
+              <CardTitle className="text-base lg:text-xl font-bold text-emerald-700">
+                Absensi Tahzin & Tahfidz
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-xs lg:text-sm text-zinc-600">
+                Catat kehadiran santri dalam program tahzin dan tahfidz
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-emerald-200 bg-white hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => setJenisAbsensi("GURU")}
+          >
+            <CardHeader className="text-center pb-2">
+              <div className="mx-auto mb-3 lg:mb-4 flex h-12 w-12 lg:h-16 lg:w-16 items-center justify-center rounded-full bg-emerald-100">
+                <GraduationCap className="h-6 w-6 lg:h-8 lg:w-8 text-emerald-600" />
+              </div>
+              <CardTitle className="text-base lg:text-xl font-bold text-emerald-700">
+                Absensi Guru
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-xs lg:text-sm text-zinc-600">
+                Pantau kehadiran guru dan tenaga pengajar
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -311,13 +372,15 @@ export default function AbsensiPage() {
           <div>
             <div className="mb-2 lg:mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 lg:px-4 lg:py-1.5 text-xs lg:text-sm font-medium text-white backdrop-blur-sm">
               <ClipboardCheck className="h-3 w-3 lg:h-4 lg:w-4" />
-              Kelola Absensi - {jenisAbsensi === "KELAS" ? "Kelas" : jenisAbsensi === "ASRAMA" ? "Asrama" : "Pengajian"}
+              Kelola Absensi - {jenisAbsensi === "KELAS" ? "Kelas" : jenisAbsensi === "ASRAMA" ? "Asrama" : jenisAbsensi === "PENGAJIAN" ? "Pengajian" : jenisAbsensi === "TAHZIN_TAHFIDZ" ? "Tahzin & Tahfidz" : "Guru"}
             </div>
             <h1 className="mb-1 lg:mb-2 text-2xl lg:text-4xl font-bold text-white">
-              Absensi {jenisAbsensi === "KELAS" ? "Kelas" : jenisAbsensi === "ASRAMA" ? "Asrama" : "Pengajian"}
+              Absensi {jenisAbsensi === "KELAS" ? "Kelas" : jenisAbsensi === "ASRAMA" ? "Asrama" : jenisAbsensi === "PENGAJIAN" ? "Pengajian" : jenisAbsensi === "TAHZIN_TAHFIDZ" ? "Tahzin & Tahfidz" : "Guru"}
             </h1>
             <p className="max-w-2xl text-sm lg:text-lg text-emerald-50">
-              Kelola dan pantau kehadiran santri / santriwati setiap hari
+              {jenisAbsensi === "GURU" 
+                ? "Kelola dan pantau kehadiran guru dan tenaga pengajar" 
+                : "Kelola dan pantau kehadiran santri / santriwati setiap hari"}
             </p>
           </div>
         </div>
@@ -341,7 +404,7 @@ export default function AbsensiPage() {
                 <span className="ml-1 text-zinc-500">(tingkat kehadiran)</span>
               </div>
               <p className="text-xs text-zinc-500">
-                Santri hadir hari ini
+                {jenisAbsensi === "GURU" ? "Guru hadir hari ini" : "Santri hadir hari ini"}
               </p>
             </div>
           </CardContent>
@@ -423,15 +486,31 @@ export default function AbsensiPage() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
               <CardTitle className="text-base lg:text-lg font-semibold text-emerald-700">
-                Statistik Kehadiran Santri / Santriwati
+                {jenisAbsensi === "GURU" ? "Statistik Kehadiran Guru" : "Statistik Kehadiran Santri / Santriwati"}
               </CardTitle>
               <p className="mt-1 text-xs lg:text-sm text-zinc-500">
-                Total {pagination.total} data kehadiran
+                Total {pagination.total} data {jenisAbsensi === "GURU" ? "guru" : "santri/santriwati"}
               </p>
             </div>
             <div className="flex gap-2">
+              {jenisAbsensi === "GURU" && (
+                <Button
+                  onClick={() => router.push("/absensi/guru/biodata")}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9"
+                >
+                  <UserPlus className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                  <span className="hidden sm:inline">Input Biodata Guru</span>
+                  <span className="sm:hidden">Biodata</span>
+                </Button>
+              )}
               <Button
-                onClick={() => setShowInputDialog(true)}
+                onClick={() => {
+                  if (jenisAbsensi === "GURU") {
+                    router.push("/absensi/guru/input");
+                  } else {
+                    setShowInputDialog(true);
+                  }
+                }}
                 className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9"
               >
                 <ClipboardCheck className="mr-2 h-3 w-3 lg:h-4 lg:w-4" />
@@ -453,42 +532,67 @@ export default function AbsensiPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-3 w-3 lg:h-4 lg:w-4 -translate-y-1/2 text-zinc-400" />
               <Input
-                placeholder="Cari nama santri..."
+                placeholder={jenisAbsensi === "GURU" ? "Cari nama guru..." : "Cari nama santri..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9 text-xs lg:text-sm h-9 lg:h-10 placeholder:text-xs lg:placeholder:text-sm"
               />
             </div>
-            <Select value={filterTingkatan} onValueChange={setFilterTingkatan}>
-              <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
-                <SelectValue placeholder="Semua Tingkatan" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Tingkatan</SelectItem>
-                <SelectItem value="WUSTHA">WUSTHA</SelectItem>
-                <SelectItem value="ULYA">ULYA</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterKelas} onValueChange={setFilterKelas}>
-              <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
-                <SelectValue placeholder="Semua Kelas" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Kelas</SelectItem>
-                <SelectItem value="VII_Putra">VII Putra</SelectItem>
-                <SelectItem value="VII_Putri">VII Putri</SelectItem>
-                <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
-                <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
-                <SelectItem value="IX_Putra">IX Putra</SelectItem>
-                <SelectItem value="IX_Putri">IX Putri</SelectItem>
-                <SelectItem value="X_Putra">X Putra</SelectItem>
-                <SelectItem value="X_Putri">X Putri</SelectItem>
-                <SelectItem value="XI_Putra">XI Putra</SelectItem>
-                <SelectItem value="XI_Putri">XI Putri</SelectItem>
-                <SelectItem value="XII_Putra">XII Putra</SelectItem>
-                <SelectItem value="XII_Putri">XII Putri</SelectItem>
-              </SelectContent>
-            </Select>
+            {jenisAbsensi !== "GURU" && (
+              <>
+                <Select value={filterTingkatan} onValueChange={setFilterTingkatan}>
+                  <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
+                    <SelectValue placeholder="Semua Tingkatan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Tingkatan</SelectItem>
+                    <SelectItem value="TK">TK</SelectItem>
+                    <SelectItem value="SD">SD</SelectItem>
+                    <SelectItem value="WUSTHA">WUSTHA</SelectItem>
+                    <SelectItem value="ULYA">ULYA</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={filterKelas} onValueChange={setFilterKelas}>
+                  <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
+                    <SelectValue placeholder="Semua Kelas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Kelas</SelectItem>
+                    {/* TK */}
+                    <SelectItem value="TK_1">TK 1</SelectItem>
+                    <SelectItem value="TK_2">TK 2</SelectItem>
+                    <SelectItem value="TK_3">TK 3</SelectItem>
+                    {/* SD */}
+                    <SelectItem value="I_SD_Putra">1 SD Putra</SelectItem>
+                    <SelectItem value="II_SD_Putra">2 SD Putra</SelectItem>
+                    <SelectItem value="III_SD_Putra">3 SD Putra</SelectItem>
+                    <SelectItem value="IV_SD_Putra">4 SD Putra</SelectItem>
+                    <SelectItem value="V_SD_Putra">5 SD Putra</SelectItem>
+                    <SelectItem value="VI_SD_Putra">6 SD Putra</SelectItem>
+                    <SelectItem value="I_SD_Putri">1 SD Putri</SelectItem>
+                    <SelectItem value="II_SD_Putri">2 SD Putri</SelectItem>
+                    <SelectItem value="III_SD_Putri">3 SD Putri</SelectItem>
+                    <SelectItem value="IV_SD_Putri">4 SD Putri</SelectItem>
+                    <SelectItem value="V_SD_Putri">5 SD Putri</SelectItem>
+                    <SelectItem value="VI_SD_Putri">6 SD Putri</SelectItem>
+                    {/* Wustha */}
+                    <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                    <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                    <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                    <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                    <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                    <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                    {/* Ulya */}
+                    <SelectItem value="X_Putra">X Putra</SelectItem>
+                    <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                    <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                    <SelectItem value="X_Putri">X Putri</SelectItem>
+                    <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                    <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                  </SelectContent>
+                </Select>
+              </>
+            )}
           </div>
         </CardHeader>
         <CardContent className="p-0 sm:p-6">
@@ -500,8 +604,17 @@ export default function AbsensiPage() {
                 <TableHeader>
                   <TableRow className="bg-emerald-50 hover:bg-emerald-50">
                     <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Nama</TableHead>
-                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
-                    <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                    {jenisAbsensi === "GURU" ? (
+                      <>
+                        <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">NIP</TableHead>
+                        <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Jabatan</TableHead>
+                      </>
+                    ) : (
+                      <>
+                        <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Kelas</TableHead>
+                        <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">Tingkatan</TableHead>
+                      </>
+                    )}
                     <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm text-center whitespace-nowrap">Hadir</TableHead>
                     <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm text-center whitespace-nowrap">Tidak Hadir</TableHead>
                     <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm text-center whitespace-nowrap">Izin</TableHead>
@@ -519,15 +632,28 @@ export default function AbsensiPage() {
                     filteredAbsensi.map((item) => (
                       <TableRow key={item.id} className="hover:bg-zinc-50">
                         <TableCell className="font-medium text-xs lg:text-sm whitespace-nowrap">
-                          <button
-                            onClick={() => router.push(`/absensi/detail/${item.id}?jenis=${jenisAbsensi}`)}
-                            className="text-emerald-700 hover:text-emerald-900 hover:underline cursor-pointer transition-colors"
-                          >
-                            {item.nama || "-"}
-                          </button>
+                          {jenisAbsensi === "GURU" ? (
+                            <span className="text-zinc-900">{item.nama || "-"}</span>
+                          ) : (
+                            <button
+                              onClick={() => router.push(`/absensi/detail/${item.id}?jenis=${jenisAbsensi}`)}
+                              className="text-emerald-700 hover:text-emerald-900 hover:underline cursor-pointer transition-colors"
+                            >
+                              {item.nama || "-"}
+                            </button>
+                          )}
                         </TableCell>
-                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{item.kelas ? item.kelas.replace("_", " ") : "-"}</TableCell>
-                        <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{item.tingkatan || "-"}</TableCell>
+                        {jenisAbsensi === "GURU" ? (
+                          <>
+                            <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{item.nip || "-"}</TableCell>
+                            <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{item.jabatan || "-"}</TableCell>
+                          </>
+                        ) : (
+                          <>
+                            <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{item.kelas ? item.kelas.replace("_", " ") : "-"}</TableCell>
+                            <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">{item.tingkatan || "-"}</TableCell>
+                          </>
+                        )}
                         <TableCell className="text-center text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{item.hadir}</TableCell>
                         <TableCell className="text-center text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{item.tidakHadir}</TableCell>
                         <TableCell className="text-center text-zinc-900 text-xs lg:text-sm whitespace-nowrap">{item.izin}</TableCell>
@@ -603,7 +729,8 @@ export default function AbsensiPage() {
         </CardContent>
       </Card>
 
-      {/* Charts Section */}
+      {/* Charts Section - Hide for GURU */}
+      {jenisAbsensi !== "GURU" && (
       <div className="grid gap-4 md:grid-cols-2">
         {/* Area Chart - Trend Kehadiran */}
         <Card className="border-zinc-200 bg-white">
@@ -734,6 +861,7 @@ export default function AbsensiPage() {
           </CardContent>
         </Card>
       </div>
+      )}
 
       {/* Dialog Input Absensi */}
       <Dialog open={showInputDialog} onOpenChange={setShowInputDialog}>
@@ -752,6 +880,8 @@ export default function AbsensiPage() {
                   <SelectValue placeholder="Pilih Tingkatan" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="TK">TK</SelectItem>
+                  <SelectItem value="SD">SD</SelectItem>
                   <SelectItem value="WUSTHA">WUSTHA</SelectItem>
                   <SelectItem value="ULYA">ULYA</SelectItem>
                 </SelectContent>
@@ -764,18 +894,85 @@ export default function AbsensiPage() {
                   <SelectValue placeholder="Pilih Kelas" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="VII_PUTRA">VII Putra</SelectItem>
-                  <SelectItem value="VII_PUTRI">VII Putri</SelectItem>
-                  <SelectItem value="VIII_PUTRA">VIII Putra</SelectItem>
-                  <SelectItem value="VIII_PUTRI">VIII Putri</SelectItem>
-                  <SelectItem value="IX_PUTRA">IX Putra</SelectItem>
-                  <SelectItem value="IX_PUTRI">IX Putri</SelectItem>
-                  <SelectItem value="X_PUTRA">X Putra</SelectItem>
-                  <SelectItem value="X_PUTRI">X Putri</SelectItem>
-                  <SelectItem value="XI_PUTRA">XI Putra</SelectItem>
-                  <SelectItem value="XI_PUTRI">XI Putri</SelectItem>
-                  <SelectItem value="XII_PUTRA">XII Putra</SelectItem>
-                  <SelectItem value="XII_PUTRI">XII Putri</SelectItem>
+                  {/* TK */}
+                  {inputTingkatan === "TK" && (
+                    <>
+                      <SelectItem value="TK_1">TK 1</SelectItem>
+                      <SelectItem value="TK_2">TK 2</SelectItem>
+                      <SelectItem value="TK_3">TK 3</SelectItem>
+                    </>
+                  )}
+                  {/* SD */}
+                  {inputTingkatan === "SD" && (
+                    <>
+                      <SelectItem value="I_SD_Putra">1 SD Putra</SelectItem>
+                      <SelectItem value="II_SD_Putra">2 SD Putra</SelectItem>
+                      <SelectItem value="III_SD_Putra">3 SD Putra</SelectItem>
+                      <SelectItem value="IV_SD_Putra">4 SD Putra</SelectItem>
+                      <SelectItem value="V_SD_Putra">5 SD Putra</SelectItem>
+                      <SelectItem value="VI_SD_Putra">6 SD Putra</SelectItem>
+                      <SelectItem value="I_SD_Putri">1 SD Putri</SelectItem>
+                      <SelectItem value="II_SD_Putri">2 SD Putri</SelectItem>
+                      <SelectItem value="III_SD_Putri">3 SD Putri</SelectItem>
+                      <SelectItem value="IV_SD_Putri">4 SD Putri</SelectItem>
+                      <SelectItem value="V_SD_Putri">5 SD Putri</SelectItem>
+                      <SelectItem value="VI_SD_Putri">6 SD Putri</SelectItem>
+                    </>
+                  )}
+                  {/* Wustha */}
+                  {inputTingkatan === "WUSTHA" && (
+                    <>
+                      <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                      <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                      <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                      <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                      <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                      <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                    </>
+                  )}
+                  {/* Ulya */}
+                  {inputTingkatan === "ULYA" && (
+                    <>
+                      <SelectItem value="X_Putra">X Putra</SelectItem>
+                      <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                      <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                      <SelectItem value="X_Putri">X Putri</SelectItem>
+                      <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                      <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                    </>
+                  )}
+                  {/* Default */}
+                  {!inputTingkatan && (
+                    <>
+                      <SelectItem value="TK_1">TK 1</SelectItem>
+                      <SelectItem value="TK_2">TK 2</SelectItem>
+                      <SelectItem value="TK_3">TK 3</SelectItem>
+                      <SelectItem value="I_SD_Putra">1 SD Putra</SelectItem>
+                      <SelectItem value="II_SD_Putra">2 SD Putra</SelectItem>
+                      <SelectItem value="III_SD_Putra">3 SD Putra</SelectItem>
+                      <SelectItem value="IV_SD_Putra">4 SD Putra</SelectItem>
+                      <SelectItem value="V_SD_Putra">5 SD Putra</SelectItem>
+                      <SelectItem value="VI_SD_Putra">6 SD Putra</SelectItem>
+                      <SelectItem value="I_SD_Putri">1 SD Putri</SelectItem>
+                      <SelectItem value="II_SD_Putri">2 SD Putri</SelectItem>
+                      <SelectItem value="III_SD_Putri">3 SD Putri</SelectItem>
+                      <SelectItem value="IV_SD_Putri">4 SD Putri</SelectItem>
+                      <SelectItem value="V_SD_Putri">5 SD Putri</SelectItem>
+                      <SelectItem value="VI_SD_Putri">6 SD Putri</SelectItem>
+                      <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                      <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                      <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                      <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                      <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                      <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                      <SelectItem value="X_Putra">X Putra</SelectItem>
+                      <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                      <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                      <SelectItem value="X_Putri">X Putri</SelectItem>
+                      <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                      <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                    </>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -810,46 +1007,119 @@ export default function AbsensiPage() {
       <Dialog open={showDownloadDialog} onOpenChange={setShowDownloadDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Unduh Riwayat Absensi</DialogTitle>
+            <DialogTitle>Unduh Riwayat Absensi {jenisAbsensi === "GURU" ? "Guru" : ""}</DialogTitle>
             <DialogDescription>
-              Pilih filter data absensi yang akan diunduh
+              Pilih filter data absensi {jenisAbsensi === "GURU" ? "guru" : "santri"} yang akan diunduh
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="download-tingkatan">Tingkatan</Label>
-              <Select value={downloadTingkatan} onValueChange={setDownloadTingkatan}>
-                <SelectTrigger id="download-tingkatan">
-                  <SelectValue placeholder="Pilih Tingkatan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="WUSTHA">WUSTHA</SelectItem>
-                  <SelectItem value="ULYA">ULYA</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="download-kelas">Kelas</Label>
-              <Select value={downloadKelas} onValueChange={setDownloadKelas}>
-                <SelectTrigger id="download-kelas">
-                  <SelectValue placeholder="Pilih Kelas" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="VII_PUTRA">VII Putra</SelectItem>
-                  <SelectItem value="VII_PUTRI">VII Putri</SelectItem>
-                  <SelectItem value="VIII_PUTRA">VIII Putra</SelectItem>
-                  <SelectItem value="VIII_PUTRI">VIII Putri</SelectItem>
-                  <SelectItem value="IX_PUTRA">IX Putra</SelectItem>
-                  <SelectItem value="IX_PUTRI">IX Putri</SelectItem>
-                  <SelectItem value="X_PUTRA">X Putra</SelectItem>
-                  <SelectItem value="X_PUTRI">X Putri</SelectItem>
-                  <SelectItem value="XI_PUTRA">XI Putra</SelectItem>
-                  <SelectItem value="XI_PUTRI">XI Putri</SelectItem>
-                  <SelectItem value="XII_PUTRA">XII Putra</SelectItem>
-                  <SelectItem value="XII_PUTRI">XII Putri</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {jenisAbsensi !== "GURU" && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="download-tingkatan">Tingkatan</Label>
+                  <Select value={downloadTingkatan} onValueChange={setDownloadTingkatan}>
+                    <SelectTrigger id="download-tingkatan">
+                      <SelectValue placeholder="Pilih Tingkatan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="TK">TK</SelectItem>
+                      <SelectItem value="SD">SD</SelectItem>
+                      <SelectItem value="WUSTHA">WUSTHA</SelectItem>
+                      <SelectItem value="ULYA">ULYA</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="download-kelas">Kelas</Label>
+                  <Select value={downloadKelas} onValueChange={setDownloadKelas}>
+                    <SelectTrigger id="download-kelas">
+                      <SelectValue placeholder="Pilih Kelas" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {/* TK */}
+                      {downloadTingkatan === "TK" && (
+                        <>
+                          <SelectItem value="TK_1">TK 1</SelectItem>
+                          <SelectItem value="TK_2">TK 2</SelectItem>
+                          <SelectItem value="TK_3">TK 3</SelectItem>
+                        </>
+                      )}
+                      {/* SD */}
+                      {downloadTingkatan === "SD" && (
+                        <>
+                          <SelectItem value="I_SD_Putra">1 SD Putra</SelectItem>
+                          <SelectItem value="II_SD_Putra">2 SD Putra</SelectItem>
+                          <SelectItem value="III_SD_Putra">3 SD Putra</SelectItem>
+                          <SelectItem value="IV_SD_Putra">4 SD Putra</SelectItem>
+                          <SelectItem value="V_SD_Putra">5 SD Putra</SelectItem>
+                          <SelectItem value="VI_SD_Putra">6 SD Putra</SelectItem>
+                          <SelectItem value="I_SD_Putri">1 SD Putri</SelectItem>
+                          <SelectItem value="II_SD_Putri">2 SD Putri</SelectItem>
+                          <SelectItem value="III_SD_Putri">3 SD Putri</SelectItem>
+                          <SelectItem value="IV_SD_Putri">4 SD Putri</SelectItem>
+                          <SelectItem value="V_SD_Putri">5 SD Putri</SelectItem>
+                          <SelectItem value="VI_SD_Putri">6 SD Putri</SelectItem>
+                        </>
+                      )}
+                      {/* Wustha */}
+                      {downloadTingkatan === "WUSTHA" && (
+                        <>
+                          <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                          <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                          <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                          <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                          <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                          <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                        </>
+                      )}
+                      {/* Ulya */}
+                      {downloadTingkatan === "ULYA" && (
+                        <>
+                          <SelectItem value="X_Putra">X Putra</SelectItem>
+                          <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                          <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                          <SelectItem value="X_Putri">X Putri</SelectItem>
+                          <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                          <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                        </>
+                      )}
+                      {/* Default */}
+                      {!downloadTingkatan && (
+                        <>
+                          <SelectItem value="TK_1">TK 1</SelectItem>
+                          <SelectItem value="TK_2">TK 2</SelectItem>
+                          <SelectItem value="TK_3">TK 3</SelectItem>
+                          <SelectItem value="I_SD_Putra">1 SD Putra</SelectItem>
+                          <SelectItem value="II_SD_Putra">2 SD Putra</SelectItem>
+                          <SelectItem value="III_SD_Putra">3 SD Putra</SelectItem>
+                          <SelectItem value="IV_SD_Putra">4 SD Putra</SelectItem>
+                          <SelectItem value="V_SD_Putra">5 SD Putra</SelectItem>
+                          <SelectItem value="VI_SD_Putra">6 SD Putra</SelectItem>
+                          <SelectItem value="I_SD_Putri">1 SD Putri</SelectItem>
+                          <SelectItem value="II_SD_Putri">2 SD Putri</SelectItem>
+                          <SelectItem value="III_SD_Putri">3 SD Putri</SelectItem>
+                          <SelectItem value="IV_SD_Putri">4 SD Putri</SelectItem>
+                          <SelectItem value="V_SD_Putri">5 SD Putri</SelectItem>
+                          <SelectItem value="VI_SD_Putri">6 SD Putri</SelectItem>
+                          <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                          <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                          <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                          <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                          <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                          <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                          <SelectItem value="X_Putra">X Putra</SelectItem>
+                          <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                          <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                          <SelectItem value="X_Putri">X Putri</SelectItem>
+                          <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                          <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                        </>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
             <div className="space-y-2">
               <Label htmlFor="bulan">Bulan</Label>
               <Select value={downloadBulan} onValueChange={setDownloadBulan}>

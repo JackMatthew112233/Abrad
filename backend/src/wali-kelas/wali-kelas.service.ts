@@ -16,8 +16,8 @@ export class WaliKelasService {
   async getStatistik() {
     const totalWaliKelas = await this.prisma.waliKelas.count();
     
-    // Total kelas yang ada (12 kelas)
-    const totalKelas = 12;
+    // Total kelas yang ada (27 kelas: 3 TK + 12 SD + 6 Wustha + 6 Ulya)
+    const totalKelas = 27;
     const kelasTerassign = totalWaliKelas;
     const kelasBelumAssign = totalKelas - kelasTerassign;
 
@@ -129,8 +129,16 @@ export class WaliKelasService {
   async getAvailableKelas() {
     // Get all kelas that don't have wali kelas yet
     const allKelas = [
-      'VII_Putra', 'VIII_Putra', 'IX_Putra', 'X_Putra', 'XI_Putra', 'XII_Putra',
-      'VII_Putri', 'VIII_Putri', 'IX_Putri', 'X_Putri', 'XI_Putri', 'XII_Putri',
+      // TK
+      'TK_1', 'TK_2', 'TK_3',
+      // SD Putra
+      'I_SD_Putra', 'II_SD_Putra', 'III_SD_Putra', 'IV_SD_Putra', 'V_SD_Putra', 'VI_SD_Putra',
+      // SD Putri
+      'I_SD_Putri', 'II_SD_Putri', 'III_SD_Putri', 'IV_SD_Putri', 'V_SD_Putri', 'VI_SD_Putri',
+      // Wustha (SMP/MTs)
+      'VII_Putra', 'VIII_Putra', 'IX_Putra', 'VII_Putri', 'VIII_Putri', 'IX_Putri',
+      // Ulya (SMA/MA)
+      'X_Putra', 'XI_Putra', 'XII_Putra', 'X_Putri', 'XI_Putri', 'XII_Putri',
     ];
 
     const assignedKelas = await this.prisma.waliKelas.findMany({

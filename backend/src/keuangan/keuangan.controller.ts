@@ -98,6 +98,7 @@ export class KeuanganController {
       totalPembayaranInfaq: string;
       totalPembayaranLaundry: string;
       tanggalPembayaran: string;
+      periodePembayaran?: string;
     },
     @UploadedFile() file: any,
   ) {
@@ -111,6 +112,7 @@ export class KeuanganController {
         totalPembayaranInfaq: parseFloat(body.totalPembayaranInfaq),
         totalPembayaranLaundry: parseFloat(body.totalPembayaranLaundry),
         tanggalPembayaran: body.tanggalPembayaran,
+        periodePembayaran: body.periodePembayaran,
       },
       file,
     );
@@ -157,6 +159,7 @@ export class KeuanganController {
       totalPembayaranInfaq: string;
       totalPembayaranLaundry: string;
       tanggalPembayaran: string;
+      periodePembayaran?: string;
     },
     @UploadedFile() file?: any,
   ) {
@@ -166,6 +169,7 @@ export class KeuanganController {
         totalPembayaranInfaq: parseFloat(body.totalPembayaranInfaq),
         totalPembayaranLaundry: parseFloat(body.totalPembayaranLaundry),
         tanggalPembayaran: body.tanggalPembayaran,
+        periodePembayaran: body.periodePembayaran,
       },
       file,
     );

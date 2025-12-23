@@ -170,13 +170,15 @@ export default function TambahSiswaPage() {
                   <Select
                     value={formData.tingkatan}
                     onValueChange={(value) =>
-                      setFormData({ ...formData, tingkatan: value })
+                      setFormData({ ...formData, tingkatan: value, kelas: "" })
                     }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Pilih tingkatan" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="TK">TK</SelectItem>
+                      <SelectItem value="SD">SD</SelectItem>
                       <SelectItem value="WUSTHA">WUSTHA</SelectItem>
                       <SelectItem value="ULYA">ULYA</SelectItem>
                     </SelectContent>
@@ -195,18 +197,85 @@ export default function TambahSiswaPage() {
                       <SelectValue placeholder="Pilih kelas" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="VII_Putra">VII Putra</SelectItem>
-                      <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
-                      <SelectItem value="IX_Putra">IX Putra</SelectItem>
-                      <SelectItem value="X_Putra">X Putra</SelectItem>
-                      <SelectItem value="XI_Putra">XI Putra</SelectItem>
-                      <SelectItem value="XII_Putra">XII Putra</SelectItem>
-                      <SelectItem value="VII_Putri">VII Putri</SelectItem>
-                      <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
-                      <SelectItem value="IX_Putri">IX Putri</SelectItem>
-                      <SelectItem value="X_Putri">X Putri</SelectItem>
-                      <SelectItem value="XI_Putri">XI Putri</SelectItem>
-                      <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                      {/* TK */}
+                      {formData.tingkatan === "TK" && (
+                        <>
+                          <SelectItem value="TK_1">TK 1</SelectItem>
+                          <SelectItem value="TK_2">TK 2</SelectItem>
+                          <SelectItem value="TK_3">TK 3</SelectItem>
+                        </>
+                      )}
+                      {/* SD */}
+                      {formData.tingkatan === "SD" && (
+                        <>
+                          <SelectItem value="I_SD_Putra">1 SD Putra</SelectItem>
+                          <SelectItem value="II_SD_Putra">2 SD Putra</SelectItem>
+                          <SelectItem value="III_SD_Putra">3 SD Putra</SelectItem>
+                          <SelectItem value="IV_SD_Putra">4 SD Putra</SelectItem>
+                          <SelectItem value="V_SD_Putra">5 SD Putra</SelectItem>
+                          <SelectItem value="VI_SD_Putra">6 SD Putra</SelectItem>
+                          <SelectItem value="I_SD_Putri">1 SD Putri</SelectItem>
+                          <SelectItem value="II_SD_Putri">2 SD Putri</SelectItem>
+                          <SelectItem value="III_SD_Putri">3 SD Putri</SelectItem>
+                          <SelectItem value="IV_SD_Putri">4 SD Putri</SelectItem>
+                          <SelectItem value="V_SD_Putri">5 SD Putri</SelectItem>
+                          <SelectItem value="VI_SD_Putri">6 SD Putri</SelectItem>
+                        </>
+                      )}
+                      {/* WUSTHA (SMP/MTs) */}
+                      {formData.tingkatan === "WUSTHA" && (
+                        <>
+                          <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                          <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                          <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                          <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                          <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                          <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                        </>
+                      )}
+                      {/* ULYA (SMA/MA) */}
+                      {formData.tingkatan === "ULYA" && (
+                        <>
+                          <SelectItem value="X_Putra">X Putra</SelectItem>
+                          <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                          <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                          <SelectItem value="X_Putri">X Putri</SelectItem>
+                          <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                          <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                        </>
+                      )}
+                      {/* Default: Semua kelas jika tingkatan belum dipilih */}
+                      {!formData.tingkatan && (
+                        <>
+                          <SelectItem value="TK_1">TK 1</SelectItem>
+                          <SelectItem value="TK_2">TK 2</SelectItem>
+                          <SelectItem value="TK_3">TK 3</SelectItem>
+                          <SelectItem value="I_SD_Putra">1 SD Putra</SelectItem>
+                          <SelectItem value="II_SD_Putra">2 SD Putra</SelectItem>
+                          <SelectItem value="III_SD_Putra">3 SD Putra</SelectItem>
+                          <SelectItem value="IV_SD_Putra">4 SD Putra</SelectItem>
+                          <SelectItem value="V_SD_Putra">5 SD Putra</SelectItem>
+                          <SelectItem value="VI_SD_Putra">6 SD Putra</SelectItem>
+                          <SelectItem value="I_SD_Putri">1 SD Putri</SelectItem>
+                          <SelectItem value="II_SD_Putri">2 SD Putri</SelectItem>
+                          <SelectItem value="III_SD_Putri">3 SD Putri</SelectItem>
+                          <SelectItem value="IV_SD_Putri">4 SD Putri</SelectItem>
+                          <SelectItem value="V_SD_Putri">5 SD Putri</SelectItem>
+                          <SelectItem value="VI_SD_Putri">6 SD Putri</SelectItem>
+                          <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                          <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                          <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                          <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                          <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                          <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                          <SelectItem value="X_Putra">X Putra</SelectItem>
+                          <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                          <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                          <SelectItem value="X_Putri">X Putri</SelectItem>
+                          <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                          <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>

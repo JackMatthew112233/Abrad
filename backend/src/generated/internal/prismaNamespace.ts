@@ -402,7 +402,9 @@ export const ModelName = {
   PengeluaranKoperasi: 'PengeluaranKoperasi',
   WaliKelas: 'WaliKelas',
   Ekstrakurikuler: 'Ekstrakurikuler',
-  NilaiEkstrakurikuler: 'NilaiEkstrakurikuler'
+  NilaiEkstrakurikuler: 'NilaiEkstrakurikuler',
+  Guru: 'Guru',
+  AbsensiGuru: 'AbsensiGuru'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siswa" | "biodataKeuangan" | "pembayaran" | "absensi" | "pelanggaran" | "kesehatan" | "tahfidz" | "pengeluaran" | "nilai" | "mataPelajaran" | "sekolah" | "donasi" | "anggotaKoperasi" | "pemasukanKoperasi" | "pengeluaranKoperasi" | "waliKelas" | "ekstrakurikuler" | "nilaiEkstrakurikuler"
+    modelProps: "user" | "siswa" | "biodataKeuangan" | "pembayaran" | "absensi" | "pelanggaran" | "kesehatan" | "tahfidz" | "pengeluaran" | "nilai" | "mataPelajaran" | "sekolah" | "donasi" | "anggotaKoperasi" | "pemasukanKoperasi" | "pengeluaranKoperasi" | "waliKelas" | "ekstrakurikuler" | "nilaiEkstrakurikuler" | "guru" | "absensiGuru"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1828,6 +1830,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Guru: {
+      payload: Prisma.$GuruPayload<ExtArgs>
+      fields: Prisma.GuruFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GuruFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GuruFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>
+        }
+        findFirst: {
+          args: Prisma.GuruFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GuruFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>
+        }
+        findMany: {
+          args: Prisma.GuruFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>[]
+        }
+        create: {
+          args: Prisma.GuruCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>
+        }
+        createMany: {
+          args: Prisma.GuruCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GuruCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>[]
+        }
+        delete: {
+          args: Prisma.GuruDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>
+        }
+        update: {
+          args: Prisma.GuruUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>
+        }
+        deleteMany: {
+          args: Prisma.GuruDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GuruUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GuruUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>[]
+        }
+        upsert: {
+          args: Prisma.GuruUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuruPayload>
+        }
+        aggregate: {
+          args: Prisma.GuruAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGuru>
+        }
+        groupBy: {
+          args: Prisma.GuruGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuruGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GuruCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuruCountAggregateOutputType> | number
+        }
+      }
+    }
+    AbsensiGuru: {
+      payload: Prisma.$AbsensiGuruPayload<ExtArgs>
+      fields: Prisma.AbsensiGuruFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AbsensiGuruFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AbsensiGuruFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>
+        }
+        findFirst: {
+          args: Prisma.AbsensiGuruFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AbsensiGuruFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>
+        }
+        findMany: {
+          args: Prisma.AbsensiGuruFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>[]
+        }
+        create: {
+          args: Prisma.AbsensiGuruCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>
+        }
+        createMany: {
+          args: Prisma.AbsensiGuruCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AbsensiGuruCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>[]
+        }
+        delete: {
+          args: Prisma.AbsensiGuruDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>
+        }
+        update: {
+          args: Prisma.AbsensiGuruUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>
+        }
+        deleteMany: {
+          args: Prisma.AbsensiGuruDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AbsensiGuruUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AbsensiGuruUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>[]
+        }
+        upsert: {
+          args: Prisma.AbsensiGuruUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AbsensiGuruPayload>
+        }
+        aggregate: {
+          args: Prisma.AbsensiGuruAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAbsensiGuru>
+        }
+        groupBy: {
+          args: Prisma.AbsensiGuruGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AbsensiGuruGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AbsensiGuruCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AbsensiGuruCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1938,6 +2088,7 @@ export const PembayaranScalarFieldEnum = {
   totalPembayaranLaundry: 'totalPembayaranLaundry',
   buktiPembayaran: 'buktiPembayaran',
   tanggalPembayaran: 'tanggalPembayaran',
+  periodePembayaran: 'periodePembayaran',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2147,6 +2298,39 @@ export const NilaiEkstrakurikulerScalarFieldEnum = {
 } as const
 
 export type NilaiEkstrakurikulerScalarFieldEnum = (typeof NilaiEkstrakurikulerScalarFieldEnum)[keyof typeof NilaiEkstrakurikulerScalarFieldEnum]
+
+
+export const GuruScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  nip: 'nip',
+  tempatLahir: 'tempatLahir',
+  tanggalLahir: 'tanggalLahir',
+  jenisKelamin: 'jenisKelamin',
+  alamat: 'alamat',
+  noTelp: 'noTelp',
+  email: 'email',
+  jabatan: 'jabatan',
+  mataPelajaran: 'mataPelajaran',
+  isAktif: 'isAktif',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GuruScalarFieldEnum = (typeof GuruScalarFieldEnum)[keyof typeof GuruScalarFieldEnum]
+
+
+export const AbsensiGuruScalarFieldEnum = {
+  id: 'id',
+  guruId: 'guruId',
+  tanggal: 'tanggal',
+  status: 'status',
+  keterangan: 'keterangan',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AbsensiGuruScalarFieldEnum = (typeof AbsensiGuruScalarFieldEnum)[keyof typeof AbsensiGuruScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2579,6 +2763,8 @@ export type GlobalOmitConfig = {
   waliKelas?: Prisma.WaliKelasOmit
   ekstrakurikuler?: Prisma.EkstrakurikulerOmit
   nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerOmit
+  guru?: Prisma.GuruOmit
+  absensiGuru?: Prisma.AbsensiGuruOmit
 }
 
 /* Types for Logging */

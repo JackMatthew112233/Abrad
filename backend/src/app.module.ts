@@ -20,6 +20,7 @@ import { EkstrakurikulerModule } from './ekstrakurikuler/ekstrakurikuler.module.
 import { NilaiEkstrakurikulerModule } from './nilai-ekstrakurikuler/nilai-ekstrakurikuler.module.js';
 import { SekolahModule } from './sekolah/sekolah.module.js';
 import { BackupModule } from './backup/backup.module.js';
+import { GuruModule } from './guru/guru.module.js';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { BackupModule } from './backup/backup.module.js';
     NilaiEkstrakurikulerModule,
     SekolahModule,
     BackupModule,
+    GuruModule,
   ],
   controllers: [AppController],
   providers: [AppService],

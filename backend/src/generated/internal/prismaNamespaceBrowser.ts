@@ -69,7 +69,9 @@ export const ModelName = {
   PengeluaranKoperasi: 'PengeluaranKoperasi',
   WaliKelas: 'WaliKelas',
   Ekstrakurikuler: 'Ekstrakurikuler',
-  NilaiEkstrakurikuler: 'NilaiEkstrakurikuler'
+  NilaiEkstrakurikuler: 'NilaiEkstrakurikuler',
+  Guru: 'Guru',
+  AbsensiGuru: 'AbsensiGuru'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -159,6 +161,7 @@ export const PembayaranScalarFieldEnum = {
   totalPembayaranLaundry: 'totalPembayaranLaundry',
   buktiPembayaran: 'buktiPembayaran',
   tanggalPembayaran: 'tanggalPembayaran',
+  periodePembayaran: 'periodePembayaran',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -368,6 +371,39 @@ export const NilaiEkstrakurikulerScalarFieldEnum = {
 } as const
 
 export type NilaiEkstrakurikulerScalarFieldEnum = (typeof NilaiEkstrakurikulerScalarFieldEnum)[keyof typeof NilaiEkstrakurikulerScalarFieldEnum]
+
+
+export const GuruScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  nip: 'nip',
+  tempatLahir: 'tempatLahir',
+  tanggalLahir: 'tanggalLahir',
+  jenisKelamin: 'jenisKelamin',
+  alamat: 'alamat',
+  noTelp: 'noTelp',
+  email: 'email',
+  jabatan: 'jabatan',
+  mataPelajaran: 'mataPelajaran',
+  isAktif: 'isAktif',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GuruScalarFieldEnum = (typeof GuruScalarFieldEnum)[keyof typeof GuruScalarFieldEnum]
+
+
+export const AbsensiGuruScalarFieldEnum = {
+  id: 'id',
+  guruId: 'guruId',
+  tanggal: 'tanggal',
+  status: 'status',
+  keterangan: 'keterangan',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AbsensiGuruScalarFieldEnum = (typeof AbsensiGuruScalarFieldEnum)[keyof typeof AbsensiGuruScalarFieldEnum]
 
 
 export const SortOrder = {

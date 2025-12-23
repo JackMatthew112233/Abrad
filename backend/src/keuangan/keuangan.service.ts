@@ -532,6 +532,7 @@ export class KeuanganService {
       totalPembayaranInfaq: number;
       totalPembayaranLaundry: number;
       tanggalPembayaran: string;
+      periodePembayaran?: string;
     },
     file: any,
   ) {
@@ -557,6 +558,7 @@ export class KeuanganService {
         totalPembayaranLaundry: data.totalPembayaranLaundry,
         buktiPembayaran: uploadResult.url,
         tanggalPembayaran: new Date(data.tanggalPembayaran),
+        periodePembayaran: data.periodePembayaran,
       },
       include: {
         siswa: {
@@ -708,6 +710,7 @@ export class KeuanganService {
       totalPembayaranInfaq: number;
       totalPembayaranLaundry: number;
       tanggalPembayaran: string;
+      periodePembayaran?: string;
     },
     file?: any,
   ) {
@@ -723,6 +726,7 @@ export class KeuanganService {
       totalPembayaranInfaq: data.totalPembayaranInfaq,
       totalPembayaranLaundry: data.totalPembayaranLaundry,
       tanggalPembayaran: new Date(data.tanggalPembayaran),
+      periodePembayaran: data.periodePembayaran,
     };
 
     // If new file uploaded, upload it and update URL

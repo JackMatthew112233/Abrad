@@ -8,18 +8,16 @@ export class MataPelajaranService {
   async getSummaryByKelas() {
     // Get all kelas enum values
     const allKelas = [
-      'VII_Putra',
-      'VIII_Putra',
-      'IX_Putra',
-      'X_Putra',
-      'XI_Putra',
-      'XII_Putra',
-      'VII_Putri',
-      'VIII_Putri',
-      'IX_Putri',
-      'X_Putri',
-      'XI_Putri',
-      'XII_Putri',
+      // TK
+      'TK_1', 'TK_2', 'TK_3',
+      // SD Putra
+      'I_SD_Putra', 'II_SD_Putra', 'III_SD_Putra', 'IV_SD_Putra', 'V_SD_Putra', 'VI_SD_Putra',
+      // SD Putri
+      'I_SD_Putri', 'II_SD_Putri', 'III_SD_Putri', 'IV_SD_Putri', 'V_SD_Putri', 'VI_SD_Putri',
+      // Wustha (SMP/MTs)
+      'VII_Putra', 'VIII_Putra', 'IX_Putra', 'VII_Putri', 'VIII_Putri', 'IX_Putri',
+      // Ulya (SMA/MA)
+      'X_Putra', 'XI_Putra', 'XII_Putra', 'X_Putri', 'XI_Putri', 'XII_Putri',
     ];
 
     const summary = await Promise.all(

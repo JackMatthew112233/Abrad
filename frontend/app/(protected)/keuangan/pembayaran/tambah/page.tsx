@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft, Search, Save, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -26,10 +33,16 @@ export default function TambahPembayaranPage() {
   const [showResults, setShowResults] = useState(false);
   const [buktiPembayaran, setBuktiPembayaran] = useState<File | null>(null);
   const [useToday, setUseToday] = useState(true);
+  const currentDate = new Date();
+  const currentMonth = currentDate.toLocaleString("id-ID", { month: "long" });
+  const currentYear = currentDate.getFullYear();
+  
   const [formData, setFormData] = useState({
     totalPembayaranInfaq: "",
     totalPembayaranLaundry: "",
     tanggalPembayaran: new Date().toISOString().split("T")[0],
+    periodeBulan: currentMonth,
+    periodeTahun: currentYear.toString(),
   });
 
   useEffect(() => {
@@ -89,6 +102,7 @@ export default function TambahPembayaranPage() {
       formDataToSend.append("totalPembayaranInfaq", formData.totalPembayaranInfaq);
       formDataToSend.append("totalPembayaranLaundry", formData.totalPembayaranLaundry);
       formDataToSend.append("tanggalPembayaran", formData.tanggalPembayaran);
+      formDataToSend.append("periodePembayaran", `${formData.periodeBulan} ${formData.periodeTahun}`);
       formDataToSend.append("buktiPembayaran", buktiPembayaran);
 
       const response = await fetch(
@@ -317,6 +331,55 @@ export default function TambahPembayaranPage() {
                   required
                   className={`text-xs lg:text-sm h-9 lg:h-10 ${useToday ? "bg-zinc-50 cursor-not-allowed" : ""}`}
                 />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs lg:text-sm">
+                Periode Pembayaran <span className="text-red-500">*</span>
+              </Label>
+              <div className="grid gap-4 grid-cols-2">
+                <Select
+                  value={formData.periodeBulan}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, periodeBulan: value })
+                  }
+                >
+                  <SelectTrigger className="text-xs lg:text-sm h-9 lg:h-10">
+                    <SelectValue placeholder="Pilih bulan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Januari">Januari</SelectItem>
+                    <SelectItem value="Februari">Februari</SelectItem>
+                    <SelectItem value="Maret">Maret</SelectItem>
+                    <SelectItem value="April">April</SelectItem>
+                    <SelectItem value="Mei">Mei</SelectItem>
+                    <SelectItem value="Juni">Juni</SelectItem>
+                    <SelectItem value="Juli">Juli</SelectItem>
+                    <SelectItem value="Agustus">Agustus</SelectItem>
+                    <SelectItem value="September">September</SelectItem>
+                    <SelectItem value="Oktober">Oktober</SelectItem>
+                    <SelectItem value="November">November</SelectItem>
+                    <SelectItem value="Desember">Desember</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={formData.periodeTahun}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, periodeTahun: value })
+                  }
+                >
+                  <SelectTrigger className="text-xs lg:text-sm h-9 lg:h-10">
+                    <SelectValue placeholder="Pilih tahun" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2023">2023</SelectItem>
+                    <SelectItem value="2024">2024</SelectItem>
+                    <SelectItem value="2025">2025</SelectItem>
+                    <SelectItem value="2026">2026</SelectItem>
+                    <SelectItem value="2027">2027</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

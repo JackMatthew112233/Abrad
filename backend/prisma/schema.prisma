@@ -30,20 +30,42 @@ enum JenisKelamin {
 }
 
 enum Tingkatan {
+  TK
+  SD
   WUSTHA
   ULYA
 }
 
 enum Kelas {
+  // TK
+  TK_1
+  TK_2
+  TK_3
+  // SD Putra
+  I_SD_Putra
+  II_SD_Putra
+  III_SD_Putra
+  IV_SD_Putra
+  V_SD_Putra
+  VI_SD_Putra
+  // SD Putri
+  I_SD_Putri
+  II_SD_Putri
+  III_SD_Putri
+  IV_SD_Putri
+  V_SD_Putri
+  VI_SD_Putri
+  // SMP/MTs (Wustha)
   VII_Putra
   VIII_Putra
   IX_Putra
-  X_Putra
-  XI_Putra
-  XII_Putra
   VII_Putri
   VIII_Putri
   IX_Putri
+  // SMA/MA (Ulya)
+  X_Putra
+  XI_Putra
+  XII_Putra
   X_Putri
   XI_Putri
   XII_Putri
@@ -60,6 +82,8 @@ enum JenisAbsensi {
   KELAS
   ASRAMA
   PENGAJIAN
+  TAHZIN_TAHFIDZ
+  GURU
 }
 
 enum JenisSanksi {
@@ -200,6 +224,7 @@ model Pembayaran {
   totalPembayaranLaundry Decimal
   buktiPembayaran       String
   tanggalPembayaran     DateTime @db.Date
+  periodePembayaran     String?  // Format: "Januari 2025", "Februari 2025", etc.
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
@@ -450,4 +475,43 @@ model NilaiEkstrakurikuler {
   @@index([ekstrakurikulerId])
   @@index([semester])
   @@index([tahunAjaran])
+}
+
+model Guru {
+  id           String       @id @default(cuid())
+  nama         String
+  nip          String?      @unique
+  tempatLahir  String?
+  tanggalLahir DateTime?
+  jenisKelamin JenisKelamin?
+  alamat       String?
+  noTelp       String?
+  email        String?
+  jabatan      String?
+  mataPelajaran String?
+  isAktif      Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  absensi      AbsensiGuru[]
+
+  @@map("guru")
+  @@index([nama])
+  @@index([isAktif])
+}
+
+model AbsensiGuru {
+  id         String        @id @default(cuid())
+  guruId     String
+  guru       Guru          @relation(fields: [guruId], references: [id], onDelete: Cascade)
+  tanggal    DateTime      @db.Date
+  status     StatusAbsensi
+  keterangan String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@unique([guruId, tanggal])
+  @@map("absensi_guru")
+  @@index([guruId])
+  @@index([tanggal])
+  @@index([status])
 }
