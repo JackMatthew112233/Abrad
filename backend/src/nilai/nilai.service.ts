@@ -1122,26 +1122,7 @@ export class NilaiService {
       });
     }
 
-    // III. UMUM (If any)
-    if (data.nilai.umum && data.nilai.umum.length > 0) {
-      worksheet.mergeCells(`A${currentRow}:D${currentRow}`);
-      worksheet.getCell(`A${currentRow}`).value = 'III. UMUM';
-      worksheet.getCell(`A${currentRow}`).font = { bold: true };
-      currentRow++;
 
-      data.nilai.umum.forEach((item: any, index: number) => {
-        this.addGradeRow(
-          worksheet,
-          currentRow,
-          index + 1,
-          item.mataPelajaran,
-          Number(item.nilai),
-        );
-        currentRow++;
-      });
-    }
-
-    currentRow += 1;
 
     // --- Ekstrakurikuler ---
     worksheet.mergeCells(`A${currentRow}:D${currentRow}`);
