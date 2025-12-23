@@ -8,14 +8,31 @@ import {
   Param,
   Query,
   UseGuards,
+  Res,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
+import type { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { NilaiService } from './nilai.service.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { uploadToSupabase } from '../utils/supabase-upload.util.js';
 
 @Controller('nilai')
 @UseGuards(JwtAuthGuard)
 export class NilaiController {
-  constructor(private readonly nilaiService: NilaiService) {}
+  constructor(private readonly nilaiService: NilaiService) { }
+
+  @Post('upload-logo')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadLogo(@UploadedFile() file: any) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
+    const result = await uploadToSupabase(file.buffer, file.originalname, 'Evidence');
+    return { url: result.url };
+  }
 
   @Get('by-siswa')
   async getNilaiBySiswaList(
@@ -37,6 +54,52 @@ export class NilaiController {
   @Get('statistik')
   async getStatistikNilai() {
     return this.nilaiService.getStatistikNilai();
+  }
+
+  @Get('raport/preview/:siswaId')
+  async getRaportPreview(
+    @Param('siswaId') siswaId: string,
+    @Query('semester') semester: string,
+    @Query('tahunAjaran') tahunAjaran: string,
+  ) {
+    return this.nilaiService.getRaportPreview(siswaId, semester, tahunAjaran);
+  }
+
+  @Get('raport/:siswaId')
+  async downloadRaport(
+    @Param('siswaId') siswaId: string,
+    @Query('semester') semester: string,
+    @Query('tahunAjaran') tahunAjaran: string,
+    @Res() res: Response,
+  ) {
+    const buffer = await this.nilaiService.downloadRaport(
+      siswaId,
+      semester,
+      tahunAjaran,
+    );
+
+    res.set({
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename=Raport-${siswaId}.xlsx`,
+      'Content-Length': (buffer as any).length,
+    });
+
+    res.end(buffer);
+  }
+
+  @Post('raport/generate')
+  async generateRaport(@Body() data: any, @Res() res: Response) {
+    const buffer = await this.nilaiService.generateRaportFromData(data);
+
+    res.set({
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename=Raport-${data.siswa.nama}.xlsx`,
+      'Content-Length': (buffer as any).length,
+    });
+
+    res.end(buffer);
   }
 
   @Get('terbaru')

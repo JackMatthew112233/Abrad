@@ -73,6 +73,11 @@ export type Nilai = Prisma.NilaiModel
  */
 export type MataPelajaran = Prisma.MataPelajaranModel
 /**
+ * Model Sekolah
+ * 
+ */
+export type Sekolah = Prisma.SekolahModel
+/**
  * Model Donasi
  * 
  */
@@ -92,3 +97,18 @@ export type PemasukanKoperasi = Prisma.PemasukanKoperasiModel
  * 
  */
 export type PengeluaranKoperasi = Prisma.PengeluaranKoperasiModel
+/**
+ * Model WaliKelas
+ * 
+ */
+export type WaliKelas = Prisma.WaliKelasModel
+/**
+ * Model Ekstrakurikuler
+ * 
+ */
+export type Ekstrakurikuler = Prisma.EkstrakurikulerModel
+/**
+ * Model NilaiEkstrakurikuler
+ * 
+ */
+export type NilaiEkstrakurikuler = Prisma.NilaiEkstrakurikulerModel

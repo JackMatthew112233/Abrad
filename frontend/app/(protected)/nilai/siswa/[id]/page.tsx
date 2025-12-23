@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Edit, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { toast } from "sonner";
 import {
   Table,
@@ -25,6 +25,23 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Nilai {
   id: string;
@@ -67,9 +84,25 @@ export default function DetailNilaiSiswaPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string>("");
+  const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
+  const [selectedSemester, setSelectedSemester] = useState("Ganjil");
+  const [selectedTahunAjaran, setSelectedTahunAjaran] = useState("2024/2025");
+
+  // Ekstrakurikuler State
+  const [ekstraList, setEkstraList] = useState<any[]>([]);
+  const [siswaEkstraList, setSiswaEkstraList] = useState<any[]>([]);
+  const [isEkstraDialogOpen, setIsEkstraDialogOpen] = useState(false);
+  const [selectedEkstra, setSelectedEkstra] = useState<any>(null);
+  const [ekstraFormData, setEkstraFormData] = useState({
+    ekstrakurikulerId: "",
+    nilai: "",
+    semester: "Ganjil",
+    tahunAjaran: "2024/2025",
+  });
 
   useEffect(() => {
     fetchData();
+    fetchEkstraData();
   }, [siswaId]);
 
   const fetchData = async (page: number = 1) => {
@@ -96,6 +129,29 @@ export default function DetailNilaiSiswaPage() {
       toast.error("Gagal memuat data nilai");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchEkstraData = async () => {
+    try {
+      // Fetch master data ekstrakurikuler
+      const resEkstra = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ekstrakurikuler`, {
+        credentials: "include",
+      });
+      if (resEkstra.ok) {
+        setEkstraList(await resEkstra.json());
+      }
+
+      // Fetch siswa nilai ekstrakurikuler
+      const resSiswaEkstra = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/nilai-ekstrakurikuler/siswa/${siswaId}`,
+        { credentials: "include" }
+      );
+      if (resSiswaEkstra.ok) {
+        setSiswaEkstraList(await resSiswaEkstra.json());
+      }
+    } catch (error) {
+      console.error("Gagal memuat data ekstrakurikuler");
     }
   };
 
@@ -134,6 +190,80 @@ export default function DetailNilaiSiswaPage() {
     }
   };
 
+  const handleDownloadRaport = () => {
+    setDownloadDialogOpen(false);
+    router.push(`/nilai/raport/preview/${siswaId}?semester=${selectedSemester}&tahunAjaran=${selectedTahunAjaran}`);
+  };
+
+  const openDownloadDialog = () => {
+    const latestNilai =
+      nilaiList.find((n) => n.jenisNilai === "UAS") || nilaiList[0];
+    setSelectedSemester(latestNilai?.semester || "Ganjil");
+    setSelectedTahunAjaran(latestNilai?.tahunAjaran || "2024/2025");
+    setDownloadDialogOpen(true);
+  };
+
+  // Ekstrakurikuler Handlers
+  const handleOpenEkstraDialog = (item?: any) => {
+    if (item) {
+      setSelectedEkstra(item);
+      setEkstraFormData({
+        ekstrakurikulerId: item.ekstrakurikulerId,
+        nilai: item.nilai,
+        semester: item.semester,
+        tahunAjaran: item.tahunAjaran,
+      });
+    } else {
+      setSelectedEkstra(null);
+      setEkstraFormData({
+        ekstrakurikulerId: "",
+        nilai: "",
+        semester: "Ganjil",
+        tahunAjaran: "2024/2025",
+      });
+    }
+    setIsEkstraDialogOpen(true);
+  };
+
+  const handleSaveEkstra = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/nilai-ekstrakurikuler`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          siswaId,
+          ...ekstraFormData,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Gagal menyimpan nilai ekstrakurikuler");
+
+      toast.success("Nilai ekstrakurikuler berhasil disimpan");
+      setIsEkstraDialogOpen(false);
+      fetchEkstraData();
+    } catch (error) {
+      toast.error("Gagal menyimpan nilai ekstrakurikuler");
+    }
+  };
+
+  const handleDeleteEkstra = async (id: string) => {
+    if (!confirm("Hapus nilai ini?")) return;
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/nilai-ekstrakurikuler/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (response.ok) {
+        toast.success("Berhasil dihapus");
+        fetchEkstraData();
+      }
+    } catch (e) {
+      toast.error("Gagal menghapus");
+    }
+  }
+
   if (isLoading && !siswa) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -166,6 +296,15 @@ export default function DetailNilaiSiswaPage() {
           <p className="text-zinc-600">
             {siswa?.nama} • {siswa?.tingkatan} • {siswa?.kelas?.replace(/_/g, " ")}
           </p>
+        </div>
+        <div className="ml-auto">
+          <Button
+            onClick={openDownloadDialog}
+            className="bg-emerald-600 hover:bg-emerald-700"
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Unduh Raport
+          </Button>
         </div>
       </div>
 
@@ -337,11 +476,10 @@ export default function DetailNilaiSiswaPage() {
                           variant={page === pagination.page ? "default" : "outline"}
                           size="sm"
                           onClick={() => handlePageChange(page)}
-                          className={`h-8 w-8 p-0 ${
-                            page === pagination.page
-                              ? "bg-emerald-600 hover:bg-emerald-700"
-                              : ""
-                          }`}
+                          className={`h-8 w-8 p-0 ${page === pagination.page
+                            ? "bg-emerald-600 hover:bg-emerald-700"
+                            : ""
+                            }`}
                         >
                           {page}
                         </Button>
@@ -360,6 +498,56 @@ export default function DetailNilaiSiswaPage() {
               </div>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Nilai Ekstrakurikuler Table */}
+      <Card className="border-zinc-200 bg-white mt-6">
+        <CardHeader>
+          <CardTitle className="text-base font-semibold text-emerald-700">
+            Nilai Ekstrakurikuler
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-emerald-50">
+                <TableHead className="font-semibold text-emerald-700">Kegiatan</TableHead>
+                <TableHead className="font-semibold text-emerald-700">Nilai</TableHead>
+                <TableHead className="font-semibold text-emerald-700">Semester</TableHead>
+                <TableHead className="font-semibold text-emerald-700">Tahun Ajaran</TableHead>
+                <TableHead className="text-center font-semibold text-emerald-700">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {siswaEkstraList.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-6 text-zinc-500">
+                    Belum ada data ekstrakurikuler
+                  </TableCell>
+                </TableRow>
+              ) : (
+                siswaEkstraList.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium">{item.ekstrakurikuler?.nama}</TableCell>
+                    <TableCell>{item.nilai}</TableCell>
+                    <TableCell>{item.semester}</TableCell>
+                    <TableCell>{item.tahunAjaran}</TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex justify-center gap-2">
+                        <Button variant="ghost" size="icon" onClick={() => handleOpenEkstraDialog(item)}>
+                          <Edit className="h-4 w-4 text-blue-600" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteEkstra(item.id)}>
+                          <Trash2 className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
 
@@ -383,6 +571,124 @@ export default function DetailNilaiSiswaPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Download Raport Dialog */}
+      <Dialog open={downloadDialogOpen} onOpenChange={setDownloadDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Unduh Raport</DialogTitle>
+            <DialogDescription>
+              Pilih periode semester dan tahun ajaran untuk raport yang akan diunduh.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="semester" className="text-right">
+                Semester
+              </Label>
+              <Select
+                value={selectedSemester}
+                onValueChange={setSelectedSemester}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Pilih semester" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Ganjil">Ganjil</SelectItem>
+                  <SelectItem value="Genap">Genap</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="tahunAjaran" className="text-right whitespace-nowrap">
+                Tahun Ajaran
+              </Label>
+              <Input
+                id="tahunAjaran"
+                value={selectedTahunAjaran}
+                onChange={(e) => setSelectedTahunAjaran(e.target.value)}
+                className="col-span-3"
+                placeholder="2024/2025"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              type="submit"
+              onClick={handleDownloadRaport}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              Unduh
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Ekstrakurikuler Input Dialog */}
+      <Dialog open={isEkstraDialogOpen} onOpenChange={setIsEkstraDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selectedEkstra ? "Edit Nilai Ekstra" : "Tambah Nilai Ekstra"}</DialogTitle>
+            <DialogDescription>Input nilai kegiatan ekstrakurikuler siswa</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSaveEkstra}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label>Kegiatan</Label>
+                <Select
+                  value={ekstraFormData.ekstrakurikulerId}
+                  onValueChange={(val) => setEkstraFormData({ ...ekstraFormData, ekstrakurikulerId: val })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih Kegiatan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ekstraList.map((ek) => (
+                      <SelectItem key={ek.id} value={ek.id}>{ek.nama}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label>Nilai</Label>
+                <Input
+                  value={ekstraFormData.nilai}
+                  onChange={(e) => setEkstraFormData({ ...ekstraFormData, nilai: e.target.value })}
+                  placeholder="Contoh: A, B, Baik, Sangat Baik"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label>Semester</Label>
+                  <Select
+                    value={ekstraFormData.semester}
+                    onValueChange={(val) => setEkstraFormData({ ...ekstraFormData, semester: val })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih semester" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Ganjil">Ganjil</SelectItem>
+                      <SelectItem value="Genap">Genap</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label>Tahun Ajaran</Label>
+                  <Input
+                    value={ekstraFormData.tahunAjaran}
+                    onChange={(e) => setEkstraFormData({ ...ekstraFormData, tahunAjaran: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsEkstraDialogOpen(false)}>Batal</Button>
+              <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">Simpan</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

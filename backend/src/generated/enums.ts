@@ -132,7 +132,9 @@ export const JenisPemasukanKoperasi = {
   SIMPANAN_POKOK: 'SIMPANAN_POKOK',
   SIMPANAN_WAJIB: 'SIMPANAN_WAJIB',
   SIMPANAN_SUKARELA: 'SIMPANAN_SUKARELA',
-  PENYERTAAN_MODAL: 'PENYERTAAN_MODAL'
+  PENYERTAAN_MODAL: 'PENYERTAAN_MODAL',
+  PENJUALAN: 'PENJUALAN',
+  USAHA_LAIN: 'USAHA_LAIN'
 } as const
 
 export type JenisPemasukanKoperasi = (typeof JenisPemasukanKoperasi)[keyof typeof JenisPemasukanKoperasi]
@@ -152,3 +154,12 @@ export const JenisAsuransi = {
 } as const
 
 export type JenisAsuransi = (typeof JenisAsuransi)[keyof typeof JenisAsuransi]
+
+
+export const KategoriMapel = {
+  KEPESANTRENAN: 'KEPESANTRENAN',
+  KEKHUSUSAN: 'KEKHUSUSAN',
+  UMUM: 'UMUM'
+} as const
+
+export type KategoriMapel = (typeof KategoriMapel)[keyof typeof KategoriMapel]

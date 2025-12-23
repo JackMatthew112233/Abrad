@@ -440,6 +440,13 @@ export type EnumKelasFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumKelasFilter<$PrismaModel> | $Enums.Kelas
 }
 
+export type EnumKategoriMapelFilter<$PrismaModel = never> = {
+  equals?: $Enums.KategoriMapel | Prisma.EnumKategoriMapelFieldRefInput<$PrismaModel>
+  in?: $Enums.KategoriMapel[] | Prisma.ListEnumKategoriMapelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KategoriMapel[] | Prisma.ListEnumKategoriMapelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKategoriMapelFilter<$PrismaModel> | $Enums.KategoriMapel
+}
+
 export type EnumKelasWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.Kelas | Prisma.EnumKelasFieldRefInput<$PrismaModel>
   in?: $Enums.Kelas[] | Prisma.ListEnumKelasFieldRefInput<$PrismaModel>
@@ -448,6 +455,16 @@ export type EnumKelasWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumKelasFilter<$PrismaModel>
   _max?: Prisma.NestedEnumKelasFilter<$PrismaModel>
+}
+
+export type EnumKategoriMapelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KategoriMapel | Prisma.EnumKategoriMapelFieldRefInput<$PrismaModel>
+  in?: $Enums.KategoriMapel[] | Prisma.ListEnumKategoriMapelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KategoriMapel[] | Prisma.ListEnumKategoriMapelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKategoriMapelWithAggregatesFilter<$PrismaModel> | $Enums.KategoriMapel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKategoriMapelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKategoriMapelFilter<$PrismaModel>
 }
 
 export type EnumJenisPemasukanKoperasiFilter<$PrismaModel = never> = {
@@ -923,6 +940,13 @@ export type NestedEnumKelasFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumKelasFilter<$PrismaModel> | $Enums.Kelas
 }
 
+export type NestedEnumKategoriMapelFilter<$PrismaModel = never> = {
+  equals?: $Enums.KategoriMapel | Prisma.EnumKategoriMapelFieldRefInput<$PrismaModel>
+  in?: $Enums.KategoriMapel[] | Prisma.ListEnumKategoriMapelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KategoriMapel[] | Prisma.ListEnumKategoriMapelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKategoriMapelFilter<$PrismaModel> | $Enums.KategoriMapel
+}
+
 export type NestedEnumKelasWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.Kelas | Prisma.EnumKelasFieldRefInput<$PrismaModel>
   in?: $Enums.Kelas[] | Prisma.ListEnumKelasFieldRefInput<$PrismaModel>
@@ -931,6 +955,16 @@ export type NestedEnumKelasWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumKelasFilter<$PrismaModel>
   _max?: Prisma.NestedEnumKelasFilter<$PrismaModel>
+}
+
+export type NestedEnumKategoriMapelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KategoriMapel | Prisma.EnumKategoriMapelFieldRefInput<$PrismaModel>
+  in?: $Enums.KategoriMapel[] | Prisma.ListEnumKategoriMapelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KategoriMapel[] | Prisma.ListEnumKategoriMapelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKategoriMapelWithAggregatesFilter<$PrismaModel> | $Enums.KategoriMapel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKategoriMapelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKategoriMapelFilter<$PrismaModel>
 }
 
 export type NestedEnumJenisPemasukanKoperasiFilter<$PrismaModel = never> = {

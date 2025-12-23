@@ -268,6 +268,12 @@ export default function TambahPemasukanPage() {
                   <SelectItem value="PENYERTAAN_MODAL" className="text-xs lg:text-sm">
                     Penyertaan Modal
                   </SelectItem>
+                  <SelectItem value="PENJUALAN" className="text-xs lg:text-sm">
+                    Penjualan
+                  </SelectItem>
+                  <SelectItem value="USAHA_LAIN" className="text-xs lg:text-sm">
+                    Usaha Lain
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>

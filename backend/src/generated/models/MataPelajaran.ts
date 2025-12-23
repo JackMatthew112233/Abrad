@@ -28,6 +28,7 @@ export type MataPelajaranMinAggregateOutputType = {
   id: string | null
   nama: string | null
   kelas: $Enums.Kelas | null
+  kategori: $Enums.KategoriMapel | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -36,6 +37,7 @@ export type MataPelajaranMaxAggregateOutputType = {
   id: string | null
   nama: string | null
   kelas: $Enums.Kelas | null
+  kategori: $Enums.KategoriMapel | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +46,7 @@ export type MataPelajaranCountAggregateOutputType = {
   id: number
   nama: number
   kelas: number
+  kategori: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -54,6 +57,7 @@ export type MataPelajaranMinAggregateInputType = {
   id?: true
   nama?: true
   kelas?: true
+  kategori?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -62,6 +66,7 @@ export type MataPelajaranMaxAggregateInputType = {
   id?: true
   nama?: true
   kelas?: true
+  kategori?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -70,6 +75,7 @@ export type MataPelajaranCountAggregateInputType = {
   id?: true
   nama?: true
   kelas?: true
+  kategori?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -151,6 +157,7 @@ export type MataPelajaranGroupByOutputType = {
   id: string
   nama: string
   kelas: $Enums.Kelas
+  kategori: $Enums.KategoriMapel
   createdAt: Date
   updatedAt: Date
   _count: MataPelajaranCountAggregateOutputType | null
@@ -180,6 +187,7 @@ export type MataPelajaranWhereInput = {
   id?: Prisma.StringFilter<"MataPelajaran"> | string
   nama?: Prisma.StringFilter<"MataPelajaran"> | string
   kelas?: Prisma.EnumKelasFilter<"MataPelajaran"> | $Enums.Kelas
+  kategori?: Prisma.EnumKategoriMapelFilter<"MataPelajaran"> | $Enums.KategoriMapel
   createdAt?: Prisma.DateTimeFilter<"MataPelajaran"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MataPelajaran"> | Date | string
 }
@@ -188,6 +196,7 @@ export type MataPelajaranOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nama?: Prisma.SortOrder
   kelas?: Prisma.SortOrder
+  kategori?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -199,6 +208,7 @@ export type MataPelajaranWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MataPelajaranWhereInput | Prisma.MataPelajaranWhereInput[]
   nama?: Prisma.StringFilter<"MataPelajaran"> | string
   kelas?: Prisma.EnumKelasFilter<"MataPelajaran"> | $Enums.Kelas
+  kategori?: Prisma.EnumKategoriMapelFilter<"MataPelajaran"> | $Enums.KategoriMapel
   createdAt?: Prisma.DateTimeFilter<"MataPelajaran"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MataPelajaran"> | Date | string
 }, "id">
@@ -207,6 +217,7 @@ export type MataPelajaranOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nama?: Prisma.SortOrder
   kelas?: Prisma.SortOrder
+  kategori?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MataPelajaranCountOrderByAggregateInput
@@ -221,6 +232,7 @@ export type MataPelajaranScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"MataPelajaran"> | string
   nama?: Prisma.StringWithAggregatesFilter<"MataPelajaran"> | string
   kelas?: Prisma.EnumKelasWithAggregatesFilter<"MataPelajaran"> | $Enums.Kelas
+  kategori?: Prisma.EnumKategoriMapelWithAggregatesFilter<"MataPelajaran"> | $Enums.KategoriMapel
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MataPelajaran"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MataPelajaran"> | Date | string
 }
@@ -229,6 +241,7 @@ export type MataPelajaranCreateInput = {
   id?: string
   nama: string
   kelas: $Enums.Kelas
+  kategori?: $Enums.KategoriMapel
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -237,6 +250,7 @@ export type MataPelajaranUncheckedCreateInput = {
   id?: string
   nama: string
   kelas: $Enums.Kelas
+  kategori?: $Enums.KategoriMapel
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -245,6 +259,7 @@ export type MataPelajaranUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   kelas?: Prisma.EnumKelasFieldUpdateOperationsInput | $Enums.Kelas
+  kategori?: Prisma.EnumKategoriMapelFieldUpdateOperationsInput | $Enums.KategoriMapel
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -253,6 +268,7 @@ export type MataPelajaranUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   kelas?: Prisma.EnumKelasFieldUpdateOperationsInput | $Enums.Kelas
+  kategori?: Prisma.EnumKategoriMapelFieldUpdateOperationsInput | $Enums.KategoriMapel
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -261,6 +277,7 @@ export type MataPelajaranCreateManyInput = {
   id?: string
   nama: string
   kelas: $Enums.Kelas
+  kategori?: $Enums.KategoriMapel
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -269,6 +286,7 @@ export type MataPelajaranUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   kelas?: Prisma.EnumKelasFieldUpdateOperationsInput | $Enums.Kelas
+  kategori?: Prisma.EnumKategoriMapelFieldUpdateOperationsInput | $Enums.KategoriMapel
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -277,6 +295,7 @@ export type MataPelajaranUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   kelas?: Prisma.EnumKelasFieldUpdateOperationsInput | $Enums.Kelas
+  kategori?: Prisma.EnumKategoriMapelFieldUpdateOperationsInput | $Enums.KategoriMapel
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -285,6 +304,7 @@ export type MataPelajaranCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nama?: Prisma.SortOrder
   kelas?: Prisma.SortOrder
+  kategori?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -293,6 +313,7 @@ export type MataPelajaranMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nama?: Prisma.SortOrder
   kelas?: Prisma.SortOrder
+  kategori?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -301,6 +322,7 @@ export type MataPelajaranMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nama?: Prisma.SortOrder
   kelas?: Prisma.SortOrder
+  kategori?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -309,12 +331,17 @@ export type EnumKelasFieldUpdateOperationsInput = {
   set?: $Enums.Kelas
 }
 
+export type EnumKategoriMapelFieldUpdateOperationsInput = {
+  set?: $Enums.KategoriMapel
+}
+
 
 
 export type MataPelajaranSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nama?: boolean
   kelas?: boolean
+  kategori?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["mataPelajaran"]>
@@ -323,6 +350,7 @@ export type MataPelajaranSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   nama?: boolean
   kelas?: boolean
+  kategori?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["mataPelajaran"]>
@@ -331,6 +359,7 @@ export type MataPelajaranSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   nama?: boolean
   kelas?: boolean
+  kategori?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["mataPelajaran"]>
@@ -339,11 +368,12 @@ export type MataPelajaranSelectScalar = {
   id?: boolean
   nama?: boolean
   kelas?: boolean
+  kategori?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MataPelajaranOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "kelas" | "createdAt" | "updatedAt", ExtArgs["result"]["mataPelajaran"]>
+export type MataPelajaranOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "kelas" | "kategori" | "createdAt" | "updatedAt", ExtArgs["result"]["mataPelajaran"]>
 
 export type $MataPelajaranPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "MataPelajaran"
@@ -352,6 +382,7 @@ export type $MataPelajaranPayload<ExtArgs extends runtime.Types.Extensions.Inter
     id: string
     nama: string
     kelas: $Enums.Kelas
+    kategori: $Enums.KategoriMapel
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["mataPelajaran"]>
@@ -780,6 +811,7 @@ export interface MataPelajaranFieldRefs {
   readonly id: Prisma.FieldRef<"MataPelajaran", 'String'>
   readonly nama: Prisma.FieldRef<"MataPelajaran", 'String'>
   readonly kelas: Prisma.FieldRef<"MataPelajaran", 'Kelas'>
+  readonly kategori: Prisma.FieldRef<"MataPelajaran", 'KategoriMapel'>
   readonly createdAt: Prisma.FieldRef<"MataPelajaran", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MataPelajaran", 'DateTime'>
 }

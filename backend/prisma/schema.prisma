@@ -104,6 +104,8 @@ enum JenisPemasukanKoperasi {
   SIMPANAN_WAJIB
   SIMPANAN_SUKARELA
   PENYERTAAN_MODAL
+  PENJUALAN
+  USAHA_LAIN
 }
 
 enum JenisPengeluaranKoperasi {
@@ -168,6 +170,7 @@ model Siswa {
   pelanggaran     Pelanggaran[]
   kesehatan       Kesehatan[]
   nilai           Nilai[]
+  nilaiEkstrakurikuler NilaiEkstrakurikuler[]
   tahfidz         Tahfidz[]
 
   @@map("siswa")
@@ -314,11 +317,32 @@ model MataPelajaran {
   id        String   @id @default(cuid())
   nama      String
   kelas     Kelas
+  kategori  KategoriMapel @default(UMUM)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("mata_pelajaran")
   @@index([kelas])
+}
+
+enum KategoriMapel {
+  KEPESANTRENAN
+  KEKHUSUSAN
+  UMUM
+}
+
+model Sekolah {
+  id           String   @id @default(cuid())
+  namaSekolah  String   @default("PONDOK PESANTREN DDI ABRAD")
+  alamat       String?
+  logoKiriUrl  String?
+  logoKananUrl String?
+  headerText1  String?  @default("LAPORAN HASIL BELAJAR")
+  headerText2  String?  @default("MARHALAH WUSTHA PONDOK PESANTREN DDI ABRAD")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("sekolah")
 }
 
 model Donasi {
@@ -381,4 +405,46 @@ model PengeluaranKoperasi {
   @@index([anggotaId])
   @@index([jenis])
   @@index([tanggal])
+}
+
+model WaliKelas {
+  id        String   @id @default(cuid())
+  namaGuru  String
+  kelas     Kelas    @unique
+  noTelp    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("wali_kelas")
+  @@index([kelas])
+}
+
+model Ekstrakurikuler {
+  id          String                 @id @default(cuid())
+  nama        String
+  keterangan  String?
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  nilai       NilaiEkstrakurikuler[]
+
+  @@map("ekstrakurikuler")
+}
+
+model NilaiEkstrakurikuler {
+  id                String          @id @default(cuid())
+  siswaId           String
+  siswa             Siswa           @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  ekstrakurikulerId String
+  ekstrakurikuler   Ekstrakurikuler @relation(fields: [ekstrakurikulerId], references: [id], onDelete: Cascade)
+  nilai             String
+  semester          String
+  tahunAjaran       String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("nilai_ekstrakurikuler")
+  @@index([siswaId])
+  @@index([ekstrakurikulerId])
+  @@index([semester])
+  @@index([tahunAjaran])
 }

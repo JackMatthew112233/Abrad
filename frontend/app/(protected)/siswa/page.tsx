@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -70,6 +70,9 @@ interface PaginationInfo {
 export default function SiswaPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [filterTingkatan, setFilterTingkatan] = useState("Semua Tingkatan");
+  const [filterKelas, setFilterKelas] = useState("Semua Kelas");
   const [siswaList, setSiswaList] = useState<Siswa[]>([]);
   const [stats, setStats] = useState<Statistik>({
     totalSiswa: 0,
@@ -91,15 +94,34 @@ export default function SiswaPage() {
   const [downloadKelas, setDownloadKelas] = useState("");
   const [downloadTingkatan, setDownloadTingkatan] = useState("");
 
+  // Debounce search query
   useEffect(() => {
-    fetchData();
-  }, []);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    // Reset ke halaman 1 saat filter berubah
+    setPagination(prev => ({ ...prev, page: 1 }));
+    fetchData(1);
+  }, [debouncedSearch, filterTingkatan, filterKelas]);
 
   const fetchData = async (page: number = 1) => {
     try {
       setIsLoading(true);
+      
+      // Build query params for filter
+      const params = new URLSearchParams();
+      params.append("page", page.toString());
+      params.append("limit", "20");
+      if (debouncedSearch) params.append("search", debouncedSearch);
+      if (filterTingkatan && filterTingkatan !== "Semua Tingkatan") params.append("tingkatan", filterTingkatan);
+      if (filterKelas && filterKelas !== "Semua Kelas") params.append("kelas", filterKelas);
+      
       const [siswaResponse, statsResponse] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/siswa?page=${page}&limit=20`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/siswa?${params.toString()}`, {
           credentials: "include",
         }),
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/siswa/statistik`, {
@@ -127,10 +149,8 @@ export default function SiswaPage() {
     fetchData(newPage);
   };
 
-  const filteredSiswa = siswaList.filter((siswa) =>
-    siswa.nama?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    siswa.nik?.includes(searchQuery)
-  );
+  // Data sudah difilter dari server, tidak perlu filter client-side lagi
+  const filteredSiswa = siswaList;
 
   const totalSiswa = stats.totalSiswa;
   const siswaLakiLaki = stats.siswaLakiLaki;
@@ -275,14 +295,46 @@ export default function SiswaPage() {
         </CardHeader>
         <CardContent>
           <div className="mb-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
-              <Input
-                placeholder="Cari nama atau NIK santri / santriwati..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 text-xs lg:text-sm placeholder:text-xs lg:placeholder:text-sm"
-              />
+            <div className="flex flex-col sm:flex-row gap-2 lg:gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                <Input
+                  placeholder="Cari nama atau NIK santri / santriwati..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 text-xs lg:text-sm placeholder:text-xs lg:placeholder:text-sm h-9 lg:h-10"
+                />
+              </div>
+              <Select value={filterTingkatan} onValueChange={setFilterTingkatan}>
+                <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
+                  <SelectValue placeholder="Pilih Tingkatan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Semua Tingkatan">Semua Tingkatan</SelectItem>
+                  <SelectItem value="WUSTHA">WUSTHA</SelectItem>
+                  <SelectItem value="ULYA">ULYA</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={filterKelas} onValueChange={setFilterKelas}>
+                <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px] text-xs lg:text-sm h-9 lg:h-10">
+                  <SelectValue placeholder="Pilih Kelas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Semua Kelas">Semua Kelas</SelectItem>
+                  <SelectItem value="VII_Putra">VII Putra</SelectItem>
+                  <SelectItem value="VIII_Putra">VIII Putra</SelectItem>
+                  <SelectItem value="IX_Putra">IX Putra</SelectItem>
+                  <SelectItem value="X_Putra">X Putra</SelectItem>
+                  <SelectItem value="XI_Putra">XI Putra</SelectItem>
+                  <SelectItem value="XII_Putra">XII Putra</SelectItem>
+                  <SelectItem value="VII_Putri">VII Putri</SelectItem>
+                  <SelectItem value="VIII_Putri">VIII Putri</SelectItem>
+                  <SelectItem value="IX_Putri">IX Putri</SelectItem>
+                  <SelectItem value="X_Putri">X Putri</SelectItem>
+                  <SelectItem value="XI_Putri">XI Putri</SelectItem>
+                  <SelectItem value="XII_Putri">XII Putri</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

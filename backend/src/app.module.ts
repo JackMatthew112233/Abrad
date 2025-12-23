@@ -15,6 +15,10 @@ import { KoperasiModule } from './koperasi/koperasi.module.js';
 import { TahfidzModule } from './tahfidz/tahfidz.module.js';
 import { DashboardModule } from './dashboard/dashboard.module.js';
 import { PendaftaranModule } from './pendaftaran/pendaftaran.module.js';
+import { WaliKelasModule } from './wali-kelas/wali-kelas.module.js';
+import { EkstrakurikulerModule } from './ekstrakurikuler/ekstrakurikuler.module.js';
+import { NilaiEkstrakurikulerModule } from './nilai-ekstrakurikuler/nilai-ekstrakurikuler.module.js';
+import { SekolahModule } from './sekolah/sekolah.module.js';
 
 @Module({
   imports: [
@@ -32,8 +36,13 @@ import { PendaftaranModule } from './pendaftaran/pendaftaran.module.js';
     TahfidzModule,
     DashboardModule,
     PendaftaranModule,
+    PendaftaranModule,
+    WaliKelasModule,
+    NilaiEkstrakurikulerModule,
+    SekolahModule,
+    NilaiEkstrakurikulerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

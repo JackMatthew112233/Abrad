@@ -14,6 +14,7 @@ import {
   X, 
   Landmark,
   UserCheck,
+  GraduationCap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -58,6 +59,11 @@ const userMenuItems = [
     href: "/nilai",
     icon: BookOpen,
   },
+  {
+    title: "Kelola Wali Kelas",
+    href: "/wali-kelas",
+    icon: GraduationCap,
+  },
 ];
 
 const adminMenuItems = [
@@ -99,7 +105,7 @@ export function Sidebar({ isOpen = true, onClose, userRole = "User" }: SidebarPr
         <div className="flex h-16 items-center justify-between border-b border-zinc-200 px-6">
           <div className="flex items-center gap-3">
             <School className="h-6 w-6 text-emerald-600" />
-            <h1 className="text-xl font-bold text-emerald-700">ABRAD SCHOOL</h1>
+            <h1 className="text-xl font-bold text-emerald-700">DDI ABRAD</h1>
           </div>
           <button
             onClick={onClose}

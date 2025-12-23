@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -88,6 +88,7 @@ interface PaginationInfo {
 export default function NilaiPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [filterTingkatan, setFilterTingkatan] = useState("Semua Tingkatan");
   const [filterKelas, setFilterKelas] = useState("Semua Kelas");
   const [siswaList, setSiswaList] = useState<NilaiBySiswa[]>([]);
@@ -113,17 +114,35 @@ export default function NilaiPage() {
   });
   const [isLoading, setIsLoading] = useState(true);
 
+  // Debounce search query
   useEffect(() => {
-    fetchAllData();
-  }, []);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    // Reset ke halaman 1 saat filter berubah
+    setPagination(prev => ({ ...prev, page: 1 }));
+    fetchAllData(1);
+  }, [debouncedSearch, filterTingkatan, filterKelas]);
 
   const fetchAllData = async (page: number = 1) => {
     try {
       setIsLoading(true);
 
+      // Build query params for filter
+      const params = new URLSearchParams();
+      params.append("page", page.toString());
+      params.append("limit", "20");
+      if (debouncedSearch) params.append("search", debouncedSearch);
+      if (filterTingkatan && filterTingkatan !== "Semua Tingkatan") params.append("tingkatan", filterTingkatan);
+      if (filterKelas && filterKelas !== "Semua Kelas") params.append("kelas", filterKelas);
+
       const [siswaRes, statsRes, terbarRes, tahfidzStatsRes] = await Promise.all([
         fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/nilai/by-siswa?page=${page}&limit=20`,
+          `${process.env.NEXT_PUBLIC_API_URL}/nilai/by-siswa?${params.toString()}`,
           { credentials: "include" }
         ),
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/nilai/statistik`, {
@@ -187,17 +206,8 @@ export default function NilaiPage() {
     return `${date.getDate()} ${bulan[date.getMonth()]} ${date.getFullYear()}`;
   };
 
-  const filteredSiswa = siswaList.filter((item) => {
-    const matchSearch =
-      !searchQuery ||
-      item.siswa.nama?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchTingkatan =
-      filterTingkatan === "Semua Tingkatan" ||
-      item.siswa.tingkatan === filterTingkatan;
-    const matchKelas =
-      filterKelas === "Semua Kelas" || item.siswa.kelas === filterKelas;
-    return matchSearch && matchTingkatan && matchKelas;
-  });
+  // Data sudah difilter dari server, tidak perlu filter client-side lagi
+  const filteredSiswa = siswaList;
 
   return (
     <div className="space-y-4 lg:space-y-6">
@@ -232,8 +242,8 @@ export default function NilaiPage() {
           </CardHeader>
           <CardContent>
             <div className="text-xl lg:text-2xl font-bold text-emerald-700">
-              {isLoading 
-                ? "..." 
+              {isLoading
+                ? "..."
                 : statistik.rataRataAdDurusAlFiqhiyyahFiqh?.toFixed(1) || "-"}
             </div>
             <p className="text-xs text-zinc-500 mt-1">
@@ -251,8 +261,8 @@ export default function NilaiPage() {
           </CardHeader>
           <CardContent>
             <div className="text-xl lg:text-2xl font-bold text-emerald-700">
-              {isLoading 
-                ? "..." 
+              {isLoading
+                ? "..."
                 : statistik.rataRataQiraahAlKutub?.toFixed(1) || "-"}
             </div>
             <p className="text-xs text-zinc-500 mt-1">
@@ -270,8 +280,8 @@ export default function NilaiPage() {
           </CardHeader>
           <CardContent>
             <div className="text-xl lg:text-2xl font-bold text-emerald-700">
-              {isLoading 
-                ? "..." 
+              {isLoading
+                ? "..."
                 : statistik.rataRataKeDDIan?.toFixed(1) || "-"}
             </div>
             <p className="text-xs text-zinc-500 mt-1">
@@ -292,12 +302,12 @@ export default function NilaiPage() {
               {isLoading
                 ? "..."
                 : tahfidzStatistik.modusJuz
-                ? `Juz ${tahfidzStatistik.modusJuz}`
-                : "-"}
+                  ? `Juz ${tahfidzStatistik.modusJuz}`
+                  : "-"}
             </div>
             <p className="text-xs text-zinc-500 mt-1">
-              {tahfidzStatistik.modusJuzCount > 0 
-                ? `${tahfidzStatistik.modusJuzCount} santri` 
+              {tahfidzStatistik.modusJuzCount > 0
+                ? `${tahfidzStatistik.modusJuzCount} santri`
                 : "Belum ada data"}
             </p>
           </CardContent>
@@ -330,6 +340,20 @@ export default function NilaiPage() {
               >
                 <Plus className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
                 <span className="hidden sm:inline">Tambah </span>Nilai
+              </Button>
+              <Button
+                onClick={() => router.push("/ekstrakurikuler")}
+                className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9"
+              >
+                <Award className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                <span className="hidden sm:inline">Kelola </span>Ekstrakurikuler
+              </Button>
+              <Button
+                onClick={() => router.push("/nilai/tambah-ekstra")}
+                className="bg-emerald-600 hover:bg-emerald-700 text-xs lg:text-sm h-8 lg:h-9"
+              >
+                <Plus className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                <span className="hidden sm:inline">Tambah </span>Nilai Ekstrakurikuler
               </Button>
             </div>
           </div>
@@ -517,11 +541,10 @@ export default function NilaiPage() {
                           }
                           size="sm"
                           onClick={() => handlePageChange(page)}
-                          className={`h-8 w-8 p-0 text-xs lg:text-sm ${
-                            page === pagination.page
-                              ? "bg-emerald-600 hover:bg-emerald-700"
-                              : ""
-                          }`}
+                          className={`h-8 w-8 p-0 text-xs lg:text-sm ${page === pagination.page
+                            ? "bg-emerald-600 hover:bg-emerald-700"
+                            : ""
+                            }`}
                         >
                           {page}
                         </Button>

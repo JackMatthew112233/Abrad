@@ -396,6 +396,7 @@ export type SiswaWhereInput = {
   pelanggaran?: Prisma.PelanggaranListRelationFilter
   kesehatan?: Prisma.KesehatanListRelationFilter
   nilai?: Prisma.NilaiListRelationFilter
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerListRelationFilter
   tahfidz?: Prisma.TahfidzListRelationFilter
 }
 
@@ -437,6 +438,7 @@ export type SiswaOrderByWithRelationInput = {
   pelanggaran?: Prisma.PelanggaranOrderByRelationAggregateInput
   kesehatan?: Prisma.KesehatanOrderByRelationAggregateInput
   nilai?: Prisma.NilaiOrderByRelationAggregateInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerOrderByRelationAggregateInput
   tahfidz?: Prisma.TahfidzOrderByRelationAggregateInput
 }
 
@@ -481,6 +483,7 @@ export type SiswaWhereUniqueInput = Prisma.AtLeast<{
   pelanggaran?: Prisma.PelanggaranListRelationFilter
   kesehatan?: Prisma.KesehatanListRelationFilter
   nilai?: Prisma.NilaiListRelationFilter
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerListRelationFilter
   tahfidz?: Prisma.TahfidzListRelationFilter
 }, "id">
 
@@ -596,6 +599,7 @@ export type SiswaCreateInput = {
   pelanggaran?: Prisma.PelanggaranCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzCreateNestedManyWithoutSiswaInput
 }
 
@@ -637,6 +641,7 @@ export type SiswaUncheckedCreateInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanUncheckedCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiUncheckedCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzUncheckedCreateNestedManyWithoutSiswaInput
 }
 
@@ -678,6 +683,7 @@ export type SiswaUpdateInput = {
   pelanggaran?: Prisma.PelanggaranUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUpdateManyWithoutSiswaNestedInput
 }
 
@@ -719,6 +725,7 @@ export type SiswaUncheckedUpdateInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUncheckedUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUncheckedUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUncheckedUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1053,6 +1060,20 @@ export type SiswaUpdateOneRequiredWithoutNilaiNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SiswaUpdateToOneWithWhereWithoutNilaiInput, Prisma.SiswaUpdateWithoutNilaiInput>, Prisma.SiswaUncheckedUpdateWithoutNilaiInput>
 }
 
+export type SiswaCreateNestedOneWithoutNilaiEkstrakurikulerInput = {
+  create?: Prisma.XOR<Prisma.SiswaCreateWithoutNilaiEkstrakurikulerInput, Prisma.SiswaUncheckedCreateWithoutNilaiEkstrakurikulerInput>
+  connectOrCreate?: Prisma.SiswaCreateOrConnectWithoutNilaiEkstrakurikulerInput
+  connect?: Prisma.SiswaWhereUniqueInput
+}
+
+export type SiswaUpdateOneRequiredWithoutNilaiEkstrakurikulerNestedInput = {
+  create?: Prisma.XOR<Prisma.SiswaCreateWithoutNilaiEkstrakurikulerInput, Prisma.SiswaUncheckedCreateWithoutNilaiEkstrakurikulerInput>
+  connectOrCreate?: Prisma.SiswaCreateOrConnectWithoutNilaiEkstrakurikulerInput
+  upsert?: Prisma.SiswaUpsertWithoutNilaiEkstrakurikulerInput
+  connect?: Prisma.SiswaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SiswaUpdateToOneWithWhereWithoutNilaiEkstrakurikulerInput, Prisma.SiswaUpdateWithoutNilaiEkstrakurikulerInput>, Prisma.SiswaUncheckedUpdateWithoutNilaiEkstrakurikulerInput>
+}
+
 export type SiswaCreateWithoutBiodataKeuanganInput = {
   id?: string
   nama?: string | null
@@ -1090,6 +1111,7 @@ export type SiswaCreateWithoutBiodataKeuanganInput = {
   pelanggaran?: Prisma.PelanggaranCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzCreateNestedManyWithoutSiswaInput
 }
 
@@ -1130,6 +1152,7 @@ export type SiswaUncheckedCreateWithoutBiodataKeuanganInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanUncheckedCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiUncheckedCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzUncheckedCreateNestedManyWithoutSiswaInput
 }
 
@@ -1186,6 +1209,7 @@ export type SiswaUpdateWithoutBiodataKeuanganInput = {
   pelanggaran?: Prisma.PelanggaranUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1226,6 +1250,7 @@ export type SiswaUncheckedUpdateWithoutBiodataKeuanganInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUncheckedUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUncheckedUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUncheckedUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1266,6 +1291,7 @@ export type SiswaCreateWithoutPembayaranInput = {
   pelanggaran?: Prisma.PelanggaranCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzCreateNestedManyWithoutSiswaInput
 }
 
@@ -1306,6 +1332,7 @@ export type SiswaUncheckedCreateWithoutPembayaranInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanUncheckedCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiUncheckedCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzUncheckedCreateNestedManyWithoutSiswaInput
 }
 
@@ -1362,6 +1389,7 @@ export type SiswaUpdateWithoutPembayaranInput = {
   pelanggaran?: Prisma.PelanggaranUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1402,6 +1430,7 @@ export type SiswaUncheckedUpdateWithoutPembayaranInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUncheckedUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUncheckedUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUncheckedUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1442,6 +1471,7 @@ export type SiswaCreateWithoutAbsensiInput = {
   pelanggaran?: Prisma.PelanggaranCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzCreateNestedManyWithoutSiswaInput
 }
 
@@ -1482,6 +1512,7 @@ export type SiswaUncheckedCreateWithoutAbsensiInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanUncheckedCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiUncheckedCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzUncheckedCreateNestedManyWithoutSiswaInput
 }
 
@@ -1538,6 +1569,7 @@ export type SiswaUpdateWithoutAbsensiInput = {
   pelanggaran?: Prisma.PelanggaranUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1578,6 +1610,7 @@ export type SiswaUncheckedUpdateWithoutAbsensiInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUncheckedUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUncheckedUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUncheckedUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1618,6 +1651,7 @@ export type SiswaCreateWithoutPelanggaranInput = {
   absensi?: Prisma.AbsensiCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzCreateNestedManyWithoutSiswaInput
 }
 
@@ -1658,6 +1692,7 @@ export type SiswaUncheckedCreateWithoutPelanggaranInput = {
   absensi?: Prisma.AbsensiUncheckedCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanUncheckedCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiUncheckedCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzUncheckedCreateNestedManyWithoutSiswaInput
 }
 
@@ -1714,6 +1749,7 @@ export type SiswaUpdateWithoutPelanggaranInput = {
   absensi?: Prisma.AbsensiUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1754,6 +1790,7 @@ export type SiswaUncheckedUpdateWithoutPelanggaranInput = {
   absensi?: Prisma.AbsensiUncheckedUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUncheckedUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUncheckedUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUncheckedUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1794,6 +1831,7 @@ export type SiswaCreateWithoutKesehatanInput = {
   absensi?: Prisma.AbsensiCreateNestedManyWithoutSiswaInput
   pelanggaran?: Prisma.PelanggaranCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzCreateNestedManyWithoutSiswaInput
 }
 
@@ -1834,6 +1872,7 @@ export type SiswaUncheckedCreateWithoutKesehatanInput = {
   absensi?: Prisma.AbsensiUncheckedCreateNestedManyWithoutSiswaInput
   pelanggaran?: Prisma.PelanggaranUncheckedCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiUncheckedCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzUncheckedCreateNestedManyWithoutSiswaInput
 }
 
@@ -1890,6 +1929,7 @@ export type SiswaUpdateWithoutKesehatanInput = {
   absensi?: Prisma.AbsensiUpdateManyWithoutSiswaNestedInput
   pelanggaran?: Prisma.PelanggaranUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1930,6 +1970,7 @@ export type SiswaUncheckedUpdateWithoutKesehatanInput = {
   absensi?: Prisma.AbsensiUncheckedUpdateManyWithoutSiswaNestedInput
   pelanggaran?: Prisma.PelanggaranUncheckedUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUncheckedUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUncheckedUpdateManyWithoutSiswaNestedInput
 }
 
@@ -1971,6 +2012,7 @@ export type SiswaCreateWithoutTahfidzInput = {
   pelanggaran?: Prisma.PelanggaranCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerCreateNestedManyWithoutSiswaInput
 }
 
 export type SiswaUncheckedCreateWithoutTahfidzInput = {
@@ -2011,6 +2053,7 @@ export type SiswaUncheckedCreateWithoutTahfidzInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanUncheckedCreateNestedManyWithoutSiswaInput
   nilai?: Prisma.NilaiUncheckedCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedCreateNestedManyWithoutSiswaInput
 }
 
 export type SiswaCreateOrConnectWithoutTahfidzInput = {
@@ -2067,6 +2110,7 @@ export type SiswaUpdateWithoutTahfidzInput = {
   pelanggaran?: Prisma.PelanggaranUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUpdateManyWithoutSiswaNestedInput
 }
 
 export type SiswaUncheckedUpdateWithoutTahfidzInput = {
@@ -2107,6 +2151,7 @@ export type SiswaUncheckedUpdateWithoutTahfidzInput = {
   pelanggaran?: Prisma.PelanggaranUncheckedUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUncheckedUpdateManyWithoutSiswaNestedInput
   nilai?: Prisma.NilaiUncheckedUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedUpdateManyWithoutSiswaNestedInput
 }
 
 export type SiswaCreateWithoutNilaiInput = {
@@ -2146,6 +2191,7 @@ export type SiswaCreateWithoutNilaiInput = {
   absensi?: Prisma.AbsensiCreateNestedManyWithoutSiswaInput
   pelanggaran?: Prisma.PelanggaranCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzCreateNestedManyWithoutSiswaInput
 }
 
@@ -2186,6 +2232,7 @@ export type SiswaUncheckedCreateWithoutNilaiInput = {
   absensi?: Prisma.AbsensiUncheckedCreateNestedManyWithoutSiswaInput
   pelanggaran?: Prisma.PelanggaranUncheckedCreateNestedManyWithoutSiswaInput
   kesehatan?: Prisma.KesehatanUncheckedCreateNestedManyWithoutSiswaInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedCreateNestedManyWithoutSiswaInput
   tahfidz?: Prisma.TahfidzUncheckedCreateNestedManyWithoutSiswaInput
 }
 
@@ -2242,6 +2289,7 @@ export type SiswaUpdateWithoutNilaiInput = {
   absensi?: Prisma.AbsensiUpdateManyWithoutSiswaNestedInput
   pelanggaran?: Prisma.PelanggaranUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUpdateManyWithoutSiswaNestedInput
 }
 
@@ -2282,6 +2330,187 @@ export type SiswaUncheckedUpdateWithoutNilaiInput = {
   absensi?: Prisma.AbsensiUncheckedUpdateManyWithoutSiswaNestedInput
   pelanggaran?: Prisma.PelanggaranUncheckedUpdateManyWithoutSiswaNestedInput
   kesehatan?: Prisma.KesehatanUncheckedUpdateManyWithoutSiswaNestedInput
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerUncheckedUpdateManyWithoutSiswaNestedInput
+  tahfidz?: Prisma.TahfidzUncheckedUpdateManyWithoutSiswaNestedInput
+}
+
+export type SiswaCreateWithoutNilaiEkstrakurikulerInput = {
+  id?: string
+  nama?: string | null
+  kelas?: $Enums.Kelas | null
+  tingkatan?: $Enums.Tingkatan | null
+  nisn?: string | null
+  npsn?: string | null
+  sekolahAsal?: string | null
+  nis?: string | null
+  nik?: string | null
+  tempatLahir?: string | null
+  tanggalLahir?: Date | string | null
+  alamat?: string | null
+  kodePos?: string | null
+  namaAyah?: string | null
+  nikAyah?: string | null
+  ttlAyah?: string | null
+  noKartuKeluarga?: string | null
+  pekerjaanAyah?: string | null
+  pendidikanAyah?: string | null
+  noTelpAyah?: string | null
+  namaIbu?: string | null
+  nikIbu?: string | null
+  ttlIbu?: string | null
+  pekerjaanIbu?: string | null
+  pendidikanIbu?: string | null
+  noTelpIbu?: string | null
+  jenisKelamin?: $Enums.JenisKelamin | null
+  isAktif?: boolean
+  status?: $Enums.StatusSiswa
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  biodataKeuangan?: Prisma.BiodataKeuanganCreateNestedOneWithoutSiswaInput
+  pembayaran?: Prisma.PembayaranCreateNestedManyWithoutSiswaInput
+  absensi?: Prisma.AbsensiCreateNestedManyWithoutSiswaInput
+  pelanggaran?: Prisma.PelanggaranCreateNestedManyWithoutSiswaInput
+  kesehatan?: Prisma.KesehatanCreateNestedManyWithoutSiswaInput
+  nilai?: Prisma.NilaiCreateNestedManyWithoutSiswaInput
+  tahfidz?: Prisma.TahfidzCreateNestedManyWithoutSiswaInput
+}
+
+export type SiswaUncheckedCreateWithoutNilaiEkstrakurikulerInput = {
+  id?: string
+  nama?: string | null
+  kelas?: $Enums.Kelas | null
+  tingkatan?: $Enums.Tingkatan | null
+  nisn?: string | null
+  npsn?: string | null
+  sekolahAsal?: string | null
+  nis?: string | null
+  nik?: string | null
+  tempatLahir?: string | null
+  tanggalLahir?: Date | string | null
+  alamat?: string | null
+  kodePos?: string | null
+  namaAyah?: string | null
+  nikAyah?: string | null
+  ttlAyah?: string | null
+  noKartuKeluarga?: string | null
+  pekerjaanAyah?: string | null
+  pendidikanAyah?: string | null
+  noTelpAyah?: string | null
+  namaIbu?: string | null
+  nikIbu?: string | null
+  ttlIbu?: string | null
+  pekerjaanIbu?: string | null
+  pendidikanIbu?: string | null
+  noTelpIbu?: string | null
+  jenisKelamin?: $Enums.JenisKelamin | null
+  isAktif?: boolean
+  status?: $Enums.StatusSiswa
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  biodataKeuangan?: Prisma.BiodataKeuanganUncheckedCreateNestedOneWithoutSiswaInput
+  pembayaran?: Prisma.PembayaranUncheckedCreateNestedManyWithoutSiswaInput
+  absensi?: Prisma.AbsensiUncheckedCreateNestedManyWithoutSiswaInput
+  pelanggaran?: Prisma.PelanggaranUncheckedCreateNestedManyWithoutSiswaInput
+  kesehatan?: Prisma.KesehatanUncheckedCreateNestedManyWithoutSiswaInput
+  nilai?: Prisma.NilaiUncheckedCreateNestedManyWithoutSiswaInput
+  tahfidz?: Prisma.TahfidzUncheckedCreateNestedManyWithoutSiswaInput
+}
+
+export type SiswaCreateOrConnectWithoutNilaiEkstrakurikulerInput = {
+  where: Prisma.SiswaWhereUniqueInput
+  create: Prisma.XOR<Prisma.SiswaCreateWithoutNilaiEkstrakurikulerInput, Prisma.SiswaUncheckedCreateWithoutNilaiEkstrakurikulerInput>
+}
+
+export type SiswaUpsertWithoutNilaiEkstrakurikulerInput = {
+  update: Prisma.XOR<Prisma.SiswaUpdateWithoutNilaiEkstrakurikulerInput, Prisma.SiswaUncheckedUpdateWithoutNilaiEkstrakurikulerInput>
+  create: Prisma.XOR<Prisma.SiswaCreateWithoutNilaiEkstrakurikulerInput, Prisma.SiswaUncheckedCreateWithoutNilaiEkstrakurikulerInput>
+  where?: Prisma.SiswaWhereInput
+}
+
+export type SiswaUpdateToOneWithWhereWithoutNilaiEkstrakurikulerInput = {
+  where?: Prisma.SiswaWhereInput
+  data: Prisma.XOR<Prisma.SiswaUpdateWithoutNilaiEkstrakurikulerInput, Prisma.SiswaUncheckedUpdateWithoutNilaiEkstrakurikulerInput>
+}
+
+export type SiswaUpdateWithoutNilaiEkstrakurikulerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nama?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableEnumKelasFieldUpdateOperationsInput | $Enums.Kelas | null
+  tingkatan?: Prisma.NullableEnumTingkatanFieldUpdateOperationsInput | $Enums.Tingkatan | null
+  nisn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npsn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sekolahAsal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nik?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempatLahir?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kodePos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nikAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ttlAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noKartuKeluarga?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pekerjaanAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendidikanAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noTelpAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nikIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ttlIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pekerjaanIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendidikanIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
+  isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  biodataKeuangan?: Prisma.BiodataKeuanganUpdateOneWithoutSiswaNestedInput
+  pembayaran?: Prisma.PembayaranUpdateManyWithoutSiswaNestedInput
+  absensi?: Prisma.AbsensiUpdateManyWithoutSiswaNestedInput
+  pelanggaran?: Prisma.PelanggaranUpdateManyWithoutSiswaNestedInput
+  kesehatan?: Prisma.KesehatanUpdateManyWithoutSiswaNestedInput
+  nilai?: Prisma.NilaiUpdateManyWithoutSiswaNestedInput
+  tahfidz?: Prisma.TahfidzUpdateManyWithoutSiswaNestedInput
+}
+
+export type SiswaUncheckedUpdateWithoutNilaiEkstrakurikulerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nama?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableEnumKelasFieldUpdateOperationsInput | $Enums.Kelas | null
+  tingkatan?: Prisma.NullableEnumTingkatanFieldUpdateOperationsInput | $Enums.Tingkatan | null
+  nisn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  npsn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sekolahAsal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nik?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempatLahir?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kodePos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nikAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ttlAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noKartuKeluarga?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pekerjaanAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendidikanAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noTelpAyah?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nikIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ttlIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pekerjaanIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendidikanIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noTelpIbu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jenisKelamin?: Prisma.NullableEnumJenisKelaminFieldUpdateOperationsInput | $Enums.JenisKelamin | null
+  isAktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusSiswaFieldUpdateOperationsInput | $Enums.StatusSiswa
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  biodataKeuangan?: Prisma.BiodataKeuanganUncheckedUpdateOneWithoutSiswaNestedInput
+  pembayaran?: Prisma.PembayaranUncheckedUpdateManyWithoutSiswaNestedInput
+  absensi?: Prisma.AbsensiUncheckedUpdateManyWithoutSiswaNestedInput
+  pelanggaran?: Prisma.PelanggaranUncheckedUpdateManyWithoutSiswaNestedInput
+  kesehatan?: Prisma.KesehatanUncheckedUpdateManyWithoutSiswaNestedInput
+  nilai?: Prisma.NilaiUncheckedUpdateManyWithoutSiswaNestedInput
   tahfidz?: Prisma.TahfidzUncheckedUpdateManyWithoutSiswaNestedInput
 }
 
@@ -2296,6 +2525,7 @@ export type SiswaCountOutputType = {
   pelanggaran: number
   kesehatan: number
   nilai: number
+  nilaiEkstrakurikuler: number
   tahfidz: number
 }
 
@@ -2305,6 +2535,7 @@ export type SiswaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   pelanggaran?: boolean | SiswaCountOutputTypeCountPelanggaranArgs
   kesehatan?: boolean | SiswaCountOutputTypeCountKesehatanArgs
   nilai?: boolean | SiswaCountOutputTypeCountNilaiArgs
+  nilaiEkstrakurikuler?: boolean | SiswaCountOutputTypeCountNilaiEkstrakurikulerArgs
   tahfidz?: boolean | SiswaCountOutputTypeCountTahfidzArgs
 }
 
@@ -2356,6 +2587,13 @@ export type SiswaCountOutputTypeCountNilaiArgs<ExtArgs extends runtime.Types.Ext
 /**
  * SiswaCountOutputType without action
  */
+export type SiswaCountOutputTypeCountNilaiEkstrakurikulerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NilaiEkstrakurikulerWhereInput
+}
+
+/**
+ * SiswaCountOutputType without action
+ */
 export type SiswaCountOutputTypeCountTahfidzArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TahfidzWhereInput
 }
@@ -2399,6 +2637,7 @@ export type SiswaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   pelanggaran?: boolean | Prisma.Siswa$pelanggaranArgs<ExtArgs>
   kesehatan?: boolean | Prisma.Siswa$kesehatanArgs<ExtArgs>
   nilai?: boolean | Prisma.Siswa$nilaiArgs<ExtArgs>
+  nilaiEkstrakurikuler?: boolean | Prisma.Siswa$nilaiEkstrakurikulerArgs<ExtArgs>
   tahfidz?: boolean | Prisma.Siswa$tahfidzArgs<ExtArgs>
   _count?: boolean | Prisma.SiswaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["siswa"]>
@@ -2513,6 +2752,7 @@ export type SiswaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   pelanggaran?: boolean | Prisma.Siswa$pelanggaranArgs<ExtArgs>
   kesehatan?: boolean | Prisma.Siswa$kesehatanArgs<ExtArgs>
   nilai?: boolean | Prisma.Siswa$nilaiArgs<ExtArgs>
+  nilaiEkstrakurikuler?: boolean | Prisma.Siswa$nilaiEkstrakurikulerArgs<ExtArgs>
   tahfidz?: boolean | Prisma.Siswa$tahfidzArgs<ExtArgs>
   _count?: boolean | Prisma.SiswaCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -2528,6 +2768,7 @@ export type $SiswaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     pelanggaran: Prisma.$PelanggaranPayload<ExtArgs>[]
     kesehatan: Prisma.$KesehatanPayload<ExtArgs>[]
     nilai: Prisma.$NilaiPayload<ExtArgs>[]
+    nilaiEkstrakurikuler: Prisma.$NilaiEkstrakurikulerPayload<ExtArgs>[]
     tahfidz: Prisma.$TahfidzPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2962,6 +3203,7 @@ export interface Prisma__SiswaClient<T, Null = never, ExtArgs extends runtime.Ty
   pelanggaran<T extends Prisma.Siswa$pelanggaranArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Siswa$pelanggaranArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PelanggaranPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   kesehatan<T extends Prisma.Siswa$kesehatanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Siswa$kesehatanArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KesehatanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   nilai<T extends Prisma.Siswa$nilaiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Siswa$nilaiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NilaiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  nilaiEkstrakurikuler<T extends Prisma.Siswa$nilaiEkstrakurikulerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Siswa$nilaiEkstrakurikulerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NilaiEkstrakurikulerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tahfidz<T extends Prisma.Siswa$tahfidzArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Siswa$tahfidzArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TahfidzPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3547,6 +3789,30 @@ export type Siswa$nilaiArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.NilaiScalarFieldEnum | Prisma.NilaiScalarFieldEnum[]
+}
+
+/**
+ * Siswa.nilaiEkstrakurikuler
+ */
+export type Siswa$nilaiEkstrakurikulerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NilaiEkstrakurikuler
+   */
+  select?: Prisma.NilaiEkstrakurikulerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NilaiEkstrakurikuler
+   */
+  omit?: Prisma.NilaiEkstrakurikulerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NilaiEkstrakurikulerInclude<ExtArgs> | null
+  where?: Prisma.NilaiEkstrakurikulerWhereInput
+  orderBy?: Prisma.NilaiEkstrakurikulerOrderByWithRelationInput | Prisma.NilaiEkstrakurikulerOrderByWithRelationInput[]
+  cursor?: Prisma.NilaiEkstrakurikulerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NilaiEkstrakurikulerScalarFieldEnum | Prisma.NilaiEkstrakurikulerScalarFieldEnum[]
 }
 
 /**

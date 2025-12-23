@@ -6,11 +6,33 @@ import ExcelJS from 'exceljs';
 export class SiswaService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllSiswa(page: number = 1, limit: number = 20, kelas?: string) {
+  async getAllSiswa(
+    page: number = 1,
+    limit: number = 20,
+    search?: string,
+    tingkatan?: string,
+    kelas?: string,
+  ) {
     const skip = (page - 1) * limit;
     
     const where: any = {};
-    if (kelas) {
+    
+    // Filter by search (nama atau NIK)
+    if (search) {
+      where.OR = [
+        { nama: { contains: search, mode: 'insensitive' } },
+        { nik: { contains: search, mode: 'insensitive' } },
+        { nisn: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+    
+    // Filter by tingkatan
+    if (tingkatan && tingkatan !== 'Semua Tingkatan') {
+      where.tingkatan = tingkatan;
+    }
+    
+    // Filter by kelas
+    if (kelas && kelas !== 'Semua Kelas') {
       where.kelas = kelas;
     }
     
@@ -20,7 +42,7 @@ export class SiswaService {
         skip,
         take: limit,
         orderBy: {
-          createdAt: 'desc',
+          nama: 'asc',
         },
       }),
       this.prisma.siswa.count({ where }),

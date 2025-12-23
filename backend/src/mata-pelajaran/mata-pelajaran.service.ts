@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
 export class MataPelajaranService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getSummaryByKelas() {
     // Get all kelas enum values
@@ -96,6 +96,7 @@ export class MataPelajaranService {
       data: {
         nama: data.nama,
         kelas: data.kelas,
+        kategori: data.kategori,
       },
     });
 
@@ -131,6 +132,7 @@ export class MataPelajaranService {
       data: {
         nama: data.nama,
         kelas: data.kelas,
+        kategori: data.kategori,
       },
     });
 

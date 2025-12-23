@@ -395,10 +395,14 @@ export const ModelName = {
   Pengeluaran: 'Pengeluaran',
   Nilai: 'Nilai',
   MataPelajaran: 'MataPelajaran',
+  Sekolah: 'Sekolah',
   Donasi: 'Donasi',
   AnggotaKoperasi: 'AnggotaKoperasi',
   PemasukanKoperasi: 'PemasukanKoperasi',
-  PengeluaranKoperasi: 'PengeluaranKoperasi'
+  PengeluaranKoperasi: 'PengeluaranKoperasi',
+  WaliKelas: 'WaliKelas',
+  Ekstrakurikuler: 'Ekstrakurikuler',
+  NilaiEkstrakurikuler: 'NilaiEkstrakurikuler'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siswa" | "biodataKeuangan" | "pembayaran" | "absensi" | "pelanggaran" | "kesehatan" | "tahfidz" | "pengeluaran" | "nilai" | "mataPelajaran" | "donasi" | "anggotaKoperasi" | "pemasukanKoperasi" | "pengeluaranKoperasi"
+    modelProps: "user" | "siswa" | "biodataKeuangan" | "pembayaran" | "absensi" | "pelanggaran" | "kesehatan" | "tahfidz" | "pengeluaran" | "nilai" | "mataPelajaran" | "sekolah" | "donasi" | "anggotaKoperasi" | "pemasukanKoperasi" | "pengeluaranKoperasi" | "waliKelas" | "ekstrakurikuler" | "nilaiEkstrakurikuler"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1232,6 +1236,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Sekolah: {
+      payload: Prisma.$SekolahPayload<ExtArgs>
+      fields: Prisma.SekolahFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SekolahFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SekolahFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>
+        }
+        findFirst: {
+          args: Prisma.SekolahFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SekolahFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>
+        }
+        findMany: {
+          args: Prisma.SekolahFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>[]
+        }
+        create: {
+          args: Prisma.SekolahCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>
+        }
+        createMany: {
+          args: Prisma.SekolahCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SekolahCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>[]
+        }
+        delete: {
+          args: Prisma.SekolahDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>
+        }
+        update: {
+          args: Prisma.SekolahUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>
+        }
+        deleteMany: {
+          args: Prisma.SekolahDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SekolahUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SekolahUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>[]
+        }
+        upsert: {
+          args: Prisma.SekolahUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SekolahPayload>
+        }
+        aggregate: {
+          args: Prisma.SekolahAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSekolah>
+        }
+        groupBy: {
+          args: Prisma.SekolahGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SekolahGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SekolahCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SekolahCountAggregateOutputType> | number
+        }
+      }
+    }
     Donasi: {
       payload: Prisma.$DonasiPayload<ExtArgs>
       fields: Prisma.DonasiFieldRefs
@@ -1528,6 +1606,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WaliKelas: {
+      payload: Prisma.$WaliKelasPayload<ExtArgs>
+      fields: Prisma.WaliKelasFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WaliKelasFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WaliKelasFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>
+        }
+        findFirst: {
+          args: Prisma.WaliKelasFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WaliKelasFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>
+        }
+        findMany: {
+          args: Prisma.WaliKelasFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>[]
+        }
+        create: {
+          args: Prisma.WaliKelasCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>
+        }
+        createMany: {
+          args: Prisma.WaliKelasCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WaliKelasCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>[]
+        }
+        delete: {
+          args: Prisma.WaliKelasDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>
+        }
+        update: {
+          args: Prisma.WaliKelasUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>
+        }
+        deleteMany: {
+          args: Prisma.WaliKelasDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WaliKelasUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WaliKelasUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>[]
+        }
+        upsert: {
+          args: Prisma.WaliKelasUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaliKelasPayload>
+        }
+        aggregate: {
+          args: Prisma.WaliKelasAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWaliKelas>
+        }
+        groupBy: {
+          args: Prisma.WaliKelasGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WaliKelasGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WaliKelasCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WaliKelasCountAggregateOutputType> | number
+        }
+      }
+    }
+    Ekstrakurikuler: {
+      payload: Prisma.$EkstrakurikulerPayload<ExtArgs>
+      fields: Prisma.EkstrakurikulerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EkstrakurikulerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EkstrakurikulerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>
+        }
+        findFirst: {
+          args: Prisma.EkstrakurikulerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EkstrakurikulerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>
+        }
+        findMany: {
+          args: Prisma.EkstrakurikulerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>[]
+        }
+        create: {
+          args: Prisma.EkstrakurikulerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>
+        }
+        createMany: {
+          args: Prisma.EkstrakurikulerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EkstrakurikulerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>[]
+        }
+        delete: {
+          args: Prisma.EkstrakurikulerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>
+        }
+        update: {
+          args: Prisma.EkstrakurikulerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>
+        }
+        deleteMany: {
+          args: Prisma.EkstrakurikulerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EkstrakurikulerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EkstrakurikulerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>[]
+        }
+        upsert: {
+          args: Prisma.EkstrakurikulerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EkstrakurikulerPayload>
+        }
+        aggregate: {
+          args: Prisma.EkstrakurikulerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEkstrakurikuler>
+        }
+        groupBy: {
+          args: Prisma.EkstrakurikulerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EkstrakurikulerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EkstrakurikulerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EkstrakurikulerCountAggregateOutputType> | number
+        }
+      }
+    }
+    NilaiEkstrakurikuler: {
+      payload: Prisma.$NilaiEkstrakurikulerPayload<ExtArgs>
+      fields: Prisma.NilaiEkstrakurikulerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NilaiEkstrakurikulerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NilaiEkstrakurikulerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>
+        }
+        findFirst: {
+          args: Prisma.NilaiEkstrakurikulerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NilaiEkstrakurikulerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>
+        }
+        findMany: {
+          args: Prisma.NilaiEkstrakurikulerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>[]
+        }
+        create: {
+          args: Prisma.NilaiEkstrakurikulerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>
+        }
+        createMany: {
+          args: Prisma.NilaiEkstrakurikulerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NilaiEkstrakurikulerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>[]
+        }
+        delete: {
+          args: Prisma.NilaiEkstrakurikulerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>
+        }
+        update: {
+          args: Prisma.NilaiEkstrakurikulerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>
+        }
+        deleteMany: {
+          args: Prisma.NilaiEkstrakurikulerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NilaiEkstrakurikulerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NilaiEkstrakurikulerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>[]
+        }
+        upsert: {
+          args: Prisma.NilaiEkstrakurikulerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NilaiEkstrakurikulerPayload>
+        }
+        aggregate: {
+          args: Prisma.NilaiEkstrakurikulerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNilaiEkstrakurikuler>
+        }
+        groupBy: {
+          args: Prisma.NilaiEkstrakurikulerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NilaiEkstrakurikulerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NilaiEkstrakurikulerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NilaiEkstrakurikulerCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1735,11 +2035,27 @@ export const MataPelajaranScalarFieldEnum = {
   id: 'id',
   nama: 'nama',
   kelas: 'kelas',
+  kategori: 'kategori',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type MataPelajaranScalarFieldEnum = (typeof MataPelajaranScalarFieldEnum)[keyof typeof MataPelajaranScalarFieldEnum]
+
+
+export const SekolahScalarFieldEnum = {
+  id: 'id',
+  namaSekolah: 'namaSekolah',
+  alamat: 'alamat',
+  logoKiriUrl: 'logoKiriUrl',
+  logoKananUrl: 'logoKananUrl',
+  headerText1: 'headerText1',
+  headerText2: 'headerText2',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SekolahScalarFieldEnum = (typeof SekolahScalarFieldEnum)[keyof typeof SekolahScalarFieldEnum]
 
 
 export const DonasiScalarFieldEnum = {
@@ -1794,6 +2110,43 @@ export const PengeluaranKoperasiScalarFieldEnum = {
 } as const
 
 export type PengeluaranKoperasiScalarFieldEnum = (typeof PengeluaranKoperasiScalarFieldEnum)[keyof typeof PengeluaranKoperasiScalarFieldEnum]
+
+
+export const WaliKelasScalarFieldEnum = {
+  id: 'id',
+  namaGuru: 'namaGuru',
+  kelas: 'kelas',
+  noTelp: 'noTelp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WaliKelasScalarFieldEnum = (typeof WaliKelasScalarFieldEnum)[keyof typeof WaliKelasScalarFieldEnum]
+
+
+export const EkstrakurikulerScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  keterangan: 'keterangan',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EkstrakurikulerScalarFieldEnum = (typeof EkstrakurikulerScalarFieldEnum)[keyof typeof EkstrakurikulerScalarFieldEnum]
+
+
+export const NilaiEkstrakurikulerScalarFieldEnum = {
+  id: 'id',
+  siswaId: 'siswaId',
+  ekstrakurikulerId: 'ekstrakurikulerId',
+  nilai: 'nilai',
+  semester: 'semester',
+  tahunAjaran: 'tahunAjaran',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NilaiEkstrakurikulerScalarFieldEnum = (typeof NilaiEkstrakurikulerScalarFieldEnum)[keyof typeof NilaiEkstrakurikulerScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2058,6 +2411,20 @@ export type ListEnumJenisNilaiFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'KategoriMapel'
+ */
+export type EnumKategoriMapelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KategoriMapel'>
+    
+
+
+/**
+ * Reference to a field of type 'KategoriMapel[]'
+ */
+export type ListEnumKategoriMapelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KategoriMapel[]'>
+    
+
+
+/**
  * Reference to a field of type 'JenisPemasukanKoperasi'
  */
 export type EnumJenisPemasukanKoperasiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPemasukanKoperasi'>
@@ -2204,10 +2571,14 @@ export type GlobalOmitConfig = {
   pengeluaran?: Prisma.PengeluaranOmit
   nilai?: Prisma.NilaiOmit
   mataPelajaran?: Prisma.MataPelajaranOmit
+  sekolah?: Prisma.SekolahOmit
   donasi?: Prisma.DonasiOmit
   anggotaKoperasi?: Prisma.AnggotaKoperasiOmit
   pemasukanKoperasi?: Prisma.PemasukanKoperasiOmit
   pengeluaranKoperasi?: Prisma.PengeluaranKoperasiOmit
+  waliKelas?: Prisma.WaliKelasOmit
+  ekstrakurikuler?: Prisma.EkstrakurikulerOmit
+  nilaiEkstrakurikuler?: Prisma.NilaiEkstrakurikulerOmit
 }
 
 /* Types for Logging */
