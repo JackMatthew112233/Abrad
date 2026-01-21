@@ -337,13 +337,45 @@ export class GuruService {
     };
   }
 
-  async getStatistikAbsensiGuru(params?: { bulan?: number; tahun?: number }) {
+  async getStatistikAbsensiGuru(params?: { bulan?: number; tahun?: number; periode?: string }) {
     const now = new Date();
-    const bulan = params?.bulan || now.getMonth() + 1;
-    const tahun = params?.tahun || now.getFullYear();
+    
+    let startDate: Date;
+    let endDate: Date;
 
-    const startDate = new Date(tahun, bulan - 1, 1);
-    const endDate = new Date(tahun, bulan, 0);
+    // Handle periode filter
+    if (params?.periode === 'hari-ini') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    } else if (params?.periode === 'minggu-ini') {
+      const dayOfWeek = now.getDay();
+      const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diffToMonday);
+      endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    } else if (params?.bulan && params?.tahun) {
+      // Use bulan/tahun if provided
+      startDate = new Date(params.tahun, params.bulan - 1, 1);
+      endDate = new Date(params.tahun, params.bulan, 0);
+    } else {
+      // Default: all time (no date filter)
+      const stats = await this.prisma.absensiGuru.groupBy({
+        by: ['status'],
+        _count: true,
+      });
+
+      const result = {
+        HADIR: 0,
+        TIDAK_HADIR: 0,
+        SAKIT: 0,
+        IZIN: 0,
+      };
+
+      stats.forEach((stat) => {
+        result[stat.status as keyof typeof result] = stat._count;
+      });
+
+      return result;
+    }
 
     const stats = await this.prisma.absensiGuru.groupBy({
       by: ['status'],
@@ -375,16 +407,31 @@ export class GuruService {
     tahun?: number;
     page?: number;
     limit?: number;
+    periode?: string;
   }) {
     const now = new Date();
-    const bulan = params.bulan || now.getMonth() + 1;
-    const tahun = params.tahun || now.getFullYear();
     const page = params.page || 1;
     const limit = params.limit || 20;
     const skip = (page - 1) * limit;
 
-    const startDate = new Date(tahun, bulan - 1, 1);
-    const endDate = new Date(tahun, bulan, 0);
+    let startDate: Date | undefined;
+    let endDate: Date | undefined;
+
+    // Handle periode filter
+    if (params.periode === 'hari-ini') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    } else if (params.periode === 'minggu-ini') {
+      const dayOfWeek = now.getDay();
+      const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diffToMonday);
+      endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    } else if (params.bulan && params.tahun) {
+      // Use bulan/tahun if provided
+      startDate = new Date(params.tahun, params.bulan - 1, 1);
+      endDate = new Date(params.tahun, params.bulan, 0);
+    }
+    // If no periode and no bulan/tahun, don't set date range (all time)
 
     const [guru, total] = await Promise.all([
       this.prisma.guru.findMany({
@@ -398,15 +445,18 @@ export class GuruService {
 
     const rekapData = await Promise.all(
       guru.map(async (g) => {
+        const whereClause: any = { guruId: g.id };
+        
+        if (startDate && endDate) {
+          whereClause.tanggal = {
+            gte: startDate,
+            lte: endDate,
+          };
+        }
+
         const absensi = await this.prisma.absensiGuru.groupBy({
           by: ['status'],
-          where: {
-            guruId: g.id,
-            tanggal: {
-              gte: startDate,
-              lte: endDate,
-            },
-          },
+          where: whereClause,
           _count: true,
         });
 

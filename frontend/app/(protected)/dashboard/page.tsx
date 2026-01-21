@@ -690,7 +690,7 @@ export default function DashboardPage() {
                   <div className="p-4 bg-emerald-50 rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                      <span className="text-sm text-zinc-600">Santri Putra</span>
+                      <span className="text-sm text-zinc-600">Santri</span>
                     </div>
                     <p className="text-2xl font-bold text-emerald-700">{data.siswa.putra}</p>
                     <p className="text-xs text-zinc-500">{((data.siswa.putra / data.siswa.total) * 100).toFixed(1)}% dari total</p>

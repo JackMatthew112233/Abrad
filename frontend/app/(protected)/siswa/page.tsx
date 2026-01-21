@@ -50,6 +50,7 @@ interface Siswa {
   kelas: string | null;
   tingkatan: string | null;
   isAktif: boolean;
+  status: string | null;
 }
 
 interface Statistik {
@@ -219,7 +220,7 @@ export default function SiswaPage() {
                 {totalSiswa > 0 ? ((siswaLakiLaki / totalSiswa) * 100).toFixed(1) : "0"}% dari total
               </p>
               <p className="text-xs text-zinc-500">
-                Santri laki-laki
+                Santri
               </p>
             </div>
           </CardContent>
@@ -443,12 +444,14 @@ export default function SiswaPage() {
                           <Badge
                             variant="outline"
                             className={
-                              siswa.isAktif
+                              siswa.status === "AKTIF"
                                 ? "border-emerald-300 bg-emerald-50 text-emerald-700 text-xs"
+                                : siswa.status === "LULUS"
+                                ? "border-blue-300 bg-blue-50 text-blue-700 text-xs"
                                 : "border-zinc-300 bg-zinc-50 text-zinc-700 text-xs"
                             }
                           >
-                            {siswa.isAktif ? "Aktif" : "Non-Aktif"}
+                            {siswa.status === "AKTIF" ? "Aktif" : siswa.status === "LULUS" ? "Lulus" : "Tidak Aktif"}
                           </Badge>
                         </TableCell>
                       </TableRow>

@@ -136,6 +136,11 @@ export default function EditSiswaPage() {
         }
       });
 
+      // Sync isAktif based on status
+      if (payload.status) {
+        payload.isAktif = payload.status === "AKTIF";
+      }
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/siswa/${params.id}`, {
         method: "PUT",
         headers: {

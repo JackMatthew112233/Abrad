@@ -71,8 +71,8 @@ export default function TambahSiswaPage() {
         }
       });
 
-      // Set default isAktif to true
-      payload.isAktif = true;
+      // Sync isAktif based on status
+      payload.isAktif = payload.status === "AKTIF";
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/siswa`, {
         method: "POST",

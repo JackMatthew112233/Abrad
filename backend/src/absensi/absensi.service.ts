@@ -262,7 +262,7 @@ export class AbsensiService {
     }));
   }
 
-  async getStatistikAbsensiPerSiswa(jenis?: string, page: number = 1, limit: number = 20) {
+  async getStatistikAbsensiPerSiswa(jenis?: string, page: number = 1, limit: number = 20, startDate?: string, endDate?: string) {
     const skip = (page - 1) * limit;
 
     const [siswaList, total] = await Promise.all([
@@ -298,6 +298,19 @@ export class AbsensiService {
         
         if (jenis) {
           where.jenis = jenis;
+        }
+
+        // Add date range filter
+        if (startDate || endDate) {
+          where.tanggal = {};
+          if (startDate) {
+            where.tanggal.gte = new Date(startDate);
+          }
+          if (endDate) {
+            const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999);
+            where.tanggal.lte = end;
+          }
         }
 
         const absensiStats = await this.prisma.absensi.groupBy({

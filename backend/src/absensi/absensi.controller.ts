@@ -67,8 +67,11 @@ export class AbsensiController {
     @Query('jenis') jenis?: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
+    @Query('periode') periode?: string,
   ) {
-    return this.absensiService.getStatistikAbsensi(jenis, startDate, endDate);
+    // Convert periode to date range
+    const dateRange = this.getDateRangeFromPeriode(periode, startDate, endDate);
+    return this.absensiService.getStatistikAbsensi(jenis, dateRange.startDate, dateRange.endDate);
   }
 
   @Get('statistik-per-siswa')
@@ -76,10 +79,12 @@ export class AbsensiController {
     @Query('jenis') jenis?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('periode') periode?: string,
   ) {
     const pageNum = page ? parseInt(page) : 1;
     const limitNum = limit ? parseInt(limit) : 20;
-    return this.absensiService.getStatistikAbsensiPerSiswa(jenis, pageNum, limitNum);
+    const dateRange = this.getDateRangeFromPeriode(periode);
+    return this.absensiService.getStatistikAbsensiPerSiswa(jenis, pageNum, limitNum, dateRange.startDate, dateRange.endDate);
   }
 
   @Get('today')
@@ -127,5 +132,42 @@ export class AbsensiController {
     );
 
     res.send(buffer);
+  }
+
+  // Helper method to convert periode to date range
+  private getDateRangeFromPeriode(
+    periode?: string,
+    startDate?: string,
+    endDate?: string,
+  ): { startDate?: string; endDate?: string } {
+    if (startDate || endDate) {
+      return { startDate, endDate };
+    }
+
+    if (!periode || periode === 'semua') {
+      return {};
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (periode === 'hari-ini') {
+      const todayStr = today.toISOString().split('T')[0];
+      return { startDate: todayStr, endDate: todayStr };
+    }
+
+    if (periode === 'minggu-ini') {
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6); // Saturday
+      
+      return {
+        startDate: startOfWeek.toISOString().split('T')[0],
+        endDate: endOfWeek.toISOString().split('T')[0],
+      };
+    }
+
+    return {};
   }
 }

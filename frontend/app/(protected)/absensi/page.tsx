@@ -107,6 +107,7 @@ export default function AbsensiPage() {
   // Filter states
   const [filterTingkatan, setFilterTingkatan] = useState("");
   const [filterKelas, setFilterKelas] = useState("");
+  const [filterPeriode, setFilterPeriode] = useState<"hari-ini" | "minggu-ini" | "semua">("semua");
   
   // Dialog states
   const [showInputDialog, setShowInputDialog] = useState(false);
@@ -132,15 +133,20 @@ export default function AbsensiPage() {
       fetchAbsensiData();
       fetchChartData();
     }
-  }, [jenisAbsensi]);
+  }, [jenisAbsensi, filterPeriode]);
 
   const fetchStats = async () => {
     if (!jenisAbsensi) return;
     try {
       // Use different endpoint for GURU
-      const url = jenisAbsensi === "GURU"
+      let url = jenisAbsensi === "GURU"
         ? `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/statistik`
         : `${process.env.NEXT_PUBLIC_API_URL}/absensi/statistik?jenis=${jenisAbsensi}`;
+      
+      // Add periode filter
+      if (filterPeriode !== "semua") {
+        url += jenisAbsensi === "GURU" ? `?periode=${filterPeriode}` : `&periode=${filterPeriode}`;
+      }
       
       const response = await fetch(url, {
         credentials: "include",
@@ -160,9 +166,14 @@ export default function AbsensiPage() {
       setIsLoadingTable(true);
       
       // Use different endpoint for GURU
-      const url = jenisAbsensi === "GURU"
+      let url = jenisAbsensi === "GURU"
         ? `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/rekap?page=${page}&limit=20`
         : `${process.env.NEXT_PUBLIC_API_URL}/absensi/statistik-per-siswa?jenis=${jenisAbsensi}&page=${page}&limit=20`;
+      
+      // Add periode filter
+      if (filterPeriode !== "semua") {
+        url += `&periode=${filterPeriode}`;
+      }
       
       const response = await fetch(url, {
         credentials: "include",
@@ -181,35 +192,30 @@ export default function AbsensiPage() {
 
   const fetchChartData = async () => {
     if (!jenisAbsensi) return;
-    
-    // Skip chart data for GURU (or implement guru-specific charts later)
-    if (jenisAbsensi === "GURU") {
-      setTrendKehadiranData([]);
-      setRadarData([]);
-      return;
-    }
+    // Skip chart data for GURU since charts are not displayed
+    if (jenisAbsensi === "GURU") return;
     
     try {
-      const [trendResponse, radarResponse] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/absensi/trend-bulanan?jenis=${jenisAbsensi}`, {
-          credentials: "include",
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/absensi/distribusi-harian?jenis=${jenisAbsensi}`, {
-          credentials: "include",
-        }),
-      ]);
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/absensi/trend-kehadiran?jenis=${jenisAbsensi}`;
       
-      if (trendResponse.ok && radarResponse.ok) {
-        const trendData = await trendResponse.json();
-        const radarDataResult = await radarResponse.json();
-        
-        setTrendKehadiranData(trendData);
-        setRadarData(radarDataResult);
+      // Add periode filter
+      if (filterPeriode !== "semua") {
+        url += `&periode=${filterPeriode}`;
+      }
+      
+      const response = await fetch(url, {
+        credentials: "include",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setTrendKehadiranData(data.trendKehadiran || []);
+        setRadarData(data.distribusiStatus || []);
       }
     } catch (error) {
       console.error("Error fetching chart data:", error);
     }
   };
+
 
   const handlePageChange = (newPage: number) => {
     fetchAbsensiData(newPage);
@@ -384,6 +390,24 @@ export default function AbsensiPage() {
             </p>
           </div>
         </div>
+      </div>
+
+
+      {/* Filter Periode */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-zinc-600">
+          Filter data berdasarkan periode waktu
+        </p>
+        <Select value={filterPeriode} onValueChange={(value: "hari-ini" | "minggu-ini" | "semua") => setFilterPeriode(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Pilih Periode" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="hari-ini">Hari Ini</SelectItem>
+            <SelectItem value="minggu-ini">Minggu Ini</SelectItem>
+            <SelectItem value="semua">Semua Waktu</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* KPI Cards */}

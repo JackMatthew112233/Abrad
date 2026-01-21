@@ -11,7 +11,32 @@
       "Edit(frontend/app/(protected)/nilai/**)",
       "Edit(backend/src/**)",
       "Bash(mkdir -p /home/aldev/Projects/Abrad/backend/src/guru)",
-      "Edit(frontend/app/(protected)/absensi/**)"
+      "Edit(frontend/app/(protected)/absensi/**)",
+      "Bash(git shortlog:*)",
+      "Bash(ls:*)",
+      "Edit(frontend/components/layout/**)",
+      "Bash(mkdir -p /home/aldev/Projects/Abrad/frontend/app/\\(protected\\)/pembaharuan)",
+      "Bash(sed -n '69,74p' /home/aldev/Projects/Abrad/frontend/components/layout/sidebar.tsx)",
+      "Edit(frontend/app/(protected)/pembaharuan/**)",
+      "Bash(grep:*)",
+      "Edit(frontend/app/(protected)/siswa/tambah/**)",
+      "Edit(frontend/app/(protected)/siswa/[id]/edit/**)",
+      "Edit(frontend/app/(protected)/siswa/**)",
+      "Bash(git -C:*)",
+      "Edit(frontend/app/(protected)/dashboard/**)",
+      "Bash(sed -i '109a\\  const [filterPeriode, setFilterPeriode] = useState<\"hari-ini\" | \"minggu-ini\" | \"semua\">(\"semua\");' /home/aldev/Projects/Abrad/frontend/app/\\(protected\\)/absensi/page.tsx)",
+      "Bash(sed -n '105,115p' /home/aldev/Projects/Abrad/frontend/app/\\(protected\\)/absensi/page.tsx)",
+      "Bash(sed -n '137,156p' /home/aldev/Projects/Abrad/frontend/app/\\(protected\\)/absensi/page.tsx)",
+      "Bash(cat:*)",
+      "Bash(python3 << 'PYTHON'\n# Read the file\nwith open('/home/aldev/Projects/Abrad/frontend/app/(protected)/absensi/page.tsx', 'r') as f:\n    lines = f.readlines()\n\n# Find the line with \"/* KPI Cards */\"\nfilter_ui = '''\n      {/* Filter Periode - Only for non-GURU absensi */}\n      {jenisAbsensi && jenisAbsensi !== \"GURU\" && (\n        <div className=\"flex justify-end\">\n          <Select value={filterPeriode} onValueChange={(value: any) => setFilterPeriode(value)}>\n            <SelectTrigger className=\"w-[180px]\">\n              <SelectValue placeholder=\"Pilih periode\" />\n            </SelectTrigger>\n            <SelectContent>\n              <SelectItem value=\"hari-ini\">Hari Ini</SelectItem>\n              <SelectItem value=\"minggu-ini\">Minggu Ini</SelectItem>\n              <SelectItem value=\"semua\">Semua</SelectItem>\n            </SelectContent>\n          </Select>\n        </div>\n      )}\n\n'''\n\n# Find and insert before \"/* KPI Cards */\"\nfor i, line in enumerate(lines):\n    if '/* KPI Cards */' in line:\n        lines.insert(i, filter_ui)\n        break\n\n# Write back\nwith open('/home/aldev/Projects/Abrad/frontend/app/(protected)/absensi/page.tsx', 'w') as f:\n    f.writelines(lines)\n\nprint(\"Filter UI added successfully before KPI Cards\")\nPYTHON)",
+      "Bash(sed -n '390,410p' /home/aldev/Projects/Abrad/frontend/app/\\(protected\\)/absensi/page.tsx)",
+      "Bash(sed -n '158,182p' /home/aldev/Projects/Abrad/frontend/app/\\(protected\\)/absensi/page.tsx)",
+      "Bash(python3 << 'PYTHON'\nimport re\n\n# Read the file\nwith open('/home/aldev/Projects/Abrad/frontend/app/(protected)/absensi/page.tsx', 'r') as f:\n    content = f.read()\n\n# Update fetchAbsensiData function\npattern = r'  const fetchAbsensiData = async \\(page: number = 1\\) => \\{.*?\\n  \\};'\nnew_function = '''  const fetchAbsensiData = async (page: number = 1) => {\n    if (!jenisAbsensi) return;\n    try {\n      setIsLoadingTable(true);\n      \n      // Use different endpoint for GURU\n      let url = jenisAbsensi === \"GURU\"\n        ? `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/rekap?page=${page}&limit=20`\n        : `${process.env.NEXT_PUBLIC_API_URL}/absensi/statistik-per-siswa?jenis=${jenisAbsensi}&page=${page}&limit=20`;\n      \n      // Add periode filter for non-GURU absensi\n      if (jenisAbsensi !== \"GURU\" && filterPeriode !== \"semua\") {\n        url += `&periode=${filterPeriode}`;\n      }\n      \n      const response = await fetch(url, {\n        credentials: \"include\",\n      });\n      if (response.ok) {\n        const data = await response.json();\n        setAbsensiData(data.data);\n        setPagination(data.pagination);\n      }\n    } catch (error) {\n      console.error(\"Error fetching absensi data:\", error);\n    } finally {\n      setIsLoadingTable(false);\n    }\n  };'''\n\ncontent = re.sub(pattern, new_function, content, flags=re.DOTALL)\n\n# Write back\nwith open('/home/aldev/Projects/Abrad/frontend/app/(protected)/absensi/page.tsx', 'w') as f:\n    f.write(content)\n\nprint(\"fetchAbsensiData function updated successfully\")\nPYTHON)",
+      "Bash(head:*)",
+      "Bash(python3 << 'PYTHON'\nimport re\n\n# Read the file\nwith open('/home/aldev/Projects/Abrad/frontend/app/(protected)/absensi/page.tsx', 'r') as f:\n    content = f.read()\n\n# Update fetchChartData function\npattern = r'  const fetchChartData = async \\(\\) => \\{.*?(?=\\n  const )'\nnew_function = '''  const fetchChartData = async () => {\n    if (!jenisAbsensi) return;\n    try {\n      // Use different endpoint for GURU\n      let url = jenisAbsensi === \"GURU\"\n        ? `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/trend-kehadiran`\n        : `${process.env.NEXT_PUBLIC_API_URL}/absensi/trend-kehadiran?jenis=${jenisAbsensi}`;\n      \n      // Add periode filter for non-GURU absensi\n      if (jenisAbsensi !== \"GURU\" && filterPeriode !== \"semua\") {\n        url += `&periode=${filterPeriode}`;\n      }\n      \n      const response = await fetch(url, {\n        credentials: \"include\",\n      });\n      if (response.ok) {\n        const data = await response.json();\n        setTrendKehadiranData(data.trendKehadiran || []);\n        setRadarData(data.distribusiStatus || []);\n      }\n    } catch (error) {\n      console.error(\"Error fetching chart data:\", error);\n    }\n  };\n\n'''\n\ncontent = re.sub(pattern, new_function, content, flags=re.DOTALL)\n\n# Write back\nwith open('/home/aldev/Projects/Abrad/frontend/app/(protected)/absensi/page.tsx', 'w') as f:\n    f.write(content)\n\nprint(\"fetchChartData function updated successfully\")\nPYTHON)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(pnpm add:*)"
     ]
   }
 }

@@ -16,6 +16,7 @@ import {
   UserCheck,
   GraduationCap,
   Database,
+  Newspaper,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -64,6 +65,12 @@ const userMenuItems = [
     title: "Kelola Wali Kelas",
     href: "/wali-kelas",
     icon: GraduationCap,
+  },
+  {
+    title: "Pembaharuan",
+    href: "/pembaharuan",
+    icon: Newspaper,
+    badge: "BARU",
   },
 ];
 
@@ -142,7 +149,12 @@ export function Sidebar({ isOpen = true, onClose, userRole = "User" }: SidebarPr
                 )}
               >
                 <Icon className="h-5 w-5" />
-                {item.title}
+                <span className="flex-1">{item.title}</span>
+                {item.badge && (
+                  <span className="inline-flex items-center rounded-full bg-emerald-500 px-2 py-0.5 text-xs font-semibold text-white">
+                    {item.badge}
+                  </span>
+                )}
               </Link>
             );
           })}

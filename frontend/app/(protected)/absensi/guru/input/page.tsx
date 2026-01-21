@@ -6,150 +6,131 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft,
   GraduationCap,
   Save,
+  Search,
   Calendar,
   UserCheck,
   UserX,
   Heart,
   FileText,
+  X,
 } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "sonner";
 
-interface GuruAbsensi {
-  guruId: string;
+interface Guru {
+  id: string;
   nama: string;
   nip: string | null;
   jabatan: string | null;
-  status: string | null;
-  keterangan: string | null;
-  absensiId: string | null;
 }
 
 export default function InputAbsensiGuruPage() {
   const router = useRouter();
-  const [tanggal, setTanggal] = useState(
-    new Date().toISOString().split("T")[0]
-  );
-  const [guruList, setGuruList] = useState<GuruAbsensi[]>([]);
-  const [absensiData, setAbsensiData] = useState<
-    Record<string, { status: string; keterangan: string }>
-  >({});
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Form states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedGuru, setSelectedGuru] = useState<Guru | null>(null);
+  const [status, setStatus] = useState<string>("");
+  const [keterangan, setKeterangan] = useState("");
+  const [useTodayDate, setUseTodayDate] = useState(true);
+  const [tanggal, setTanggal] = useState(new Date().toISOString().split("T")[0]);
+  
+  // Data states
+  const [guruList, setGuruList] = useState<Guru[]>([]);
+  const [filteredGuru, setFilteredGuru] = useState<Guru[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Fetch all guru on mount
   useEffect(() => {
-    fetchAbsensiData();
-  }, [tanggal]);
+    fetchGuruList();
+  }, []);
 
-  const fetchAbsensiData = async () => {
+  // Filter guru based on search
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredGuru([]);
+      setShowDropdown(false);
+    } else {
+      const filtered = guruList.filter(
+        (guru) =>
+          guru.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          guru.nip?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredGuru(filtered);
+      setShowDropdown(filtered.length > 0 && !selectedGuru);
+    }
+  }, [searchQuery, guruList, selectedGuru]);
+
+  // Update tanggal when checkbox changes
+  useEffect(() => {
+    if (useTodayDate) {
+      setTanggal(new Date().toISOString().split("T")[0]);
+    }
+  }, [useTodayDate]);
+
+  const fetchGuruList = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/tanggal/${tanggal}`,
-        {
-          credentials: "include",
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/guru?limit=1000`,
+        { credentials: "include" }
       );
-
       if (response.ok) {
         const data = await response.json();
-        setGuruList(data);
-
-        // Initialize absensi data
-        const initialData: Record<
-          string,
-          { status: string; keterangan: string }
-        > = {};
-        data.forEach((guru: GuruAbsensi) => {
-          initialData[guru.guruId] = {
-            status: guru.status || "",
-            keterangan: guru.keterangan || "",
-          };
-        });
-        setAbsensiData(initialData);
+        setGuruList(data.data || []);
       }
     } catch (error) {
-      toast.error("Gagal memuat data");
+      toast.error("Gagal memuat data guru");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleStatusChange = (guruId: string, status: string) => {
-    setAbsensiData((prev) => ({
-      ...prev,
-      [guruId]: {
-        ...prev[guruId],
-        status,
-      },
-    }));
+  const handleSelectGuru = (guru: Guru) => {
+    setSelectedGuru(guru);
+    setSearchQuery(guru.nama);
+    setShowDropdown(false);
   };
 
-  const handleKeteranganChange = (guruId: string, keterangan: string) => {
-    setAbsensiData((prev) => ({
-      ...prev,
-      [guruId]: {
-        ...prev[guruId],
-        keterangan,
-      },
-    }));
+  const handleClearSelection = () => {
+    setSelectedGuru(null);
+    setSearchQuery("");
+    setStatus("");
+    setKeterangan("");
   };
 
-  const handleSetAllStatus = (status: string) => {
-    const newData: Record<string, { status: string; keterangan: string }> = {};
-    guruList.forEach((guru) => {
-      newData[guru.guruId] = {
-        status,
-        keterangan: absensiData[guru.guruId]?.keterangan || "",
-      };
-    });
-    setAbsensiData(newData);
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const handleSave = async () => {
-    // Filter out empty status
-    const absensiToSave = Object.entries(absensiData)
-      .filter(([_, data]) => data.status)
-      .map(([guruId, data]) => ({
-        guruId,
-        status: data.status,
-        keterangan: data.keterangan || undefined,
-      }));
+    if (!selectedGuru) {
+      toast.error("Pilih guru terlebih dahulu");
+      return;
+    }
 
-    if (absensiToSave.length === 0) {
-      toast.error("Pilih status kehadiran minimal untuk satu guru");
+    if (!status) {
+      toast.error("Pilih status kehadiran");
       return;
     }
 
     try {
       setIsSaving(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/bulk`,
+        `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({
+            guruId: selectedGuru.id,
             tanggal,
-            absensi: absensiToSave,
+            status,
+            keterangan: keterangan || undefined,
           }),
         }
       );
@@ -157,8 +138,9 @@ export default function InputAbsensiGuruPage() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(data.message || "Absensi berhasil disimpan");
-        fetchAbsensiData(); // Refresh data
+        toast.success("Absensi berhasil disimpan!");
+        // Reset form
+        handleClearSelection();
       } else {
         toast.error(data.message || "Gagal menyimpan absensi");
       }
@@ -169,17 +151,12 @@ export default function InputAbsensiGuruPage() {
     }
   };
 
-  // Count statistics
-  const stats = {
-    hadir: Object.values(absensiData).filter((d) => d.status === "HADIR")
-      .length,
-    tidakHadir: Object.values(absensiData).filter(
-      (d) => d.status === "TIDAK_HADIR"
-    ).length,
-    sakit: Object.values(absensiData).filter((d) => d.status === "SAKIT")
-      .length,
-    izin: Object.values(absensiData).filter((d) => d.status === "IZIN").length,
-  };
+  const statusOptions = [
+    { value: "HADIR", label: "Hadir", icon: UserCheck, color: "emerald", bgColor: "bg-emerald-50 hover:bg-emerald-100 border-emerald-200", activeColor: "bg-emerald-500 text-white border-emerald-500" },
+    { value: "TIDAK_HADIR", label: "Tidak Hadir", icon: UserX, color: "red", bgColor: "bg-red-50 hover:bg-red-100 border-red-200", activeColor: "bg-red-500 text-white border-red-500" },
+    { value: "SAKIT", label: "Sakit", icon: Heart, color: "blue", bgColor: "bg-blue-50 hover:bg-blue-100 border-blue-200", activeColor: "bg-blue-500 text-white border-blue-500" },
+    { value: "IZIN", label: "Izin", icon: FileText, color: "amber", bgColor: "bg-amber-50 hover:bg-amber-100 border-amber-200", activeColor: "bg-amber-500 text-white border-amber-500" },
+  ];
 
   return (
     <div className="space-y-4 lg:space-y-6">
@@ -224,199 +201,186 @@ export default function InputAbsensiGuruPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-3 lg:gap-4">
-        <Card className="border-zinc-200 bg-white">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs lg:text-sm font-medium text-zinc-600">
-              Hadir
-            </CardTitle>
-            <UserCheck className="h-4 w-4 text-emerald-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl lg:text-2xl font-bold text-emerald-700">
-              {stats.hadir}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-zinc-200 bg-white">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs lg:text-sm font-medium text-zinc-600">
-              Tidak Hadir
-            </CardTitle>
-            <UserX className="h-4 w-4 text-red-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl lg:text-2xl font-bold text-red-600">
-              {stats.tidakHadir}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-zinc-200 bg-white">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs lg:text-sm font-medium text-zinc-600">
-              Sakit
-            </CardTitle>
-            <Heart className="h-4 w-4 text-amber-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl lg:text-2xl font-bold text-amber-600">
-              {stats.sakit}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-zinc-200 bg-white">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs lg:text-sm font-medium text-zinc-600">
-              Izin
-            </CardTitle>
-            <FileText className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl lg:text-2xl font-bold text-blue-600">
-              {stats.izin}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Input Form */}
+      {/* Form Card */}
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-emerald-600" />
-                <Label htmlFor="tanggal" className="text-sm font-medium">
-                  Tanggal:
-                </Label>
+          <CardTitle className="text-lg font-semibold text-emerald-700">
+            Form Input Absensi
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Search Guru */}
+            <div className="space-y-2">
+              <Label htmlFor="search-guru" className="text-sm font-medium">
+                Cari Nama Guru <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                <Input
+                  id="search-guru"
+                  placeholder="Ketik nama atau NIP guru..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (selectedGuru) setSelectedGuru(null);
+                  }}
+                  className="pl-10 pr-10"
+                  autoComplete="off"
+                />
+                {selectedGuru && (
+                  <button
+                    type="button"
+                    onClick={handleClearSelection}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+                
+                {/* Dropdown Results */}
+                {showDropdown && (
+                  <div className="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white shadow-lg max-h-60 overflow-y-auto">
+                    {filteredGuru.map((guru) => (
+                      <button
+                        key={guru.id}
+                        type="button"
+                        onClick={() => handleSelectGuru(guru)}
+                        className="w-full px-4 py-3 text-left hover:bg-emerald-50 border-b border-zinc-100 last:border-0"
+                      >
+                        <div className="font-medium text-zinc-900">{guru.nama}</div>
+                        <div className="text-xs text-zinc-500">
+                          {guru.nip ? `NIP: ${guru.nip}` : "NIP: -"} • {guru.jabatan || "-"}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-              <Input
-                id="tanggal"
-                type="date"
-                value={tanggal}
-                onChange={(e) => setTanggal(e.target.value)}
-                className="w-auto text-sm h-9"
+              
+              {/* Selected Guru Info */}
+              {selectedGuru && (
+                <div className="mt-2 p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-emerald-700">{selectedGuru.nama}</p>
+                      <p className="text-xs text-emerald-600">
+                        {selectedGuru.nip ? `NIP: ${selectedGuru.nip}` : "NIP: -"} • {selectedGuru.jabatan || "-"}
+                      </p>
+                    </div>
+                    <GraduationCap className="h-8 w-8 text-emerald-300" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Status Kehadiran */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Status Kehadiran <span className="text-red-500">*</span>
+              </Label>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {statusOptions.map((option) => {
+                  const Icon = option.icon;
+                  const isActive = status === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setStatus(option.value)}
+                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${
+                        isActive ? option.activeColor : option.bgColor
+                      }`}
+                    >
+                      <Icon className={`h-6 w-6 mb-2 ${isActive ? "text-white" : `text-${option.color}-600`}`} />
+                      <span className={`text-sm font-medium ${isActive ? "text-white" : `text-${option.color}-700`}`}>
+                        {option.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Keterangan */}
+            <div className="space-y-2">
+              <Label htmlFor="keterangan" className="text-sm font-medium">
+                Keterangan <span className="text-zinc-400">(opsional)</span>
+              </Label>
+              <Textarea
+                id="keterangan"
+                placeholder="Tambahkan keterangan jika diperlukan..."
+                value={keterangan}
+                onChange={(e) => setKeterangan(e.target.value)}
+                rows={3}
+                className="resize-none"
               />
             </div>
-            <div className="flex gap-2">
+
+            {/* Tanggal */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">
+                Tanggal <span className="text-red-500">*</span>
+              </Label>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  type="button"
+                  variant={useTodayDate ? "default" : "outline"}
+                  onClick={() => setUseTodayDate(true)}
+                  className={useTodayDate ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                >
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Hari Ini ({new Date().toLocaleDateString("id-ID", { 
+                    day: "numeric", 
+                    month: "short", 
+                    year: "numeric" 
+                  })})
+                </Button>
+                <Button
+                  type="button"
+                  variant={!useTodayDate ? "default" : "outline"}
+                  onClick={() => setUseTodayDate(false)}
+                  className={!useTodayDate ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                >
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Pilih Tanggal Lain
+                </Button>
+              </div>
+
+              {!useTodayDate && (
+                <div className="flex items-center gap-3 mt-2">
+                  <Input
+                    type="date"
+                    value={tanggal}
+                    onChange={(e) => setTanggal(e.target.value)}
+                    className="w-auto"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Submit Buttons */}
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t">
               <Button
+                type="button"
                 variant="outline"
-                size="sm"
-                onClick={() => handleSetAllStatus("HADIR")}
-                className="text-emerald-600 border-emerald-600 hover:bg-emerald-50"
+                onClick={() => router.back()}
+                disabled={isSaving}
+                className="sm:w-auto"
               >
-                Set Semua Hadir
+                Batal
               </Button>
               <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="bg-emerald-600 hover:bg-emerald-700"
+                type="submit"
+                className="bg-emerald-600 hover:bg-emerald-700 sm:w-auto"
+                disabled={isSaving || !selectedGuru || !status}
               >
                 <Save className="mr-2 h-4 w-4" />
                 {isSaving ? "Menyimpan..." : "Simpan Absensi"}
               </Button>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0 sm:p-6">
-          <div className="overflow-x-auto">
-            <Table className="min-w-[700px]">
-              <TableHeader>
-                <TableRow className="bg-emerald-50">
-                  <TableHead className="w-12 font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
-                    No
-                  </TableHead>
-                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
-                    Nama Guru
-                  </TableHead>
-                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
-                    NIP
-                  </TableHead>
-                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
-                    Jabatan
-                  </TableHead>
-                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap w-40">
-                    Status
-                  </TableHead>
-                  <TableHead className="font-semibold text-emerald-700 text-xs lg:text-sm whitespace-nowrap">
-                    Keterangan
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={6}
-                      className="h-32 text-center text-zinc-500 text-xs lg:text-sm"
-                    >
-                      Memuat data...
-                    </TableCell>
-                  </TableRow>
-                ) : guruList.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={6}
-                      className="h-32 text-center text-zinc-500 text-xs lg:text-sm"
-                    >
-                      Belum ada guru terdaftar
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  guruList.map((guru, index) => (
-                    <TableRow key={guru.guruId} className="hover:bg-zinc-50">
-                      <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
-                        {index + 1}
-                      </TableCell>
-                      <TableCell className="font-medium text-zinc-900 text-xs lg:text-sm whitespace-nowrap">
-                        {guru.nama}
-                      </TableCell>
-                      <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
-                        {guru.nip || "-"}
-                      </TableCell>
-                      <TableCell className="text-zinc-600 text-xs lg:text-sm whitespace-nowrap">
-                        {guru.jabatan || "-"}
-                      </TableCell>
-                      <TableCell>
-                        <Select
-                          value={absensiData[guru.guruId]?.status || ""}
-                          onValueChange={(value) =>
-                            handleStatusChange(guru.guruId, value)
-                          }
-                        >
-                          <SelectTrigger className="text-xs lg:text-sm h-8">
-                            <SelectValue placeholder="Pilih" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="HADIR">Hadir</SelectItem>
-                            <SelectItem value="TIDAK_HADIR">
-                              Tidak Hadir
-                            </SelectItem>
-                            <SelectItem value="SAKIT">Sakit</SelectItem>
-                            <SelectItem value="IZIN">Izin</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          placeholder="Keterangan (opsional)"
-                          value={absensiData[guru.guruId]?.keterangan || ""}
-                          onChange={(e) =>
-                            handleKeteranganChange(guru.guruId, e.target.value)
-                          }
-                          className="text-xs lg:text-sm h-8"
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          </form>
         </CardContent>
       </Card>
     </div>

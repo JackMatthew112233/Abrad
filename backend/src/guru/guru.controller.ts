@@ -54,10 +54,12 @@ export class GuruController {
   async getStatistikAbsensiGuru(
     @Query('bulan') bulan?: string,
     @Query('tahun') tahun?: string,
+    @Query('periode') periode?: string,
   ) {
     return this.guruService.getStatistikAbsensiGuru({
       bulan: bulan ? parseInt(bulan) : undefined,
       tahun: tahun ? parseInt(tahun) : undefined,
+      periode,
     });
   }
 
@@ -67,12 +69,14 @@ export class GuruController {
     @Query('tahun') tahun?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('periode') periode?: string,
   ) {
     return this.guruService.getRekapAbsensiGuru({
       bulan: bulan ? parseInt(bulan) : undefined,
       tahun: tahun ? parseInt(tahun) : undefined,
       page: page ? parseInt(page) : undefined,
       limit: limit ? parseInt(limit) : undefined,
+      periode,
     });
   }
 
