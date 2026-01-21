@@ -36,7 +36,9 @@
       "Bash(python3 << 'PYTHON'\nimport re\n\n# Read the file\nwith open('/home/aldev/Projects/Abrad/frontend/app/(protected)/absensi/page.tsx', 'r') as f:\n    content = f.read()\n\n# Update fetchChartData function\npattern = r'  const fetchChartData = async \\(\\) => \\{.*?(?=\\n  const )'\nnew_function = '''  const fetchChartData = async () => {\n    if (!jenisAbsensi) return;\n    try {\n      // Use different endpoint for GURU\n      let url = jenisAbsensi === \"GURU\"\n        ? `${process.env.NEXT_PUBLIC_API_URL}/guru/absensi/trend-kehadiran`\n        : `${process.env.NEXT_PUBLIC_API_URL}/absensi/trend-kehadiran?jenis=${jenisAbsensi}`;\n      \n      // Add periode filter for non-GURU absensi\n      if (jenisAbsensi !== \"GURU\" && filterPeriode !== \"semua\") {\n        url += `&periode=${filterPeriode}`;\n      }\n      \n      const response = await fetch(url, {\n        credentials: \"include\",\n      });\n      if (response.ok) {\n        const data = await response.json();\n        setTrendKehadiranData(data.trendKehadiran || []);\n        setRadarData(data.distribusiStatus || []);\n      }\n    } catch (error) {\n      console.error(\"Error fetching chart data:\", error);\n    }\n  };\n\n'''\n\ncontent = re.sub(pattern, new_function, content, flags=re.DOTALL)\n\n# Write back\nwith open('/home/aldev/Projects/Abrad/frontend/app/(protected)/absensi/page.tsx', 'w') as f:\n    f.write(content)\n\nprint(\"fetchChartData function updated successfully\")\nPYTHON)",
       "Bash(git log:*)",
       "Bash(git branch:*)",
-      "Bash(pnpm add:*)"
+      "Bash(pnpm add:*)",
+      "Bash(mkdir -p \"/home/aldev/Projects/Abrad/frontend/app/(protected)/pembaharuan/arsip/21-januari-2026\")",
+      "Edit(frontend/app/(protected)/keuangan/**)"
     ]
   }
 }

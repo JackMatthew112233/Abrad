@@ -70,23 +70,36 @@ export class KeuanganController {
   }
 
   @Get('statistik')
-  async getStatistikKeuangan() {
-    return this.keuanganService.getStatistikKeuangan();
+  async getStatistikKeuangan(
+    @Query('bulan') bulan?: string,
+    @Query('tahun') tahun?: string,
+  ) {
+    return this.keuanganService.getStatistikKeuangan(bulan, tahun);
   }
 
   @Get('chart-pembayaran')
-  async getChartPembayaran() {
-    return this.keuanganService.getChartPembayaran();
+  async getChartPembayaran(
+    @Query('bulan') bulan?: string,
+    @Query('tahun') tahun?: string,
+  ) {
+    return this.keuanganService.getChartPembayaran(bulan, tahun);
   }
 
   @Get('chart-target-realisasi')
-  async getChartTargetRealisasi() {
-    return this.keuanganService.getChartTargetRealisasi();
+  async getChartTargetRealisasi(
+    @Query('bulan') bulan?: string,
+    @Query('tahun') tahun?: string,
+  ) {
+    return this.keuanganService.getChartTargetRealisasi(bulan, tahun);
   }
 
   @Get('chart-distribusi')
-  async getChartDistribusi(@Query('filter') filter?: string) {
-    return this.keuanganService.getChartDistribusi(filter);
+  async getChartDistribusi(
+    @Query('filter') filter?: string,
+    @Query('bulan') bulan?: string,
+    @Query('tahun') tahun?: string,
+  ) {
+    return this.keuanganService.getChartDistribusi(filter, bulan, tahun);
   }
 
   @Post('pembayaran')
@@ -127,16 +140,22 @@ export class KeuanganController {
   async getAllPembayaranWithPagination(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('bulan') bulan?: string,
+    @Query('tahun') tahun?: string,
   ) {
     const pageNum = page ? parseInt(page) : 1;
     const limitNum = limit ? parseInt(limit) : 20;
-    return this.keuanganService.getAllPembayaranWithPagination(pageNum, limitNum);
+    return this.keuanganService.getAllPembayaranWithPagination(pageNum, limitNum, bulan, tahun);
   }
 
   @Get('pembayaran-terbaru')
-  async getPembayaranTerbaru(@Query('limit') limit?: string) {
+  async getPembayaranTerbaru(
+    @Query('limit') limit?: string,
+    @Query('bulan') bulan?: string,
+    @Query('tahun') tahun?: string,
+  ) {
     const limitNum = limit ? parseInt(limit) : 10;
-    return this.keuanganService.getPembayaranTerbaru(limitNum);
+    return this.keuanganService.getPembayaranTerbaru(limitNum, bulan, tahun);
   }
 
   @Get('pembayaran/siswa/:siswaId')

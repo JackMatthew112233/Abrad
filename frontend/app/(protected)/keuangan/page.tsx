@@ -115,6 +115,10 @@ export default function KeuanganPage() {
   const [filterTingkatan, setFilterTingkatan] = useState("");
   const [filterKelas, setFilterKelas] = useState("");
   
+  // Header filter states (for KPI cards)
+  const [filterBulanHeader, setFilterBulanHeader] = useState("");
+  const [filterTahunHeader, setFilterTahunHeader] = useState("");
+  
   // Download dialog state
   const [showDownloadDialog, setShowDownloadDialog] = useState(false);
   const [downloadMode, setDownloadMode] = useState<"semua" | "per_santri">("semua");
@@ -134,9 +138,13 @@ export default function KeuanganPage() {
 
   useEffect(() => {
     fetchData();
+  }, []);
+
+  // Re-fetch chart and recent data when filters change
+  useEffect(() => {
     fetchChartData();
     fetchRecentData();
-  }, []);
+  }, [filterBulanHeader, filterTahunHeader, filterDistribusi]);
   
   useEffect(() => {
     fetchChartData();
@@ -168,22 +176,36 @@ export default function KeuanganPage() {
     }
   };
 
+  // Build filter params for API calls
+  const buildFilterParams = () => {
+    const params = new URLSearchParams();
+    if (filterBulanHeader && filterBulanHeader !== "all") {
+      params.append("bulan", filterBulanHeader);
+    }
+    if (filterTahunHeader && filterTahunHeader !== "all") {
+      params.append("tahun", filterTahunHeader);
+    }
+    return params;
+  };
+
   const fetchChartData = async () => {
     try {
-      const distribusiUrl = filterDistribusi === "all" 
-        ? `${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-distribusi`
-        : `${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-distribusi?filter=${filterDistribusi}`;
+      const filterParams = buildFilterParams();
+      
+      // Build URLs with filter params
+      const distribusiParams = new URLSearchParams(filterParams);
+      if (filterDistribusi !== "all") {
+        distribusiParams.append("filter", filterDistribusi);
+      }
+      
+      const pembayaranUrl = `${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-pembayaran${filterParams.toString() ? `?${filterParams.toString()}` : ""}`;
+      const targetRealisasiUrl = `${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-target-realisasi${filterParams.toString() ? `?${filterParams.toString()}` : ""}`;
+      const distribusiUrl = `${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-distribusi${distribusiParams.toString() ? `?${distribusiParams.toString()}` : ""}`;
       
       const [pembayaranResponse, targetRealisasiResponse, distribusiResponse] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-pembayaran`, {
-          credentials: "include",
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/keuangan/chart-target-realisasi`, {
-          credentials: "include",
-        }),
-        fetch(distribusiUrl, {
-          credentials: "include",
-        }),
+        fetch(pembayaranUrl, { credentials: "include" }),
+        fetch(targetRealisasiUrl, { credentials: "include" }),
+        fetch(distribusiUrl, { credentials: "include" }),
       ]);
 
       if (pembayaranResponse.ok) {
@@ -207,13 +229,15 @@ export default function KeuanganPage() {
 
   const fetchRecentData = async () => {
     try {
+      const filterParams = buildFilterParams();
+      filterParams.append("limit", "10");
+      
+      const pembayaranUrl = `${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran-terbaru?${filterParams.toString()}`;
+      const pengeluaranUrl = `${process.env.NEXT_PUBLIC_API_URL}/pengeluaran/terbaru?${filterParams.toString()}`;
+      
       const [pembayaranResponse, pengeluaranResponse] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran-terbaru?limit=10`, {
-          credentials: "include",
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/pengeluaran/terbaru?limit=10`, {
-          credentials: "include",
-        }),
+        fetch(pembayaranUrl, { credentials: "include" }),
+        fetch(pengeluaranUrl, { credentials: "include" }),
       ]);
 
       if (pembayaranResponse.ok) {
@@ -241,6 +265,8 @@ export default function KeuanganPage() {
       minimumFractionDigits: 0,
     }).format(amount);
   };
+
+
 
   const filteredBiodata = biodataList.filter((item) => {
     const matchesSearch = item.siswa.nama.toLowerCase().includes(searchQuery.toLowerCase());
@@ -270,6 +296,54 @@ export default function KeuanganPage() {
           <p className="max-w-2xl text-sm lg:text-lg text-emerald-50">
             Kelola biodata keuangan dan pembayaran santri / santriwati dengan mudah
           </p>
+        </div>
+      </div>
+
+      {/* Filter Section */}
+      <div className="flex justify-end">
+        <div className="flex items-center gap-2">
+          <Select 
+            value={filterBulanHeader} 
+            onValueChange={(value) => {
+              setFilterBulanHeader(value);
+              // Auto-select current year if month is selected and year is not set
+              if (value && value !== "all" && (!filterTahunHeader || filterTahunHeader === "all")) {
+                setFilterTahunHeader(new Date().getFullYear().toString());
+              }
+            }}
+          >
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Semua Bulan" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Bulan</SelectItem>
+              <SelectItem value="1">Januari</SelectItem>
+              <SelectItem value="2">Februari</SelectItem>
+              <SelectItem value="3">Maret</SelectItem>
+              <SelectItem value="4">April</SelectItem>
+              <SelectItem value="5">Mei</SelectItem>
+              <SelectItem value="6">Juni</SelectItem>
+              <SelectItem value="7">Juli</SelectItem>
+              <SelectItem value="8">Agustus</SelectItem>
+              <SelectItem value="9">September</SelectItem>
+              <SelectItem value="10">Oktober</SelectItem>
+              <SelectItem value="11">November</SelectItem>
+              <SelectItem value="12">Desember</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={filterTahunHeader} onValueChange={setFilterTahunHeader}>
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder="Semua Tahun" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Tahun</SelectItem>
+              {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                <SelectItem key={year} value={year.toString()}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

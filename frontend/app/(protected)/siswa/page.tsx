@@ -53,12 +53,23 @@ interface Siswa {
   status: string | null;
 }
 
+interface StatusBreakdown {
+  aktif: number;
+  tidakAktif: number;
+  lulus: number;
+}
+
 interface Statistik {
   totalSiswa: number;
   siswaLakiLaki: number;
   siswaPerempuan: number;
   siswaAktif: number;
   siswaNonAktif: number;
+  breakdown?: {
+    total: StatusBreakdown;
+    santri: StatusBreakdown;
+    santriwati: StatusBreakdown;
+  };
 }
 
 interface PaginationInfo {
@@ -184,6 +195,7 @@ export default function SiswaPage() {
 
       {/* KPI Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Total Santri / Santriwati */}
         <Card className="border-emerald-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
@@ -193,19 +205,28 @@ export default function SiswaPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="text-3xl font-bold text-emerald-700">{totalSiswa}</div>
-            <div className="space-y-1">
-              <div className="flex items-center text-xs text-emerald-600">
-                <span className="font-semibold">
-                  {siswaLakiLaki} Santri • {siswaPerempuan} Santriwati
-                </span>
-              </div>
+            <div className="space-y-2">
               <p className="text-xs text-zinc-500">
-                Total keseluruhan santri aktif dan non-aktif
+                {siswaLakiLaki} Santri dan {siswaPerempuan} Santriwati
               </p>
+              {stats.breakdown && (
+                <div className="flex flex-wrap gap-1.5">
+                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.total.aktif} Aktif
+                  </Badge>
+                  <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.total.lulus} Lulus
+                  </Badge>
+                  <Badge className="bg-zinc-100 text-zinc-600 border-zinc-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.total.tidakAktif} Tidak Aktif
+                  </Badge>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
 
+        {/* Santri */}
         <Card className="border-emerald-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
@@ -215,17 +236,28 @@ export default function SiswaPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="text-3xl font-bold text-emerald-700">{siswaLakiLaki}</div>
-            <div className="space-y-1">
+            <div className="space-y-2">
               <p className="text-xs text-zinc-500">
                 {totalSiswa > 0 ? ((siswaLakiLaki / totalSiswa) * 100).toFixed(1) : "0"}% dari total
               </p>
-              <p className="text-xs text-zinc-500">
-                Santri
-              </p>
+              {stats.breakdown && (
+                <div className="flex flex-wrap gap-1.5">
+                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.santri.aktif} Aktif
+                  </Badge>
+                  <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.santri.lulus} Lulus
+                  </Badge>
+                  <Badge className="bg-zinc-100 text-zinc-600 border-zinc-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.santri.tidakAktif} Tidak Aktif
+                  </Badge>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
 
+        {/* Santriwati */}
         <Card className="border-emerald-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
@@ -235,33 +267,56 @@ export default function SiswaPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="text-3xl font-bold text-emerald-700">{siswaPerempuan}</div>
-            <div className="space-y-1">
+            <div className="space-y-2">
               <p className="text-xs text-zinc-500">
                 {totalSiswa > 0 ? ((siswaPerempuan / totalSiswa) * 100).toFixed(1) : "0"}% dari total
               </p>
-              <p className="text-xs text-zinc-500">
-                Santri perempuan
-              </p>
+              {stats.breakdown && (
+                <div className="flex flex-wrap gap-1.5">
+                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.santriwati.aktif} Aktif
+                  </Badge>
+                  <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.santriwati.lulus} Lulus
+                  </Badge>
+                  <Badge className="bg-zinc-100 text-zinc-600 border-zinc-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.santriwati.tidakAktif} Tidak Aktif
+                  </Badge>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
 
+        {/* Santri / Santriwati Aktif */}
         <Card className="border-emerald-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-zinc-700">
-              Santri Aktif
+              Santri / Santriwati Aktif
             </CardTitle>
             <UserCheck className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-3xl font-bold text-emerald-700">{siswaAktif}</div>
-            <div className="space-y-1">
+            <div className="text-3xl font-bold text-emerald-700">
+              {stats.breakdown?.total.aktif ?? siswaAktif}
+            </div>
+            <div className="space-y-2">
               <p className="text-xs text-zinc-500">
-                {totalSiswa > 0 ? ((siswaAktif / totalSiswa) * 100).toFixed(1) : "0"}% tingkat keaktifan
+                {totalSiswa > 0 ? (((stats.breakdown?.total.aktif ?? siswaAktif) / totalSiswa) * 100).toFixed(1) : "0"}% dari total
               </p>
-              <p className="text-xs text-zinc-500">
-                {stats.siswaNonAktif} cuti/non-aktif
-              </p>
+              {stats.breakdown && (
+                <div className="flex flex-wrap gap-1.5">
+                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.total.aktif} Aktif
+                  </Badge>
+                  <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.total.lulus} Lulus
+                  </Badge>
+                  <Badge className="bg-zinc-100 text-zinc-600 border-zinc-200 text-[10px] px-1.5 py-0 h-5">
+                    {stats.breakdown.total.tidakAktif} Tidak Aktif
+                  </Badge>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

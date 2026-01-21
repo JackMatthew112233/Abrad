@@ -40,18 +40,34 @@ export class PengeluaranService {
     });
   }
 
-  async getAllPengeluaran(page: number = 1, limit: number = 20) {
+  async getAllPengeluaran(page: number = 1, limit: number = 20, bulan?: string, tahun?: string) {
     const skip = (page - 1) * limit;
+    
+    // Build date filter
+    let whereClause: any = {};
+    if (bulan && tahun) {
+      const month = parseInt(bulan);
+      const year = parseInt(tahun);
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+      whereClause.tanggalPengeluaran = { gte: startDate, lte: endDate };
+    } else if (tahun) {
+      const year = parseInt(tahun);
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31, 23, 59, 59, 999);
+      whereClause.tanggalPengeluaran = { gte: startDate, lte: endDate };
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.pengeluaran.findMany({
+        where: whereClause,
         skip,
         take: limit,
         orderBy: {
           tanggalPengeluaran: 'desc',
         },
       }),
-      this.prisma.pengeluaran.count(),
+      this.prisma.pengeluaran.count({ where: whereClause }),
     ]);
 
     // Convert Decimal to Number for JSON serialization
@@ -144,8 +160,25 @@ export class PengeluaranService {
     return { message: 'Data pengeluaran berhasil dihapus' };
   }
 
-  async getPengeluaranTerbaru(limit: number = 10) {
+  async getPengeluaranTerbaru(limit: number = 10, bulan?: string, tahun?: string) {
+    // Build date filter
+    let whereClause: any = {};
+    
+    if (bulan && tahun) {
+      const month = parseInt(bulan);
+      const year = parseInt(tahun);
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+      whereClause.tanggalPengeluaran = { gte: startDate, lte: endDate };
+    } else if (tahun) {
+      const year = parseInt(tahun);
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31, 23, 59, 59, 999);
+      whereClause.tanggalPengeluaran = { gte: startDate, lte: endDate };
+    }
+
     const data = await this.prisma.pengeluaran.findMany({
+      where: whereClause,
       take: limit,
       orderBy: {
         tanggalPengeluaran: 'desc',

@@ -124,6 +124,30 @@ export class NilaiController {
     );
   }
 
+  @Get('siswa/:siswaId/bulk')
+  async getNilaiBulk(
+    @Param('siswaId') siswaId: string,
+    @Query('semester') semester?: string,
+    @Query('tahunAjaran') tahunAjaran?: string,
+  ) {
+    return this.nilaiService.getNilaiBulk(siswaId, semester, tahunAjaran);
+  }
+
+  @Post('bulk')
+  async createOrUpdateNilaiBulk(@Body() data: {
+    siswaId: string;
+    semester: string;
+    tahunAjaran: string;
+    tanggal: string;
+    nilaiList: Array<{
+      mataPelajaran: string;
+      jenisNilai: string;
+      nilai: number | null;
+    }>;
+  }) {
+    return this.nilaiService.createOrUpdateNilaiBulk(data);
+  }
+
   @Get(':id')
   async getNilaiById(@Param('id') id: string) {
     return this.nilaiService.getNilaiById(id);

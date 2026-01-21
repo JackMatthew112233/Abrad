@@ -170,8 +170,29 @@ export class KeuanganService {
     };
   }
 
-  async getStatistikKeuangan() {
-    // Get all biodata keuangan
+  async getStatistikKeuangan(bulan?: string, tahun?: string) {
+    // Build date filter for pembayaran and donasi
+    let dateFilter: any = {};
+    if (bulan && tahun) {
+      const month = parseInt(bulan);
+      const year = parseInt(tahun);
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+      dateFilter = {
+        gte: startDate,
+        lte: endDate,
+      };
+    } else if (tahun) {
+      const year = parseInt(tahun);
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31, 23, 59, 59, 999);
+      dateFilter = {
+        gte: startDate,
+        lte: endDate,
+      };
+    }
+
+    // Get all biodata keuangan (not filtered by date - these are commitments)
     const allBiodata = await this.prisma.biodataKeuangan.findMany({
       select: {
         komitmenInfaqLaundry: true,
@@ -191,8 +212,13 @@ export class KeuanganService {
       0,
     );
 
-    // Get all pembayaran
+    // Get pembayaran with optional date filter
+    const pembayaranWhere = Object.keys(dateFilter).length > 0 
+      ? { tanggalPembayaran: dateFilter }
+      : {};
+    
     const allPembayaran = await this.prisma.pembayaran.findMany({
+      where: pembayaranWhere,
       select: {
         totalPembayaranInfaq: true,
         totalPembayaranLaundry: true,
@@ -208,11 +234,16 @@ export class KeuanganService {
       0,
     );
 
-    // Count santri with biodata
+    // Count santri with biodata (not filtered by date)
     const jumlahSantriTerdaftar = await this.prisma.biodataKeuangan.count();
 
-    // Get total donasi
+    // Get total donasi with optional date filter
+    const donasiWhere = Object.keys(dateFilter).length > 0 
+      ? { createdAt: dateFilter }
+      : {};
+    
     const donasiAggregate = await this.prisma.donasi.aggregate({
+      where: donasiWhere,
       _sum: {
         jumlahDonasi: true,
       },
@@ -227,27 +258,54 @@ export class KeuanganService {
       totalPembayaranLaundry,
       jumlahSantriTerdaftar,
       totalDonasi,
+      // Return filter info for display
+      filterInfo: {
+        bulan: bulan || null,
+        tahun: tahun || null,
+      },
     };
   }
 
-  async getChartPembayaran() {
-    // Get last 6 months of payment data
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  // Helper to build date filter
+  private buildDateFilter(bulan?: string, tahun?: string) {
+    if (bulan && tahun) {
+      const month = parseInt(bulan);
+      const year = parseInt(tahun);
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+      return { gte: startDate, lte: endDate };
+    } else if (tahun) {
+      const year = parseInt(tahun);
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31, 23, 59, 59, 999);
+      return { gte: startDate, lte: endDate };
+    }
+    return null;
+  }
+
+  async getChartPembayaran(bulan?: string, tahun?: string) {
+    // Build date filter or use last 6 months as default
+    const dateFilter = this.buildDateFilter(bulan, tahun);
+    
+    let whereClause: any = {};
+    if (dateFilter) {
+      whereClause.tanggalPembayaran = dateFilter;
+    } else {
+      // Default: last 6 months
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+      whereClause.tanggalPembayaran = { gte: sixMonthsAgo };
+    }
 
     const pembayaranList = await this.prisma.pembayaran.findMany({
-      where: {
-        createdAt: {
-          gte: sixMonthsAgo,
-        },
-      },
+      where: whereClause,
       select: {
         totalPembayaranInfaq: true,
         totalPembayaranLaundry: true,
-        createdAt: true,
+        tanggalPembayaran: true,
       },
       orderBy: {
-        createdAt: 'asc',
+        tanggalPembayaran: 'asc',
       },
     });
 
@@ -261,7 +319,7 @@ export class KeuanganService {
       const monthKey = new Intl.DateTimeFormat('id-ID', {
         month: 'short',
         year: 'numeric',
-      }).format(pembayaran.createdAt);
+      }).format(pembayaran.tanggalPembayaran);
 
       if (!monthlyData[monthKey]) {
         monthlyData[monthKey] = { infaq: 0, laundry: 0 };
@@ -279,8 +337,12 @@ export class KeuanganService {
     }));
   }
 
-  async getChartTargetRealisasi() {
-    // Get total target (komitmen) from biodata keuangan
+  async getChartTargetRealisasi(bulan?: string, tahun?: string) {
+    // Build date filter
+    const dateFilter = this.buildDateFilter(bulan, tahun);
+    const pembayaranWhere = dateFilter ? { tanggalPembayaran: dateFilter } : {};
+
+    // Get total target (komitmen) from biodata keuangan - not filtered by date
     const biodataKeuangan = await this.prisma.biodataKeuangan.aggregate({
       _sum: {
         komitmenInfaqLaundry: true,
@@ -289,8 +351,9 @@ export class KeuanganService {
       },
     });
 
-    // Get total realisasi (pembayaran)
+    // Get total realisasi (pembayaran) - filtered by date if provided
     const pembayaran = await this.prisma.pembayaran.aggregate({
+      where: pembayaranWhere,
       _sum: {
         totalPembayaranInfaq: true,
         totalPembayaranLaundry: true,
@@ -303,23 +366,25 @@ export class KeuanganService {
     // Calculate percentage
     const persentase = totalTarget > 0 ? Math.round((totalRealisasi / totalTarget) * 100) : 0;
 
-    // Get last 6 months of payment data for trend chart
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    // Get payment data for trend chart - filtered by date or last 6 months
+    let trendWhereClause: any = {};
+    if (dateFilter) {
+      trendWhereClause.tanggalPembayaran = dateFilter;
+    } else {
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+      trendWhereClause.tanggalPembayaran = { gte: sixMonthsAgo };
+    }
 
     const pembayaranList = await this.prisma.pembayaran.findMany({
-      where: {
-        createdAt: {
-          gte: sixMonthsAgo,
-        },
-      },
+      where: trendWhereClause,
       select: {
         totalPembayaranInfaq: true,
         totalPembayaranLaundry: true,
-        createdAt: true,
+        tanggalPembayaran: true,
       },
       orderBy: {
-        createdAt: 'asc',
+        tanggalPembayaran: 'asc',
       },
     });
 
@@ -330,7 +395,7 @@ export class KeuanganService {
       const monthKey = new Intl.DateTimeFormat('id-ID', {
         month: 'short',
         year: 'numeric',
-      }).format(p.createdAt);
+      }).format(p.tanggalPembayaran);
 
       if (!monthlyData[monthKey]) {
         monthlyData[monthKey] = { realisasi: 0 };
@@ -370,12 +435,17 @@ export class KeuanganService {
     };
   }
 
-  async getChartDistribusi(filter?: string) {
+  async getChartDistribusi(filter?: string, bulan?: string, tahun?: string) {
     // Filter: all (default), pemasukan, pengeluaran, donasi, jenis_SERAGAM, jenis_LISTRIK, etc
+    const dateFilter = this.buildDateFilter(bulan, tahun);
+    const pembayaranWhere = dateFilter ? { tanggalPembayaran: dateFilter } : {};
+    const pengeluaranWhere = dateFilter ? { tanggalPengeluaran: dateFilter } : {};
+    const donasiWhere = dateFilter ? { createdAt: dateFilter } : {};
     
     if (filter === 'pemasukan') {
       // Detail breakdown pemasukan
       const pembayaran = await this.prisma.pembayaran.aggregate({
+        where: pembayaranWhere,
         _sum: {
           totalPembayaranInfaq: true,
           totalPembayaranLaundry: true,
@@ -399,6 +469,7 @@ export class KeuanganService {
     if (filter === 'donasi') {
       // Detail breakdown donasi by nama
       const donasiList = await this.prisma.donasi.findMany({
+        where: donasiWhere,
         select: {
           nama: true,
           jumlahDonasi: true,
@@ -427,37 +498,44 @@ export class KeuanganService {
     }
     
     if (filter === 'pengeluaran') {
-      // Pengeluaran breakdown by jenis
-      const pengeluaranByJenis = await this.prisma.pengeluaran.groupBy({
-        by: ['jenis'],
-        _sum: {
+      // Pengeluaran breakdown by jenis - need raw query for groupBy with where
+      const allPengeluaran = await this.prisma.pengeluaran.findMany({
+        where: pengeluaranWhere,
+        select: {
+          jenis: true,
           harga: true,
         },
       });
 
-      const colors = ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6'];
-      
-      return pengeluaranByJenis.map((item, index) => {
-        const jenisMap: Record<string, string> = {
-          SERAGAM: 'Seragam',
-          LISTRIK: 'Listrik',
-          INTERNET: 'Internet',
-          LAUK: 'Lauk',
-          BERAS: 'Beras',
-          PERCETAKAN: 'Percetakan',
-          JASA: 'Jasa',
-          LAUNDRY: 'Laundry',
-          PERBAIKAN_FASILITAS_PONDOK: 'Perbaikan Fasilitas',
-          PENGELUARAN_NON_RUTIN: 'Non Rutin',
-          LAINNYA: 'Lainnya',
-        };
-        
-        return {
-          name: jenisMap[item.jenis] || item.jenis,
-          value: Number(item._sum.harga || 0),
-          color: colors[index % colors.length],
-        };
+      // Group by jenis manually
+      const groupedByJenis: Record<string, number> = {};
+      allPengeluaran.forEach((item) => {
+        if (!groupedByJenis[item.jenis]) {
+          groupedByJenis[item.jenis] = 0;
+        }
+        groupedByJenis[item.jenis] += Number(item.harga || 0);
       });
+
+      const colors = ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6'];
+      const jenisMap: Record<string, string> = {
+        SERAGAM: 'Seragam',
+        LISTRIK: 'Listrik',
+        INTERNET: 'Internet',
+        LAUK: 'Lauk',
+        BERAS: 'Beras',
+        PERCETAKAN: 'Percetakan',
+        JASA: 'Jasa',
+        LAUNDRY: 'Laundry',
+        PERBAIKAN_FASILITAS_PONDOK: 'Perbaikan Fasilitas',
+        PENGELUARAN_NON_RUTIN: 'Non Rutin',
+        LAINNYA: 'Lainnya',
+      };
+      
+      return Object.entries(groupedByJenis).map(([jenis, total], index) => ({
+        name: jenisMap[jenis] || jenis,
+        value: total,
+        color: colors[index % colors.length],
+      }));
     }
     
     if (filter && filter.startsWith('jenis_')) {
@@ -467,6 +545,7 @@ export class KeuanganService {
       const pengeluaranList = await this.prisma.pengeluaran.findMany({
         where: {
           jenis: jenis as any,
+          ...(dateFilter ? { tanggalPengeluaran: dateFilter } : {}),
         },
         select: {
           nama: true,
@@ -497,6 +576,7 @@ export class KeuanganService {
     
     // Default: Pemasukan vs Pengeluaran
     const pembayaran = await this.prisma.pembayaran.aggregate({
+      where: pembayaranWhere,
       _sum: {
         totalPembayaranInfaq: true,
         totalPembayaranLaundry: true,
@@ -504,6 +584,7 @@ export class KeuanganService {
     });
 
     const pengeluaran = await this.prisma.pengeluaran.aggregate({
+      where: pengeluaranWhere,
       _sum: {
         harga: true,
       },
@@ -596,11 +677,14 @@ export class KeuanganService {
     }));
   }
 
-  async getAllPembayaranWithPagination(page: number = 1, limit: number = 20) {
+  async getAllPembayaranWithPagination(page: number = 1, limit: number = 20, bulan?: string, tahun?: string) {
     const skip = (page - 1) * limit;
+    const dateFilter = this.buildDateFilter(bulan, tahun);
+    const whereClause = dateFilter ? { tanggalPembayaran: dateFilter } : {};
 
     const [pembayaranList, total] = await Promise.all([
       this.prisma.pembayaran.findMany({
+        where: whereClause,
         skip,
         take: limit,
         include: {
@@ -618,7 +702,7 @@ export class KeuanganService {
           tanggalPembayaran: 'desc',
         },
       }),
-      this.prisma.pembayaran.count(),
+      this.prisma.pembayaran.count({ where: whereClause }),
     ]);
 
     // Convert Decimal to Number for JSON serialization
@@ -639,8 +723,12 @@ export class KeuanganService {
     };
   }
 
-  async getPembayaranTerbaru(limit: number = 10) {
+  async getPembayaranTerbaru(limit: number = 10, bulan?: string, tahun?: string) {
+    const dateFilter = this.buildDateFilter(bulan, tahun);
+    const whereClause = dateFilter ? { tanggalPembayaran: dateFilter } : {};
+
     const pembayaranList = await this.prisma.pembayaran.findMany({
+      where: whereClause,
       take: limit,
       include: {
         siswa: {

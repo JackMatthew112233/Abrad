@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Edit, Trash2, ChevronLeft, ChevronRight, FileText } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import {
   Table,
@@ -77,16 +84,26 @@ export default function RiwayatPembayaranPage() {
   });
   const [newBukti, setNewBukti] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Filter states
+  const [filterBulan, setFilterBulan] = useState("");
+  const [filterTahun, setFilterTahun] = useState("");
 
   useEffect(() => {
-    fetchData(pagination.page);
-  }, []);
+    fetchData(1);
+  }, [filterBulan, filterTahun]);
 
   const fetchData = async (page: number = 1) => {
     try {
       setIsLoading(true);
+      const params = new URLSearchParams();
+      params.append("page", page.toString());
+      params.append("limit", "20");
+      if (filterBulan && filterBulan !== "all") params.append("bulan", filterBulan);
+      if (filterTahun && filterTahun !== "all") params.append("tahun", filterTahun);
+      
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran-all?page=${page}&limit=20`,
+        `${process.env.NEXT_PUBLIC_API_URL}/keuangan/pembayaran-all?${params.toString()}`,
         { credentials: "include" }
       );
 
@@ -223,9 +240,54 @@ export default function RiwayatPembayaranPage() {
 
       <Card className="border-zinc-200 bg-white">
         <CardHeader>
-          <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
-            Daftar Pembayaran
-          </CardTitle>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700">
+              Daftar Pembayaran
+            </CardTitle>
+            <div className="flex items-center gap-2">
+              <Select 
+                value={filterBulan} 
+                onValueChange={(value) => {
+                  setFilterBulan(value);
+                  if (value && value !== "all" && (!filterTahun || filterTahun === "all")) {
+                    setFilterTahun(new Date().getFullYear().toString());
+                  }
+                }}
+              >
+                <SelectTrigger className="w-[130px] text-xs lg:text-sm h-8 lg:h-9">
+                  <SelectValue placeholder="Semua Bulan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Bulan</SelectItem>
+                  <SelectItem value="1">Januari</SelectItem>
+                  <SelectItem value="2">Februari</SelectItem>
+                  <SelectItem value="3">Maret</SelectItem>
+                  <SelectItem value="4">April</SelectItem>
+                  <SelectItem value="5">Mei</SelectItem>
+                  <SelectItem value="6">Juni</SelectItem>
+                  <SelectItem value="7">Juli</SelectItem>
+                  <SelectItem value="8">Agustus</SelectItem>
+                  <SelectItem value="9">September</SelectItem>
+                  <SelectItem value="10">Oktober</SelectItem>
+                  <SelectItem value="11">November</SelectItem>
+                  <SelectItem value="12">Desember</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={filterTahun} onValueChange={setFilterTahun}>
+                <SelectTrigger className="w-[110px] text-xs lg:text-sm h-8 lg:h-9">
+                  <SelectValue placeholder="Semua Tahun" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Tahun</SelectItem>
+                  {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                    <SelectItem key={year} value={year.toString()}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="p-0 sm:p-6">
           {isLoading ? (

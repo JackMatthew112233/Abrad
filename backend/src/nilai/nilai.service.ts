@@ -341,6 +341,151 @@ export class NilaiService {
     return { message: 'Nilai berhasil dihapus' };
   }
 
+  async getNilaiBulk(
+    siswaId: string,
+    semester?: string,
+    tahunAjaran?: string,
+  ) {
+    // Get siswa data
+    const siswa = await this.prisma.siswa.findUnique({
+      where: { id: siswaId },
+    });
+
+    if (!siswa) {
+      throw new NotFoundException('Siswa tidak ditemukan');
+    }
+
+    // Get all mata pelajaran for siswa's kelas
+    const mataPelajaranList = siswa.kelas
+      ? await this.prisma.mataPelajaran.findMany({
+          where: { kelas: siswa.kelas },
+          orderBy: { nama: 'asc' },
+        })
+      : [];
+
+    // Get existing nilai for this siswa, semester, tahunAjaran (if provided)
+    let existingNilai: any[] = [];
+    if (semester && tahunAjaran) {
+      existingNilai = await this.prisma.nilai.findMany({
+        where: {
+          siswaId,
+          semester,
+          tahunAjaran,
+        },
+        orderBy: { updatedAt: 'desc' },
+      });
+    }
+
+    // Map existing nilai by mataPelajaran (keep the latest/first one per mapel)
+    const nilaiMap = new Map<string, any>();
+    existingNilai.forEach((n) => {
+      if (!nilaiMap.has(n.mataPelajaran)) {
+        nilaiMap.set(n.mataPelajaran, n);
+      }
+    });
+
+    // Combine mata pelajaran with existing nilai
+    const result = mataPelajaranList.map((mapel) => {
+      const existing = nilaiMap.get(mapel.nama);
+      return {
+        mataPelajaran: mapel.nama,
+        mapelId: mapel.id,
+        nilaiId: existing?.id || null,
+        jenisNilai: existing?.jenisNilai || null,
+        nilai: existing ? Number(existing.nilai) : null,
+      };
+    });
+
+    return {
+      siswa: {
+        id: siswa.id,
+        nama: siswa.nama,
+        kelas: siswa.kelas,
+        tingkatan: siswa.tingkatan,
+      },
+      mataPelajaranList: result,
+    };
+  }
+
+  async createOrUpdateNilaiBulk(data: {
+    siswaId: string;
+    semester: string;
+    tahunAjaran: string;
+    tanggal: string;
+    nilaiList: Array<{
+      mataPelajaran: string;
+      jenisNilai: string;
+      nilai: number | null;
+    }>;
+  }) {
+    const siswa = await this.prisma.siswa.findUnique({
+      where: { id: data.siswaId },
+    });
+
+    if (!siswa) {
+      throw new NotFoundException('Siswa tidak ditemukan');
+    }
+
+    const results = {
+      created: 0,
+      updated: 0,
+      skipped: 0,
+    };
+
+    for (const item of data.nilaiList) {
+      // Skip if nilai or jenisNilai is empty
+      if (item.nilai === null || item.nilai === undefined || !item.jenisNilai) {
+        results.skipped++;
+        continue;
+      }
+
+      // Check if nilai already exists for this mapel + jenisNilai + semester + tahunAjaran
+      const existing = await this.prisma.nilai.findFirst({
+        where: {
+          siswaId: data.siswaId,
+          mataPelajaran: item.mataPelajaran,
+          semester: data.semester,
+          tahunAjaran: data.tahunAjaran,
+          jenisNilai: item.jenisNilai as any,
+        },
+      });
+
+      if (existing) {
+        // Update existing
+        await this.prisma.nilai.update({
+          where: { id: existing.id },
+          data: {
+            nilai: item.nilai,
+            tanggal: new Date(data.tanggal),
+          },
+        });
+        results.updated++;
+      } else {
+        // Create new
+        await this.prisma.nilai.create({
+          data: {
+            siswaId: data.siswaId,
+            mataPelajaran: item.mataPelajaran,
+            jenisNilai: item.jenisNilai as any,
+            nilai: item.nilai,
+            semester: data.semester,
+            tahunAjaran: data.tahunAjaran,
+            tanggal: new Date(data.tanggal),
+          },
+        });
+        results.created++;
+      }
+    }
+
+    const totalSaved = results.created + results.updated;
+    return {
+      message: totalSaved > 0 
+        ? `Berhasil menyimpan ${totalSaved} nilai (${results.created} baru, ${results.updated} diperbarui)`
+        : 'Tidak ada nilai yang disimpan',
+      ...results,
+    };
+  }
+
   async getRaportPreview(
     siswaId: string,
     semester: string = 'Ganjil',

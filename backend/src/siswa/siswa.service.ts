@@ -60,25 +60,50 @@ export class SiswaService {
   }
 
   async getStatistik() {
+    // Total counts
     const totalSiswa = await this.prisma.siswa.count();
-    
     const siswaLakiLaki = await this.prisma.siswa.count({
-      where: {
-        jenisKelamin: 'LakiLaki',
-      },
+      where: { jenisKelamin: 'LakiLaki' },
     });
-
     const siswaPerempuan = await this.prisma.siswa.count({
-      where: {
-        jenisKelamin: 'Perempuan',
-      },
+      where: { jenisKelamin: 'Perempuan' },
     });
 
-    const siswaAktif = await this.prisma.siswa.count({
-      where: {
-        isAktif: true,
-      },
+    // Status breakdown for all
+    const totalAktif = await this.prisma.siswa.count({
+      where: { status: 'AKTIF' },
     });
+    const totalTidakAktif = await this.prisma.siswa.count({
+      where: { status: 'TIDAK_AKTIF' },
+    });
+    const totalLulus = await this.prisma.siswa.count({
+      where: { status: 'LULUS' },
+    });
+
+    // Status breakdown for Laki-laki (Santri)
+    const santriAktif = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'LakiLaki', status: 'AKTIF' },
+    });
+    const santriTidakAktif = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'LakiLaki', status: 'TIDAK_AKTIF' },
+    });
+    const santriLulus = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'LakiLaki', status: 'LULUS' },
+    });
+
+    // Status breakdown for Perempuan (Santriwati)
+    const santriwatiAktif = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'Perempuan', status: 'AKTIF' },
+    });
+    const santriwatiTidakAktif = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'Perempuan', status: 'TIDAK_AKTIF' },
+    });
+    const santriwatiLulus = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'Perempuan', status: 'LULUS' },
+    });
+
+    // siswaAktif now uses status field for accuracy
+    const siswaAktif = totalAktif;
 
     return {
       totalSiswa,
@@ -86,6 +111,24 @@ export class SiswaService {
       siswaPerempuan,
       siswaAktif,
       siswaNonAktif: totalSiswa - siswaAktif,
+      // New detailed breakdown
+      breakdown: {
+        total: {
+          aktif: totalAktif,
+          tidakAktif: totalTidakAktif,
+          lulus: totalLulus,
+        },
+        santri: {
+          aktif: santriAktif,
+          tidakAktif: santriTidakAktif,
+          lulus: santriLulus,
+        },
+        santriwati: {
+          aktif: santriwatiAktif,
+          tidakAktif: santriwatiTidakAktif,
+          lulus: santriwatiLulus,
+        },
+      },
     };
   }
 

@@ -48,16 +48,22 @@ export class PengeluaranController {
   async getAllPengeluaran(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('bulan') bulan?: string,
+    @Query('tahun') tahun?: string,
   ) {
     const pageNum = page ? parseInt(page) : 1;
     const limitNum = limit ? parseInt(limit) : 20;
-    return this.pengeluaranService.getAllPengeluaran(pageNum, limitNum);
+    return this.pengeluaranService.getAllPengeluaran(pageNum, limitNum, bulan, tahun);
   }
 
   @Get('terbaru')
-  async getPengeluaranTerbaru(@Query('limit') limit?: string) {
+  async getPengeluaranTerbaru(
+    @Query('limit') limit?: string,
+    @Query('bulan') bulan?: string,
+    @Query('tahun') tahun?: string,
+  ) {
     const limitNum = limit ? parseInt(limit) : 10;
-    return this.pengeluaranService.getPengeluaranTerbaru(limitNum);
+    return this.pengeluaranService.getPengeluaranTerbaru(limitNum, bulan, tahun);
   }
 
   @Get('export')
