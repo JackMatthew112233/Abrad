@@ -20,7 +20,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const userMenuItems = [
+interface MenuItem {
+  title: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+}
+
+const userMenuItems: MenuItem[] = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -74,7 +81,7 @@ const userMenuItems = [
   },
 ];
 
-const adminMenuItems = [
+const adminMenuItems: MenuItem[] = [
   {
     title: "Kelola Pendaftaran",
     href: "/pendaftaran",
