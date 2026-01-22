@@ -42,10 +42,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+
+interface StatusBreakdown {
+  aktif: number;
+  tidakAktif: number;
+  lulus: number;
+}
 
 interface DashboardData {
   period: { year: number; month: number };
-  siswa: { total: number; putra: number; putri: number };
+  siswa: {
+    total: number;
+    putra: number;
+    putri: number;
+    aktif: number;
+    breakdown: {
+      total: StatusBreakdown;
+      santri: StatusBreakdown;
+      santriwati: StatusBreakdown;
+    };
+  };
   pembayaran: {
     totalNominal: number;
     totalTransaksi: number;
@@ -254,15 +271,30 @@ export default function DashboardPage() {
             <Card className="border-zinc-200 bg-white">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-xs lg:text-sm font-medium text-zinc-600">
-                  Total Santri Aktif
+                  Total Santri / Santriwati Aktif
                 </CardTitle>
                 <Users className="h-4 w-4 text-emerald-600" />
               </CardHeader>
-              <CardContent>
-                <div className="text-xl lg:text-3xl font-bold text-emerald-700">{data.siswa.total}</div>
-                <p className="text-xs text-zinc-500 mt-1">
-                  {data.siswa.putra} putra • {data.siswa.putri} putri
+              <CardContent className="space-y-2">
+                <div className="text-xl lg:text-3xl font-bold text-emerald-700">
+                  {data.siswa.breakdown?.total.aktif ?? data.siswa.aktif}
+                </div>
+                <p className="text-xs text-zinc-500">
+                  {data.siswa.total > 0 ? (((data.siswa.breakdown?.total.aktif ?? data.siswa.aktif) / data.siswa.total) * 100).toFixed(1) : "0"}% dari total
                 </p>
+                {data.siswa.breakdown && (
+                  <div className="flex flex-wrap gap-1">
+                    <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-[10px] px-1.5 py-0 h-5">
+                      {data.siswa.breakdown.total.aktif} Aktif
+                    </Badge>
+                    <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[10px] px-1.5 py-0 h-5">
+                      {data.siswa.breakdown.total.lulus} Lulus
+                    </Badge>
+                    <Badge className="bg-zinc-100 text-zinc-600 border-zinc-200 text-[10px] px-1.5 py-0 h-5">
+                      {data.siswa.breakdown.total.tidakAktif} Tidak Aktif
+                    </Badge>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

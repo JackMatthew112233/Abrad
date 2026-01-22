@@ -232,6 +232,83 @@ function KPICardBreakdownIllustration() {
   );
 }
 
+// Illustration for Dashboard KPI Fix
+function DashboardKPIFixIllustration() {
+  return (
+    <div className="bg-zinc-50 rounded-xl p-4 lg:p-6 border border-zinc-200 space-y-4">
+      {/* Before/After Section */}
+      <div>
+        <div className="text-xs text-zinc-500 mb-3 font-medium uppercase tracking-wide flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          Perubahan KPI Card di Dashboard
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Before */}
+          <div className="space-y-2">
+            <div className="text-xs font-semibold text-red-600">Sebelum</div>
+            <div className="bg-white rounded-lg border border-red-200 p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-zinc-500 line-through">Total Santri Aktif</span>
+                <Users className="h-3.5 w-3.5 text-zinc-400" />
+              </div>
+              <div className="text-2xl font-bold text-red-500 mb-1">118</div>
+              <p className="text-[10px] text-zinc-500">76 putra • 42 putri</p>
+              <p className="text-[10px] text-red-400 mt-2 italic">Bug: Menghitung berdasarkan isAktif (boolean), menghitung SEMUA status</p>
+            </div>
+          </div>
+
+          {/* After */}
+          <div className="space-y-2">
+            <div className="text-xs font-semibold text-emerald-600">Sesudah</div>
+            <div className="bg-white rounded-lg border border-emerald-200 p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-zinc-500">Total Santri / Santriwati Aktif</span>
+                <Users className="h-3.5 w-3.5 text-emerald-600" />
+              </div>
+              <div className="text-2xl font-bold text-emerald-700 mb-1">98</div>
+              <p className="text-[10px] text-zinc-500 mb-2">83.1% dari total</p>
+              <div className="flex flex-wrap gap-1">
+                <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-[10px] px-1.5 py-0 h-5">
+                  98 Aktif
+                </Badge>
+                <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[10px] px-1.5 py-0 h-5">
+                  15 Lulus
+                </Badge>
+                <Badge className="bg-zinc-100 text-zinc-600 border-zinc-200 text-[10px] px-1.5 py-0 h-5">
+                  5 Tidak Aktif
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* What Changed */}
+      <div className="pt-3 border-t border-zinc-200">
+        <div className="text-xs text-zinc-500 mb-2 font-medium uppercase tracking-wide">Perubahan yang Dilakukan</div>
+        <div className="space-y-2">
+          <div className="flex items-start gap-2">
+            <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+            <span className="text-xs text-zinc-600">KPI sekarang hanya menghitung santri dengan status AKTIF saja</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+            <span className="text-xs text-zinc-600">Menampilkan persentase dari total santri</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+            <span className="text-xs text-zinc-600">Ditambahkan badge breakdown status: Aktif, Lulus, Tidak Aktif</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+            <span className="text-xs text-zinc-600">Konsisten dengan KPI &quot;Santri / Santriwati Aktif&quot; di halaman Kelola Santri</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Illustration for Keuangan Filter Feature
 function KeuanganFilterIllustration() {
   return (
@@ -442,6 +519,19 @@ export default function PembaharuanPage() {
       ],
       illustration: <KeuanganFilterIllustration />,
       alert: "Filter TIDAK mempengaruhi KPI Cards (Total Komitmen, Total Infaq, Total Laundry, Total Donasi) dan Tabel Daftar Biodata Keuangan. Alasannya: KPI menampilkan total komitmen/target yang bersifat tetap (bukan transaksi), sedangkan Tabel Biodata Keuangan menampilkan data profil keuangan santri yang tidak berbasis waktu.",
+    },
+    {
+      number: 4,
+      title: "Perbaikan KPI Total Santri / Santriwati Aktif di Dashboard",
+      description: "Perbaikan bug pada KPI Card 'Total Santri Aktif' di halaman Dashboard yang sebelumnya menghitung semua status santri. Sekarang konsisten dengan KPI 'Santri / Santriwati Aktif' di halaman Kelola Santri.",
+      highlights: [
+        "Perbaikan bug: KPI sekarang hanya menghitung santri dengan status AKTIF (sebelumnya menghitung semua status karena menggunakan field isAktif boolean)",
+        "Nama KPI diubah dari 'Total Santri Aktif' menjadi 'Total Santri / Santriwati Aktif'",
+        "Menampilkan persentase santri aktif dari total santri (contoh: '83.1% dari total')",
+        "Ditambahkan badge breakdown status: Aktif (hijau), Lulus (biru), Tidak Aktif (abu-abu)",
+        "Tampilan konsisten dengan KPI 'Santri / Santriwati Aktif' di halaman Kelola Santri / Santriwati",
+      ],
+      illustration: <DashboardKPIFixIllustration />,
     },
   ];
 

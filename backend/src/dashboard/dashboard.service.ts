@@ -59,15 +59,71 @@ export class DashboardService {
   }
 
   private async getSiswaStats() {
-    const total = await this.prisma.siswa.count({ where: { isAktif: true } });
+    // Total counts (all statuses)
+    const total = await this.prisma.siswa.count();
     const putra = await this.prisma.siswa.count({
-      where: { isAktif: true, jenisKelamin: 'LakiLaki' },
+      where: { jenisKelamin: 'LakiLaki' },
     });
     const putri = await this.prisma.siswa.count({
-      where: { isAktif: true, jenisKelamin: 'Perempuan' },
+      where: { jenisKelamin: 'Perempuan' },
     });
 
-    return { total, putra, putri };
+    // Status breakdown for all
+    const totalAktif = await this.prisma.siswa.count({
+      where: { status: 'AKTIF' },
+    });
+    const totalTidakAktif = await this.prisma.siswa.count({
+      where: { status: 'TIDAK_AKTIF' },
+    });
+    const totalLulus = await this.prisma.siswa.count({
+      where: { status: 'LULUS' },
+    });
+
+    // Status breakdown for Laki-laki (Santri)
+    const santriAktif = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'LakiLaki', status: 'AKTIF' },
+    });
+    const santriTidakAktif = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'LakiLaki', status: 'TIDAK_AKTIF' },
+    });
+    const santriLulus = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'LakiLaki', status: 'LULUS' },
+    });
+
+    // Status breakdown for Perempuan (Santriwati)
+    const santriwatiAktif = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'Perempuan', status: 'AKTIF' },
+    });
+    const santriwatiTidakAktif = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'Perempuan', status: 'TIDAK_AKTIF' },
+    });
+    const santriwatiLulus = await this.prisma.siswa.count({
+      where: { jenisKelamin: 'Perempuan', status: 'LULUS' },
+    });
+
+    return {
+      total,
+      putra,
+      putri,
+      aktif: totalAktif,
+      breakdown: {
+        total: {
+          aktif: totalAktif,
+          tidakAktif: totalTidakAktif,
+          lulus: totalLulus,
+        },
+        santri: {
+          aktif: santriAktif,
+          tidakAktif: santriTidakAktif,
+          lulus: santriLulus,
+        },
+        santriwati: {
+          aktif: santriwatiAktif,
+          tidakAktif: santriwatiTidakAktif,
+          lulus: santriwatiLulus,
+        },
+      },
+    };
   }
 
   private async getPembayaranStats(startDate: Date, endDate: Date) {
